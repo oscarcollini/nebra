@@ -1,0 +1,19 @@
+# N•E•B•R•A — profilo di prova
+# Profilo fittizio: azimut   altezza (gradi)
+0 8
+30 10
+50 12
+70 16
+90 13
+110 8
+130 6
+150 4
+180 3
+210 5
+240 9
+260 14
+280 19
+300 16
+310 13
+330 10
+359 8
