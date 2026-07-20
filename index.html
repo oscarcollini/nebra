@@ -3421,23 +3421,40 @@ function lunarGG(date){
   const {y,m,d} = ymd(date);
   return (m === 2 && d === 29 && isLeapYear(y)) ? 28 : d;
 }
-// Lunazioni alternate 29/30; mesi pari iniziano da 29, dispari da 30.
+// Per l’età: durata base 29 nei mesi pari, 30 nei dispari; poi durata opposta.
 function lunarInitialCycle(month){
   return (month % 2 === 0) ? 29 : 30;
 }
 function lunarAgeState(rawL, month){
   const initialCycle = lunarInitialCycle(month);
   const nextCycle = initialCycle === 29 ? 30 : 29;
-  if(rawL < initialCycle) return {L:rawL, cycle:initialCycle, initialCycle, zeroCycle:null};
-  if(rawL === initialCycle) return {L:0, cycle:initialCycle, initialCycle, zeroCycle:initialCycle};
+  if(rawL < initialCycle) return {L:rawL, reductionCycle:initialCycle, initialCycle, zeroCycle:null};
+  if(rawL === initialCycle) return {L:0, reductionCycle:initialCycle, initialCycle, zeroCycle:initialCycle};
   let L = rawL - initialCycle;
-  if(L < nextCycle) return {L, cycle:nextCycle, initialCycle, zeroCycle:null};
-  if(L === nextCycle) return {L:0, cycle:nextCycle, initialCycle, zeroCycle:nextCycle};
+  if(L < nextCycle) return {L, reductionCycle:nextCycle, initialCycle, zeroCycle:null};
+  if(L === nextCycle) return {L:0, reductionCycle:nextCycle, initialCycle, zeroCycle:nextCycle};
   L -= nextCycle;
-  return {L, cycle:nextCycle, initialCycle, zeroCycle:null};
+  return {L, reductionCycle:lunarInitialCycle(month === 12 ? 1 : month + 1), initialCycle, zeroCycle:null};
 }
-function lunarDistanceState(L, cycle, zeroCycle){
-  const N = L === 0 ? zeroCycle : cycle;
+function lunarAgeAt(date){
+  const {m,d} = ymd(date);
+  const E = epact(date);
+  const R = R_MONTH[m];
+  const GG = lunarGG(date);
+  const rawL = E + R + GG;
+  return {E, R, GG, civilDay:d, rawL, ...lunarAgeState(rawL, m)};
+}
+// N per L+30−N è la durata della lunazione che contiene la data.
+function lunarCurrentCycle(date, age){
+  if(age.L === 0) return age.zeroCycle;
+  for(const N of [29,30]){
+    if(age.L > N) continue;
+    const endAge = lunarAgeAt(addCalendarDays(date, N - age.L));
+    if(endAge.L === 0 && endAge.zeroCycle === N) return N;
+  }
+  return age.reductionCycle;
+}
+function lunarDistanceState(L, N){
   const valueL = L === 0 ? N : L;
   const twice = (valueL + 30 - N) * 2;
   const rawSgn = Math.floor(twice / 5);
@@ -3446,15 +3463,11 @@ function lunarDistanceState(L, cycle, zeroCycle){
   return {N, valueL, twice, rawSgn, sgn, gr, total:sgn*30 + gr};
 }
 function moonLon(date, sun){
-  const {m,d} = ymd(date);
-  const E = epact(date);
-  const R = R_MONTH[m];
-  const GG = lunarGG(date);
-  const rawL = E + R + GG;
-  const age = lunarAgeState(rawL, m);
-  const {L, cycle, initialCycle, zeroCycle} = age;
+  const age = lunarAgeAt(date);
+  const {L} = age;
+  const N = lunarCurrentCycle(date, age);
   const isNewMoon = L === 0;
-  const distance = lunarDistanceState(L, cycle, zeroCycle);
+  const distance = lunarDistanceState(L, N);
   const {sgn, gr} = distance;
   const dist = sgn === 0
     ? `+${gr}gr`
@@ -3463,7 +3476,7 @@ function moonLon(date, sun){
       : `+${sgn} SGN +${gr}gr`;
   return {
     lon: mod(sun + sgn*30 + gr, 360),
-    E, R, GG, civilDay:d, rawL, L, cycle, initialCycle, zeroCycle,
+    ...age,
     isNewMoon, distance, dist
   };
 }
@@ -4848,7 +4861,7 @@ function calcUI(){
       stationary:"Stationary interval: −60 to +60 days", rise:"rise", set:"set", semiarc:"semiarc", heightCulm:"culm. H", culminates:"culminates", expanded:"Expanded formula", riseAz:"rise az.", setAz:"set az.", arcManual:"Manual arc calculation",
       sunNote:"The highlighted column is the month used.", interpNote:"The highlighted columns bound the selected interval.",
       sunLead:"gamma is the day of the Sun’s entry into ARI00, read from the database.",
-      moonLead:"L is lunar age; distance from the Sun and position follow from L. A lunation takes the name of the month in which it ends: N=29 in even months, 30 in odd months. If two end in the same month, the second uses the opposite duration; the following month returns to the base rule. L=1 first crescent; 29/0 or 30/0 conjunction.",
+      moonLead:"L is lunar age; N is the duration of the current lunation. To find L, use the month’s base duration (29 in even months, 30 in odd months), then the opposite duration if needed; after both, the new lunation follows the next month’s base duration. L=1 first crescent; 29/0 or 30/0 conjunction.",
       leapNote:"On 29 February use GG = 28.", at:"at", of:"of", fromDate:"on", and:"and", betweenArc:"between",
       venusDays:"Venus (days)", marsDays:"Mars (days)", jupiterDays:"Jupiter (days)", saturnDays:"Saturn (days)",
       elongSun:"Sun elong.", eclLon:"Ecl. long.", notation:"Notation", culmination:"Culmination X", horizon:"Horizon X", references:"References"
@@ -4862,7 +4875,7 @@ function calcUI(){
     stationary:"Fermata: da −60 a +60 giorni", rise:"levata", set:"tramonto", semiarc:"semiarco", heightCulm:"H culmine", culminates:"culmina", expanded:"Formula sviluppata", riseAz:"az. levata", setAz:"az. tramonto", arcManual:"Calcolo manuale degli archi",
     sunNote:"La colonna evidenziata è il mese usato.", interpNote:"Le colonne evidenziate delimitano il tratto scelto.",
     sunLead:"gamma è il giorno d’ingresso del Sole in ARI00, letto dal database.",
-    moonLead:"L è l’età; da L si ricavano distanza dal Sole e posizione. La lunazione prende il nome del mese in cui termina: N=29 nei mesi pari, 30 nei dispari. Se due terminano nello stesso mese, la seconda usa la durata opposta; il mese seguente riprende la regola base. L=1 prima falce; 29/0 o 30/0 congiunzione.",
+    moonLead:"L è l’età; N è la durata della lunazione in corso. Per trovare L si usa la durata base del mese (29 nei pari, 30 nei dispari), poi se necessario la durata opposta; superate entrambe, la nuova lunazione segue la durata base del mese successivo. L=1 prima falce; 29/0 o 30/0 congiunzione.",
     leapNote:"Il 29 febbraio usa GG = 28.", at:"a", of:"di", fromDate:"il", and:"e", betweenArc:"tra",
     venusDays:"Venere (gg)", marsDays:"Marte (gg)", jupiterDays:"Giove (gg)", saturnDays:"Saturno (gg)",
     elongSun:"Elong. Sole", eclLon:"Longit.ecl.", notation:"Notazione", culmination:"Culmine X", horizon:"Orizzonte X", references:"Riferimenti"
@@ -5183,22 +5196,19 @@ ${displayName("Sole")} = ${sunRow.sg}`;
   const lunarDistance = lunar.distance;
   const moonFormulaLon = mod(extra.sun + lunarDistance.total,360);
   const monthRule = currentLang() === "en"
-    ? `${monthNames[m]} ${m % 2 === 0 ? "even" : "odd"}: N = ${lunar.initialCycle}`
-    : `${monthNames[m]} ${m % 2 === 0 ? "pari" : "dispari"}: N = ${lunar.initialCycle}`;
+    ? `${monthNames[m]} ${m % 2 === 0 ? "even" : "odd"}: base duration ${lunar.initialCycle}`
+    : `${monthNames[m]} ${m % 2 === 0 ? "pari" : "dispari"}: durata base ${lunar.initialCycle}`;
   let lunarTraceL = lunarSum;
   const firstCycle = lunar.initialCycle;
   const nextCycle = firstCycle === 29 ? 30 : 29;
   const lunarReduction = [];
-  let completedCycles = 0;
   if(lunarTraceL > firstCycle){
     const before = lunarTraceL;
     lunarTraceL -= firstCycle;
-    completedCycles = 1;
     lunarReduction.push(`L = ${before}−${firstCycle} = ${lunarTraceL}`);
     if(lunarTraceL > nextCycle){
       const before2 = lunarTraceL;
       lunarTraceL -= nextCycle;
-      completedCycles = 2;
       lunarReduction.push(`L = ${before2}−${nextCycle} = ${lunarTraceL}`);
     }
   }
@@ -5212,21 +5222,31 @@ ${displayName("Sole")} = ${sunRow.sg}`;
   let lunationName = currentLang() === "en" ? `Moon of ${monthNames[endParts.m]}` : `luna di ${monthNames[endParts.m]}`;
   if(sameYM(previousEnd,lunationEndDate)) lunationName = currentLang() === "en" ? `2nd Moon of ${monthNames[endParts.m]}` : `2a luna di ${monthNames[endParts.m]}`;
   else if(sameYM(followingEnd,lunationEndDate)) lunationName = currentLang() === "en" ? `1st Moon of ${monthNames[endParts.m]}` : `1a luna di ${monthNames[endParts.m]}`;
-  const lunationContextLine = completedCycles > 0 ? `\n${lunationName}: N = ${currentLunationDuration}` : "";
-  const conjunctionLine = lunarTraceL === (completedCycles === 0 ? firstCycle : nextCycle) ? `\nL = ${completedCycles === 0 ? firstCycle : nextCycle}/0` : "";
+  const lunationContextLine = `\n${lunationName}: N = ${currentLunationDuration}`;
+  const conjunctionLine = lunar.L === 0 ? `\nL = ${lunar.zeroCycle}/0` : "";
   const leapLine = lunar.civilDay !== lunar.GG ? `\n${u.leapNote}` : "";
   const lunarFormula = currentLang() === "en"
     ? `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
-L = (E + R + GG) %N
-N: even MM 29 | odd MM 30   [2nd: 30/29 | 29/02=28]
+L = E + R + GG
+Bring L into the current lunation:
+subtract the month’s base duration (even 29 | odd 30);
+if needed, also subtract the opposite duration.
+After both, the new lunation follows the next month’s base duration.
+29/0 | 30/0 = conjunction   [29/02: GG=28]
 
+N = duration of the current lunation
 SGN = (L+30−N)×2//5
 gr  = ((L+30−N)×2%5)×6
 Moon = Sun + SGN + gr`
     : `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
-L = (E + R + GG) %N
-N: MM pari 29 | MM dispari 30   [2a: 30/29 | 29/02=28]
+L = E + R + GG
+Riporta L nella lunazione in corso:
+sottrai la durata base del mese (pari 29 | dispari 30);
+se necessario, sottrai anche la durata opposta.
+Superate entrambe, la nuova lunazione segue la durata base del mese successivo.
+29/0 | 30/0 = congiunzione   [29/02: GG=28]
 
+N = durata della lunazione in corso
 SGN = (L+30−N)×2//5
 gr  = ((L+30−N)×2%5)×6
 Luna = Sole + SGN + gr`;
@@ -5243,8 +5263,8 @@ gr  = ((${lunarDistance.valueL}+30−${lunarDistance.N})×2%5)×6 = ${lunarDista
 Δ☉ = ${calcSignedDistanceText(lunarDistance.sgn,lunarDistance.gr)}
 ${displayName("Luna")} = ${displayName("Sole")} + ${calcSignedDistanceText(lunarDistance.sgn,lunarDistance.gr).replace(/^\+/,"")} = ${fmtSG(moonFormulaLon)}`;
   const lunarDescription = currentLang() === "en"
-    ? "The Moon gives two results: lunar age L, which describes the phase, and SGNgr. E is the epact; R is the monthly regular. The distance from the Sun is derived from L. A lunation takes the name of the month in which it ends."
-    : "Per la Luna si ricavano due risultati: l’età L, che descrive la fase, e la posizione SGNgr. E è l’epatta; R la regolare mensile. Dall’età si ricava la distanza dal Sole. La lunazione prende il nome del mese in cui termina.";
+    ? "The Moon gives two results: lunar age L, which describes the phase, and SGNgr. E is the epact; R is the monthly regular. The distance from the Sun follows from L and from N, the duration of the current lunation."
+    : "Per la Luna si ricavano due risultati: l’età L, che descrive la fase, e la posizione SGNgr. E è l’epatta; R la regolare mensile. La distanza dal Sole si ricava da L e da N, durata della lunazione in corso.";
   const lunarTable = calcRefTable(u.lunarTable,[{label:"MM",values:monthNames.slice(1)},{label:"R",values:R_MONTH.slice(1)}],m-1);
   const lunarBlock = calcUniformBlock({id:"calc-luna",title:`2 · ${displayName("Luna")} · ${moonRow.sg}`,description:lunarDescription,formula:lunarFormula,table:lunarTable,current:lunarCurrent});
 
