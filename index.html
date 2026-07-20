@@ -4842,7 +4842,7 @@ function calcUI(){
   if(currentLang() === "en"){
     return {
       months:["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],
-      civilDate:"Civil date and time", rule:"Daily positions update at 12:00 TSL so the observing night remains continuous.",
+      civilDate:"Civil date and time", tableDate:"Table date", rule:"Daily positions update at 12:00 TSL so the observing night remains continuous.",
       monthTable:"MM / y / SGN", lunarTable:"MM / R", curveNodes:"Curve table", daysFromT0:" days",
       anchorCI:"t₀ (CI)", anchorOP:"t₀ (OP)", reconstructed:"reconstructed", between:"Between", failsafe:"Failsafe", control:"decennial anchor", steps:"steps",
       stationary:"Stationary interval: −60 to +60 days", rise:"rise", set:"set", semiarc:"semiarc", heightCulm:"culm. H", culminates:"culminates", expanded:"Expanded formula", riseAz:"rise az.", setAz:"set az.", arcManual:"Manual arc calculation",
@@ -4856,7 +4856,7 @@ function calcUI(){
   }
   return {
     months:["","GEN","FEB","MAR","APR","MAG","GIU","LUG","AGO","SET","OTT","NOV","DIC"],
-    civilDate:"Data e ora civile", rule:"Le posizioni giornaliere sono aggiornate a mezzogiorno TSL, così la notte osservativa resta continua.",
+    civilDate:"Data e ora civile", tableDate:"Data della tavola", rule:"Le posizioni giornaliere sono aggiornate a mezzogiorno TSL, così la notte osservativa resta continua.",
     monthTable:"MM / y / SGN", lunarTable:"MM / R", curveNodes:"Tabella della curva", daysFromT0:" giorni",
     anchorCI:"t₀ (CI)", anchorOP:"t₀ (OP)", reconstructed:"ricostruita", between:"Tra", failsafe:"Failsafe", control:"ancora decennale", steps:"passaggi",
     stationary:"Fermata: da −60 a +60 giorni", rise:"levata", set:"tramonto", semiarc:"semiarco", heightCulm:"H culmine", culminates:"culmina", expanded:"Formula sviluppata", riseAz:"az. levata", setAz:"az. tramonto", arcManual:"Calcolo manuale degli archi",
@@ -4978,7 +4978,7 @@ function calcUniformBlock({id="",title="",description="",formula="",table="",cur
   const idAttr = id ? ` id="${id}"` : "";
   const fLabel = currentLang() === "en" ? "Formula" : "Formula";
   const tLabel = currentLang() === "en" ? "Table" : "Tabella";
-  const cLabel = currentLang() === "en" ? "Selected date" : "Data selezionata";
+  const cLabel = currentLang() === "en" ? "Current calculation" : "Calcolo corrente";
   return `<details class="calc-step"${idAttr}><summary>${title}</summary><div class="calc-body">${description ? `<div class="calc-section-description">${description}</div>` : ""}${formula ? `<div class="calc-section-label">${fLabel}</div><pre class="calc-code">${calcEscape(formula)}</pre>` : ""}${table ? `<div class="calc-section-label">${tLabel}</div>${table}` : ""}${(current || currentHTML) ? `<div class="calc-section-label">${cLabel}</div>${current ? `<pre class="calc-code">${calcEscape(current)}</pre>` : ""}${currentHTML ? `<div class="calc-current-html">${currentHTML}</div>` : ""}` : ""}${note ? `<div class="calc-note">${note}</div>` : ""}</div></details>`;
 }
 function calcStaticBlock(id, title, html){
@@ -5346,11 +5346,15 @@ P1: 1/3 orizzontale | 1/2 verticale
 P2: 2/3 orizzontale | 4/5 verticale
 Az: punto 114</pre><ol class="calc-build-list"><li>Traccia orizzonte e meridiano; alla latitudine corrente il culmine base è <code>${calcHumanNumber(90-latNow)}gr</code>.</li><li>Per l’ARC desiderato segna levata, culmine e tramonto applicando la regola <code>10gr / 30m / 8gr</code>.</li><li>Fra levata e culmine colloca P1 a un terzo dello spostamento orizzontale e a metà di quello verticale; colloca P2 a due terzi in orizzontale e a quattro quinti in verticale. Riporta gli stessi punti sul lato occidentale.</li><li>Traccia un solo arco regolare attraverso levata, P1, P2, culmine, i punti speculari e tramonto.</li><li>Dal punto <code>114</code> traccia le guide di azimut verso E, ESE, SE e S.</li></ol>`);
 
-  const dateReference=`<div class="calc-date-reference"><b>${u.civilDate}:</b> ${state.dateLabel} ${state.timeLabel} · <b>TSL:</b> ${state.tslLabel}<br>${u.rule}</div>`;
+  const civilYMD = ymd(extra.civilDate);
+  const tableLabel = formatDateDMY(extra.tableDate);
+  const datesDiffer = calendarDayIndex(extra.civilDate) !== calendarDayIndex(extra.tableDate);
+  const tableDateLine = datesDiffer ? `<br><b>${u.tableDate}:</b> ${tableLabel}` : "";
+  const dateReference=`<div class="calc-date-reference"><b>${u.civilDate}:</b> ${state.dateLabel} ${state.timeLabel} · <b>TSL:</b> ${state.tslLabel}${tableDateLine}<br>${u.rule}</div>`;
   box.innerHTML=dateReference+[
     calcRulerReference(),
     calcSkyReference(y),
-    calcDoomsdayReference(y,m,d),
+    calcDoomsdayReference(civilYMD.y,civilYMD.m,civilYMD.d),
     solarBlock,
     lunarBlock,
     calcPlanetReference(),
