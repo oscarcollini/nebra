@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>N•E•B•R•A · v0.9.9</title>
+<title>N•E•B•R•A · v0.9.91</title>
 <meta content="Calcolatore astronomico N•E•B•R•A per Sole, Luna, pianeti e orizzonte locale." name="description"/>
 <meta content="#078783" name="theme-color"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
@@ -3445,12 +3445,20 @@ function lunarAgeAt(date){
   return {E, R, GG, civilDay:d, rawL, ...lunarAgeState(rawL, m)};
 }
 // N per L+30−N è la durata della lunazione che contiene la data.
+// Cerca il termine della lunazione: N/0 esplicito oppure 29/0 soppresso dal saltus (29 → 1).
+// La ricerca giorno per giorno comprende anche la ripetizione del giorno lunare al 29 febbraio.
 function lunarCurrentCycle(date, age){
   if(age.L === 0) return age.zeroCycle;
-  for(const N of [29,30]){
-    if(age.L > N) continue;
-    const endAge = lunarAgeAt(addCalendarDays(date, N - age.L));
-    if(endAge.L === 0 && endAge.zeroCycle === N) return N;
+  let cursor = date;
+  for(let i=0;i<=35;i++){
+    const current = i === 0 ? age : lunarAgeAt(cursor);
+    if(current.L === 0) return current.zeroCycle;
+    const nextDate = addCalendarDays(cursor, 1);
+    const next = lunarAgeAt(nextDate);
+    const currentValue = current.L === 0 ? current.zeroCycle : current.L;
+    const nextValue = next.L === 0 ? next.zeroCycle : next.L;
+    if(currentValue === 29 && nextValue === 1) return 29;
+    cursor = nextDate;
   }
   return age.reductionCycle;
 }
@@ -5560,7 +5568,7 @@ setTodayNow();
   });
 })();
 </script>
-<footer class="page-footer">N•E•B•R•A v0.9.9 · Oscar Collini fecit · CC BY-SA 4.0</footer>
+<footer class="page-footer">N•E•B•R•A v0.9.91 · Oscar Collini fecit · CC BY-SA 4.0</footer>
 <div aria-hidden="true" class="night-fab-clearance"></div>
 
 <script>
