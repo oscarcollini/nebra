@@ -1,52 +1,9 @@
-N•E•B•R•A — PUBBLICAZIONE SU GITHUB PAGES
+N•E•B•R•A — PUBBLICAZIONE / AGGIORNAMENTO
 
-IMPORTANTE
-Carica su GitHub i file estratti dal pacchetto ZIP, non il pacchetto ZIP stesso.
+Repository già esistente:
+Add file → Upload files → trascina tutti i file → Commit changes.
 
-1. Crea gratuitamente un account su GitHub.
-2. Dopo l’accesso, premi il simbolo + in alto e scegli “New repository”.
-3. Repository name: nebra
-4. Seleziona “Public”.
-5. Non aggiungere altri file nelle opzioni iniziali; premi “Create repository”.
-6. Nella pagina del repository vuoto premi “uploading an existing file”.
-   In alternativa: Add file > Upload files.
-7. Seleziona e carica TUTTI questi file estratti dallo ZIP:
-   - index.html
-   - manifest.webmanifest
-   - sw.js
-   - icon-192.png
-   - icon-512.png
-   - apple-touch-icon.png
-   - profilo-di-prova.txt
-   - README.md
-   - ISTRUZIONI-PUBBLICAZIONE.txt
-8. In fondo alla pagina premi “Commit changes”.
-9. Apri la scheda “Settings” del repository.
-10. Nel menu laterale scegli “Pages”.
-11. In “Build and deployment”, imposta:
-    Source: Deploy from a branch
-    Branch: main
-    Folder: /(root)
-12. Premi “Save”.
-13. Attendi qualche minuto. Nella stessa pagina comparirà l’indirizzo pubblico.
-    Avrà una forma simile a: https://TUO-NOME.github.io/nebra/
-14. Apri quell’indirizzo sul telefono.
-15. Android / Chrome: menu ⋮ > Installa app oppure Aggiungi a schermata Home.
-    iPhone / Safari: Condividi > Aggiungi alla schermata Home.
-16. Apri l’app una prima volta mentre sei online. Dopo il primo caricamento
-    potrà riaprirsi anche senza connessione.
+Prima pubblicazione:
+Settings → Pages → Deploy from a branch → main → /(root) → Save.
 
-PROFILO DI PROVA
-Apri “Profili dell’orizzonte” e scegli “Profilo di prova · integrato”.
-È fittizio e non viene attivato automaticamente.
-
-PROFILI REALI E PRIVACY
-I profili importati normalmente nell’app restano salvati nel browser del dispositivo.
-Non caricare nel repository un profilo reale se non vuoi renderlo pubblico.
-
-AGGIORNARE N•E•B•R•A IN FUTURO
-1. Fatti preparare una nuova versione PWA.
-2. Nel repository scegli Add file > Upload files.
-3. Carica il nuovo index.html con lo stesso nome; carica anche gli altri file
-   soltanto se sono cambiati.
-4. Conferma con Commit changes. GitHub Pages aggiornerà il sito.
+Apri il sito una volta online; poi la PWA funziona anche offline.

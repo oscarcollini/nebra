@@ -4317,7 +4317,7 @@ const NebraHorizon = (() => {
     sourceIt:'integrato',
     sourceEn:'built-in',
     created:'',
-    points:[[0,8],[30,10],[50,12],[70,16],[90,13],[110,8],[130,6],[150,4],[180,3],[210,5],[240,9],[260,14],[280,19],[300,16],[310,13],[330,10],[359,8]]
+    points:[[0,25],[25,27],[50,23],[60,20],[70,22],[80,23],[90,20],[100,18],[110,17],[120,15],[121,25],[140,35],[160,25],[161,5],[170,5],[180,10],[181,11],[183,12],[184,11],[185,10],[186,12],[187,10],[188,11],[189,9],[190,10],[191,0],[200,5],[210,8],[220,10],[240,15],[250,14],[260,12],[270,13],[280,14],[290,15],[300,20],[330,22],[360,25]]
   }];
   let store = {activeId:'', profiles:[]};
   let initialized = false;
@@ -4972,7 +4972,7 @@ function calcArcFormulaHTML(row, state){
   const h = HArc(m,state.coeff);
   const semi = TArc(m,state.coeff);
   const trm = 270 + state.coeff.kAz*m;
-  return `<div class="calc-arc-detail"><div class="calc-arc-detail-title">${u.expanded} · ${calcEscape(displayName(row.name))}</div><div class="calc-arc-value">${calcEscape(row.sg)} · m = ${calcEscape(calcArcMText(m))}</div><div class="calc-arc-formulas-wrap"><table class="calc-arc-formulas"><tbody>${calcArcFormulaLine(u.riseAz, "90gr", `${calcHumanNumber(state.coeff.kAz)}gr`, m, "minus", calcArcAzResult(lev))}${calcArcFormulaLine(u.heightCulm, `${calcHumanNumber(state.coeff.H0)}gr`, "8gr", m, "plus", `${Math.round(h)}gr`)}${calcArcFormulaLine(u.semiarc, "6h", calcArcDurationText(state.coeff.kT), m, "plus", calcHours(semi))}${calcArcFormulaLine(u.setAz, "270gr", `${calcHumanNumber(state.coeff.kAz)}gr`, m, "plus", calcArcAzResult(trm))}</tbody></table></div></div>`;
+  return `<div class="calc-arc-detail"><div class="calc-arc-detail-title">${u.expanded} · ${calcEscape(displayName(row.name))}</div><div class="calc-arc-value">${calcEscape(row.sg)} · ARC = ${calcEscape(calcArcMText(m))}</div><div class="calc-arc-formulas-wrap"><table class="calc-arc-formulas"><tbody>${calcArcFormulaLine(u.riseAz, "90gr", `${calcHumanNumber(state.coeff.kAz)}gr`, m, "minus", calcArcAzResult(lev))}${calcArcFormulaLine(u.heightCulm, `${calcHumanNumber(state.coeff.H0)}gr`, "8gr", m, "plus", `${Math.round(h)}gr`)}${calcArcFormulaLine(u.semiarc, "6h", calcArcDurationText(state.coeff.kT), m, "plus", calcHours(semi))}${calcArcFormulaLine(u.setAz, "270gr", `${calcHumanNumber(state.coeff.kAz)}gr`, m, "plus", calcArcAzResult(trm))}</tbody></table></div></div>`;
 }
 function calcUniformBlock({id="",title="",description="",formula="",table="",current="",currentHTML="",note=""}){
   const idAttr = id ? ` id="${id}"` : "";
@@ -4990,10 +4990,12 @@ function calcRulerReference(){
     : "La stessa notazione è usata nelle formule, nelle tabelle e nei risultati.";
   const formula = currentLang() === "en"
     ? `DATE / TIME : DD.MM.YYYY | hh:mm
+SSAA = year | SS = century | AA = year within the century
 ARITHMETIC  : // : 26//7=3 | % : 26%7=5
 CONVERSIONS : 1 SGN = 2h | 1gr = 4m
 TSL → CIVIL : +4m/gr W of the zone meridian | +DST`
     : `DATA / ORA  : GG.MM.SSAA | hh:mm
+SSAA = anno | SS = secolo | AA = anno nel secolo
 ARITMETICA  : // : 26//7=3 | % : 26%7=5
 CONVERSIONI : 1 SGN = 2h | 1gr = 4m
 TSL → T.CIV.: +4m/gr W del meridiano di fuso | +DST`;
@@ -5028,8 +5030,8 @@ function calcSkyReference(year){
 }
 function calcPlanetReference(){
   const description = currentLang() === "en"
-    ? "Choose the nearest anchor t₀, locate the two consecutive curve points containing X and interpolate the value d(X)."
-    : "Si sceglie l’ancora t₀ più vicina, si individuano i due punti consecutivi della curva che contengono X e si interpola il valore d(X).";
+    ? "Choose the nearest anchor t₀. The two nodes containing X are (t1,d1) and (t2,d2); interpolate d(X) between them."
+    : "Si sceglie l’ancora t₀ più vicina. I due nodi che contengono X sono (t1,d1) e (t2,d2); fra essi si interpola d(X).";
   const formula = `X = data − t₀
 d(X) = d1 + (X−t1)/(t2−t1) × (d2−d1)`;
   return calcUniformBlock({id:"calc-pianeti",title:currentLang()==="en"?"3 · Planets":"3 · Pianeti",description,formula});
@@ -5077,9 +5079,9 @@ function calcExactAnchorReference(year){
     {name:displayName("Saturno"), event:"OP", rows:calcExactAnchorWindow(ANCHORS.SATURN_OP, start, end)}
   ]);
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-ancore", `R1 · Ephemeris anchors ${start}–${end}`, `<p>The preferred reference is the real date of a Venus inferior conjunction or a Mars, Jupiter or Saturn opposition, taken from an ephemeris or almanac. From that date N•E•B•R•A derives the event position: the Sun for Venus, the Sun plus six signs for an opposition. The app stores the complete date series from <code>1900</code> through <code>2199</code>.</p><p>This table shows the five years before and after the reference year; an asterisk marks the immediately adjacent anchor outside each margin. The planet cards above show the anchor actually used and the distance <code>X</code>.</p>${table}`);
+    return calcStaticBlock("calc-ancore", `R1 · Ephemeris anchors ${start}–${end}`, `<p><code>CI</code> = inferior conjunction; <code>OP</code> = opposition. The preferred reference is the real date of a Venus CI or a Mars, Jupiter or Saturn OP, taken from an ephemeris or almanac. From that date N•E•B•R•A derives the event position: the Sun for Venus, the Sun plus six signs for an opposition. The app stores the complete date series from <code>1900</code> through <code>2199</code>.</p><p>This table shows the five years before and after the reference year; an asterisk marks the immediately adjacent anchor outside each margin. The planet cards above show the anchor actually used and the distance <code>X</code>.</p>${table}`);
   }
-  return calcStaticBlock("calc-ancore", `R1 · Ancore da effemeridi ${start}–${end}`, `<p>Il riferimento preferibile è la data reale di una congiunzione inferiore di Venere o di un’opposizione di Marte, Giove o Saturno, ricavata da effemeridi o almanacco. Da quella data N•E•B•R•A ricava la posizione dell’evento: il Sole per Venere, il Sole più sei segni per un’opposizione. L’app conserva la serie completa delle date dal <code>1900</code> al <code>2199</code>.</p><p>La tabella mostra i cinque anni precedenti e successivi all’anno di riferimento; l’asterisco indica l’ancora immediatamente esterna a ciascun margine. Le schede dei pianeti riportano l’ancora effettivamente usata e la distanza <code>X</code>.</p>${table}`);
+  return calcStaticBlock("calc-ancore", `R1 · Ancore da effemeridi ${start}–${end}`, `<p><code>CI</code> = congiunzione inferiore; <code>OP</code> = opposizione. Il riferimento preferibile è la data reale di una CI di Venere o di una OP di Marte, Giove o Saturno, ricavata da effemeridi o almanacco. Da quella data N•E•B•R•A ricava la posizione dell’evento: il Sole per Venere, il Sole più sei segni per un’opposizione. L’app conserva la serie completa delle date dal <code>1900</code> al <code>2199</code>.</p><p>La tabella mostra i cinque anni precedenti e successivi all’anno di riferimento; l’asterisco indica l’ancora immediatamente esterna a ciascun margine. Le schede dei pianeti riportano l’ancora effettivamente usata e la distanza <code>X</code>.</p>${table}`);
 }
 function calcDecadeAnchorReference(year){
   const center = Math.max(1680, Math.min(4090, Math.floor(year/10)*10));
@@ -5223,8 +5225,8 @@ gr  = ((${lunarDistance.valueL}+30−${lunarDistance.N})×2%5)×6 = ${lunarDista
 Δ☉ = ${calcSignedDistanceText(lunarDistance.sgn,lunarDistance.gr)}
 ${displayName("Luna")} = ${displayName("Sole")} + ${calcSignedDistanceText(lunarDistance.sgn,lunarDistance.gr).replace(/^\+/,"")} = ${fmtSG(moonFormulaLon)}`;
   const lunarDescription = currentLang() === "en"
-    ? "The Moon gives two results: lunar age L, which describes the phase, and SGNgr. The distance from the Sun is derived from L. A lunation takes the name of the month in which it ends."
-    : "Per la Luna si ricavano due risultati: l’età L, che descrive la fase, e la posizione SGNgr. Dall’età si ricava la distanza dal Sole. La lunazione prende il nome del mese in cui termina.";
+    ? "The Moon gives two results: lunar age L, which describes the phase, and SGNgr. E is the epact; R is the monthly regular. The distance from the Sun is derived from L. A lunation takes the name of the month in which it ends."
+    : "Per la Luna si ricavano due risultati: l’età L, che descrive la fase, e la posizione SGNgr. E è l’epatta; R la regolare mensile. Dall’età si ricava la distanza dal Sole. La lunazione prende il nome del mese in cui termina.";
   const lunarTable = calcRefTable(u.lunarTable,[{label:"MM",values:monthNames.slice(1)},{label:"R",values:R_MONTH.slice(1)}],m-1);
   const lunarBlock = calcUniformBlock({id:"calc-luna",title:`2 · ${displayName("Luna")} · ${moonRow.sg}`,description:lunarDescription,formula:lunarFormula,table:lunarTable,current:lunarCurrent});
 
@@ -5517,10 +5519,16 @@ setTodayNow();
 
 <script>
 if ('serviceWorker' in navigator) {
+  let nebraSwReloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (nebraSwReloading) return;
+    nebraSwReloading = true;
+    window.location.reload();
+  });
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(err =>
-      console.warn('N•E•B•R•A service worker:', err)
-    );
+    navigator.serviceWorker.register('./sw.js').then(registration => {
+      registration.update();
+    }).catch(err => console.warn('N•E•B•R•A service worker:', err));
   });
 }
 </script>

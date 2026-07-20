@@ -1,18 +1,5 @@
-# N•E•B•R•A
+# N•E•B•R•A PWA
 
-Calcolatore astronomico per Sole, Luna, pianeti e orizzonte locale.
+Versione installabile e utilizzabile offline.
 
-Questa cartella contiene la versione installabile come PWA e utilizzabile offline dopo il primo avvio online.
-
-## Profilo dell’orizzonte
-
-Nell’app è incluso un **Profilo di prova** fittizio, disponibile nell’elenco dei profili ma non attivo automaticamente. Il file `profilo-di-prova.txt` contiene gli stessi punti e può essere usato per provare importazione ed esportazione.
-
-## File principali
-
-- `index.html` — applicazione
-- `manifest.webmanifest` — dati di installazione
-- `sw.js` — funzionamento offline
-- `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — icone
-
-Le istruzioni per pubblicare il sito sono in `ISTRUZIONI-PUBBLICAZIONE.txt`.
+Per aggiornare il sito GitHub Pages, carica nuovamente tutti i file di questa cartella nel repository `nebra` e conferma con **Commit changes**. I file con lo stesso nome sostituiscono quelli precedenti.

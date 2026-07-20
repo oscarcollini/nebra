@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nebra-offline-v1';
+const CACHE_NAME = 'nebra-offline-v2';
 const SCOPE = self.registration.scope;
 const INDEX_URL = new URL('index.html', SCOPE).href;
 const CORE_URLS = [

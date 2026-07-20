@@ -1,0 +1,14 @@
+N•E•B•R•A — AGGIORNAMENTO SU GITHUB
+
+1. Estrai questo ZIP.
+2. Apri GitHub e il repository “nebra”.
+3. Premi Add file → Upload files.
+4. Trascina TUTTI i file estratti. Devono restare nella pagina principale del repository, non in una sottocartella.
+5. In fondo premi Commit changes.
+6. Attendi alcuni minuti, poi apri il sito GitHub Pages mentre sei connesso.
+
+I file con lo stesso nome sostituiscono quelli già presenti. Non devi cancellare prima i vecchi file.
+
+AGGIORNAMENTO DELLA PWA INSTALLATA
+
+La nuova versione viene cercata quando il sito o la PWA vengono aperti con una connessione. Questa versione ricarica automaticamente la pagina quando il nuovo service worker prende il controllo. Se un telefono continua a mostrare la versione precedente, chiudi completamente la PWA e riaprila online; in caso estremo apri una volta il link in Chrome e ricarica. Non serve reinstallarla.
