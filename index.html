@@ -1527,7 +1527,7 @@ const I18N = {
     screen_guide_summary:"Read the table",
     screen_guide_intro:"The table and the results describe the same sky scene.",
     screen_guide_setup_title:"Set the scene",
-    screen_guide_setup_1:"Choose date, time and place, or press <b>Now</b>. Latitude, longitude, time-zone meridian and daylight saving connect civil time to LST.",
+    screen_guide_setup_1:"Choose date, time and place, or press <b>Now</b>. Latitude, longitude, time-zone meridian and daylight saving connect civil time to TSL.",
     screen_guide_setup_2:"The horizon can be straight or taken from a local profile. The standard table refers to 45N; Advanced mode allows experimental adaptation to the entered latitude.",
     screen_guide_chart_title:"Read the chart",
     screen_guide_chart_1:"The ecliptic ruler shows <code>SGNgr</code> positions. The centre of the chart is the meridian; the two sides show hours before and after culmination.",
@@ -1569,7 +1569,7 @@ const I18N = {
     about_vault_text:"The arc table turns the ruler into the local sky vault. Aldebaran, Denebola and Altair form three pillars distributed across the sky: the <code>V</code>, <code>?</code> and <code>Y</code> shapes help identify broad sectors of the vault and the zodiac below them.",
     about_hand_title:"By hand",
     about_hand_text_1:"The manual procedure follows the same order as the app: Sun position, Moon age and distance, planetary curves, culmination and diurnal arc.",
-    about_hand_text_2:"In <strong>Formulas and calculations</strong>, each section contains a brief description, the general formula, the relevant table and the worked calculation for the selected data. The same block includes instructions for drawing planetary ephemerides and the arc table.",
+    about_hand_text_2:"In <strong>Formulas and calculations</strong>, each section contains a brief description, the general formula, the relevant table and the worked calculation for the selected date. The same block includes instructions for drawing planetary ephemerides and the arc table.",
     about_link_calcs:"→ Formulas and calculations",
     about_link_ephemerides:"→ Draw the ephemerides",
     about_link_table:"→ Draw the arc table",
@@ -5006,7 +5006,9 @@ function calcSkyReference(year){
   const description = currentLang() === "en"
     ? "Fiducials mark recognizable positions near the ecliptic; the three pillars orient broad sectors of the vault. All marks share the same precessional shift F."
     : "I fiduciali segnano posizioni riconoscibili vicine all’eclittica; i tre pilastri orientano grandi settori della volta. Tutte le tacche condividono lo stesso scarto precessionale F.";
-  const formula = `prec.eq. [<<] F: 5gr/360 anni | F0: 1840–2199`;
+  const formula = currentLang() === "en"
+    ? `prec.eq. [<<] F: 5gr/360 years | F0: 1840–2199`
+    : `prec.eq. [<<] F: 5gr/360 anni | F0: 1840–2199`;
   const pillarsTitle = currentLang()==="en" ? "Pillars" : "Pilastri";
   const fiducialsTitle = currentLang()==="en" ? "Fiducials" : "Fiduciali";
   const table = `<div class="calc-table-caption">${pillarsTitle}</div>
@@ -5032,7 +5034,10 @@ function calcPlanetReference(){
   const description = currentLang() === "en"
     ? "Choose the nearest anchor t₀. The two nodes containing X are (t1,d1) and (t2,d2); interpolate d(X) between them."
     : "Si sceglie l’ancora t₀ più vicina. I due nodi che contengono X sono (t1,d1) e (t2,d2); fra essi si interpola d(X).";
-  const formula = `X = data − t₀
+  const formula = currentLang() === "en"
+    ? `X = date − t₀
+d(X) = d1 + (X−t1)/(t2−t1) × (d2−d1)`
+    : `X = data − t₀
 d(X) = d1 + (X−t1)/(t2−t1) × (d2−d1)`;
   return calcUniformBlock({id:"calc-pianeti",title:currentLang()==="en"?"3 · Planets":"3 · Pianeti",description,formula});
 }
@@ -5134,7 +5139,12 @@ function renderCalculationTrace(date, rows, state, meta, extra){
   const gamma = extra.sunGamma;
   const yMonth = Y_MONTH[m];
   const I = gamma + yMonth;
-  const solarFormula = `I = gamma + y
+  const solarFormula = currentLang() === "en"
+    ? `I = gamma + y
+
+If GG≥I: SGN=MM;   gr=GG−I
+If GG<I:  SGN=MM−1; gr=30−I+GG`
+    : `I = gamma + y
 
 Se GG≥I: SGN=MM;   gr=GG−I
 Se GG<I:  SGN=MM−1; gr=30−I+GG`;
@@ -5205,7 +5215,15 @@ ${displayName("Sole")} = ${sunRow.sg}`;
   const lunationContextLine = completedCycles > 0 ? `\n${lunationName}: N = ${currentLunationDuration}` : "";
   const conjunctionLine = lunarTraceL === (completedCycles === 0 ? firstCycle : nextCycle) ? `\nL = ${completedCycles === 0 ? firstCycle : nextCycle}/0` : "";
   const leapLine = lunar.civilDay !== lunar.GG ? `\n${u.leapNote}` : "";
-  const lunarFormula = `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
+  const lunarFormula = currentLang() === "en"
+    ? `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
+L = (E + R + GG) %N
+N: even MM 29 | odd MM 30   [2nd: 30/29 | 29/02=28]
+
+SGN = (L+30−N)×2//5
+gr  = ((L+30−N)×2%5)×6
+Moon = Sun + SGN + gr`
+    : `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
 L = (E + R + GG) %N
 N: MM pari 29 | MM dispari 30   [2a: 30/29 | 29/02=28]
 
@@ -5233,7 +5251,7 @@ ${displayName("Luna")} = ${displayName("Sole")} + ${calcSignedDistanceText(lunar
   const vPts=VENUS_POINTS, vTr=calcTraceSegment(vPts,meta.venus.d);
   const venusTable=calcCurveTable(`${u.curveNodes} · t₀=CI`,vPts,meta.venus.d,u.elongSun,u.venusDays);
   const venusCurrent=`${calcFailsafeLine(meta.venus.ci,u)}${u.anchorCI}: ${calcDateDMY(meta.venus.ci.date)} · ${meta.venus.ci.sg}${meta.venus.ci.reconstructed?` · ${u.reconstructed}`:""}
-X = data−t₀ = ${calcSigned(meta.venus.d,0)}${u.daysFromT0}
+X = ${currentLang()==="en"?"date":"data"}−t₀ = ${calcSigned(meta.venus.d,0)}${u.daysFromT0}
 
 ${u.between} ${calcSigned(vTr.x0,0)} → ${calcSigned(vTr.y0,0)}gr ${u.and} ${calcSigned(vTr.x1,0)} → ${calcSigned(vTr.y1,0)}gr:
 ${calcEqInterp("gr",vTr)}
@@ -5246,7 +5264,7 @@ ${displayName("Venere")} = ${displayName("Sole")} + d(X)
   const mPts=MARS_POINTS, mTr=calcTraceSegment(mPts,meta.mars.d);
   const marsTable=calcCurveTable(`${u.curveNodes} · t₀=OP`,mPts,meta.mars.d,u.eclLon,u.marsDays);
   const marsCurrent=`${calcFailsafeLine(meta.mars.op,u)}${u.anchorOP}: ${calcDateDMY(meta.mars.op.date)} · M24=${meta.mars.op.sg}${meta.mars.op.reconstructed?` · ${u.reconstructed}`:""}
-X = data−t₀ = ${calcSigned(meta.mars.d,0)}${u.daysFromT0}
+X = ${currentLang()==="en"?"date":"data"}−t₀ = ${calcSigned(meta.mars.d,0)}${u.daysFromT0}
 
 ${u.between} ${calcSigned(mTr.x0,0)} → ${calcSigned(mTr.y0,0)}gr ${u.and} ${calcSigned(mTr.x1,0)} → ${calcSigned(mTr.y1,0)}gr:
 ${calcEqInterp("gr",mTr)}
@@ -5259,7 +5277,7 @@ ${displayName("Marte")} = M24 + d(X)
   const jPts=JUPITER_POINTS, jTr=calcTraceSegment(jPts,meta.jupiter.d);
   const jupiterTable=calcCurveTable(`${u.curveNodes} · t₀=OP`,jPts,meta.jupiter.d,u.eclLon,u.jupiterDays);
   const jupiterCurrent=`${calcFailsafeLine(meta.jupiter.op,u)}${u.anchorOP}: ${calcDateDMY(meta.jupiter.op.date)} · M24=${meta.jupiter.op.sg}${meta.jupiter.op.reconstructed?` · ${u.reconstructed}`:""}
-X = data−t₀ = ${calcSigned(meta.jupiter.d,0)}${u.daysFromT0}
+X = ${currentLang()==="en"?"date":"data"}−t₀ = ${calcSigned(meta.jupiter.d,0)}${u.daysFromT0}
 
 ${Math.abs(meta.jupiter.d)<=60?`${u.stationary}\nd(X) = 0gr`:`${u.between} ${calcSigned(jTr.x0,0)} → ${calcSigned(jTr.y0,0)}gr ${u.and} ${calcSigned(jTr.x1,0)} → ${calcSigned(jTr.y1,0)}gr:\n${calcEqInterp("gr",jTr)}`}
 
@@ -5269,7 +5287,7 @@ ${displayName("Giove")} = M24 + d(X) ≈ ${jupiterRow.sg}`;
   const sPts=SATURN_POINTS, sTr=calcTraceSegment(sPts,meta.saturn.d);
   const saturnTable=calcCurveTable(`${u.curveNodes} · t₀=OP`,sPts,meta.saturn.d,u.eclLon,u.saturnDays);
   const saturnCurrent=`${calcFailsafeLine(meta.saturn.op,u)}${u.anchorOP}: ${calcDateDMY(meta.saturn.op.date)} · M24=${meta.saturn.op.sg}${meta.saturn.op.reconstructed?` · ${u.reconstructed}`:""}
-X = data−t₀ = ${calcSigned(meta.saturn.d,0)}${u.daysFromT0}
+X = ${currentLang()==="en"?"date":"data"}−t₀ = ${calcSigned(meta.saturn.d,0)}${u.daysFromT0}
 
 ${Math.abs(meta.saturn.d)<=60?`${u.stationary}\nd(X) = 0gr`:`${u.between} ${calcSigned(sTr.x0,0)} → ${calcSigned(sTr.y0,0)}gr ${u.and} ${calcSigned(sTr.x1,0)} → ${calcSigned(sTr.y1,0)}gr:\n${calcEqInterp("gr",sTr)}`}
 
@@ -5282,7 +5300,11 @@ ${displayName("Saturno")} = M24 + d(X) ≈ ${saturnRow.sg}`;
     ? `TSL = civil time − longitude correction − DST\n    = ${hhmm} − ${calcSigned(lonCorrection,0)}m − ${formatDSTOffset(extra.dst)}\n    = ${state.tslLabel}`
     : `TSL = ora civile − correzione di longitudine − DST\n    = ${hhmm} − ${calcSigned(lonCorrection,0)}m − ${formatDSTOffset(extra.dst)}\n    = ${state.tslLabel}`;
   const culmLines=[sunRow,moonRow,venusRow,marsRow,jupiterRow,saturnRow].map(r=>`C(${displayName(r.name)}) = ${calcCulminationHM(r.lon,extra.sun)} TSL`).join("\n");
-  const culmineFormula=`TSL = ora civile − correzione di longitudine − DST
+  const culmineFormula = currentLang() === "en"
+    ? `TSL = civil time − longitude correction − DST
+C(X) = 12:00 + (X−SUN)   [SGNgr → hh:mm]
+M24 = SUN + 6SGN`
+    : `TSL = ora civile − correzione di longitudine − DST
 C(X) = 12:00 + (X−SOLE)   [SGNgr → hh:mm]
 M24 = SOLE + 6SGN`;
   const culmineCurrent=`${tslCurrent}
