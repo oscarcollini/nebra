@@ -1,23 +1,41 @@
-# N•E•B•R•A — profilo di prova
-# Dati sintetici, non riferiti a un luogo reale.
+# N•E•B•R•A — profilo fittizio di prova
+# Non rappresenta un luogo reale.
 # Formato: azimut   altezza (gradi)
 
-0	2
-20	3
-40	5
-60	8
-80	6
-100	4
-120	7
-140	10
-160	8
-180	5
-200	4
-220	6
-240	9
-260	7
-280	4
+0	4
+10	5
+20	5
+30	6
+40	6
+50	8
+60	9
+70	11
+80	10
+90	8
+100	5
+110	4
+120	3
+130	2
+140	2
+150	3
+160	3
+170	4
+180	4
+190	5
+200	7
+210	9
+220	12
+230	15
+240	16
+250	16
+260	14
+270	10
+280	7
+290	5
 300	3
-320	5
-340	4
-360	2
+310	3
+320	3
+330	3
+340	3
+350	3
+360	4

@@ -1,10 +1,19 @@
 N•E•B•R•A v0.9.93 — PUBBLICAZIONE SU GITHUB PAGES
 
-1. Estrai lo ZIP.
-2. Copia tutti i file nella radice del repository GitHub.
+1. Crea o apri il repository destinato alla PWA.
+2. Copia nella radice del repository TUTTI i file contenuti in questo archivio.
+   Non caricare la cartella contenitore: index.html deve trovarsi nella radice
+   pubblicata.
 3. In GitHub apri Settings > Pages.
-4. Seleziona Deploy from a branch, il branch principale e la cartella / (root).
+4. In Build and deployment scegli:
+   Source: Deploy from a branch
+   Branch: main
+   Folder: /(root)
 5. Salva e attendi la pubblicazione.
+6. Apri l'indirizzo HTTPS fornito da GitHub Pages.
+7. Verifica che l'app si apra, che compaia il Profilo di prova e che il browser
+   proponga l'installazione.
+8. Dopo il primo caricamento online, prova una ricarica senza rete.
 
-La PWA richiede HTTPS, fornito automaticamente da GitHub Pages.
-Non rinominare index.html, manifest.webmanifest, sw.js o le icone.
+Il service worker funziona tramite HTTPS oppure su localhost. Non funziona
+aprendo index.html direttamente come file locale.

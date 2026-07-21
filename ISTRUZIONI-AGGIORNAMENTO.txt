@@ -1,8 +1,17 @@
-N•E•B•R•A v0.9.93 — AGGIORNAMENTO
+N•E•B•R•A v0.9.93 — AGGIORNAMENTO DELLA PWA
 
-1. Sostituisci nel repository tutti i file del pacchetto precedente con quelli di questa cartella.
+1. Sostituisci nella radice del repository tutti i file con quelli di questo
+   archivio, mantenendo invariati i nomi.
 2. Esegui commit e push.
-3. Ricarica la pagina pubblicata. La cache è identificata come nebra-offline-v0-9-93.
-4. Se un dispositivo conserva ancora la build precedente, chiudi e riapri la PWA; in ultima istanza rimuovi e reinstalla l’app.
+3. Attendi il completamento di GitHub Pages.
+4. Apri l'app online e ricarica la pagina.
+5. Se un dispositivo mostra ancora una versione precedente:
+   - chiudi completamente la PWA e riaprila;
+   - ricarica la pagina online;
+   - in ultima istanza elimina i dati del sito o disinstalla e reinstalla la PWA.
 
-Il numero di versione resta 0.9.93.
+La cache di questa build è:
+nebra-offline-v0-9-93-completa-20260721
+
+Il profilo fittizio incorporato viene aggiunto soltanto quando non esistono
+profili salvati. Un profilo già scelto dall'utente non viene sovrascritto.
