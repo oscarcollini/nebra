@@ -1,9 +1,10 @@
-N•E•B•R•A — PUBBLICAZIONE / AGGIORNAMENTO
+N•E•B•R•A v0.9.93 — PUBBLICAZIONE SU GITHUB PAGES
 
-Repository già esistente:
-Add file → Upload files → trascina tutti i file → Commit changes.
+1. Estrai lo ZIP.
+2. Copia tutti i file nella radice del repository GitHub.
+3. In GitHub apri Settings > Pages.
+4. Seleziona Deploy from a branch, il branch principale e la cartella / (root).
+5. Salva e attendi la pubblicazione.
 
-Prima pubblicazione:
-Settings → Pages → Deploy from a branch → main → /(root) → Save.
-
-Apri il sito una volta online; poi la PWA funziona anche offline.
+La PWA richiede HTTPS, fornito automaticamente da GitHub Pages.
+Non rinominare index.html, manifest.webmanifest, sw.js o le icone.

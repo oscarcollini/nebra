@@ -1,14 +1,8 @@
-N•E•B•R•A — AGGIORNAMENTO SU GITHUB
+N•E•B•R•A v0.9.93 — AGGIORNAMENTO
 
-1. Estrai questo ZIP.
-2. Apri GitHub e il repository “nebra”.
-3. Premi Add file → Upload files.
-4. Trascina TUTTI i file estratti. Devono restare nella pagina principale del repository, non in una sottocartella.
-5. In fondo premi Commit changes.
-6. Attendi alcuni minuti, poi apri il sito GitHub Pages mentre sei connesso.
+1. Sostituisci nel repository tutti i file del pacchetto precedente con quelli di questa cartella.
+2. Esegui commit e push.
+3. Ricarica la pagina pubblicata. La cache è identificata come nebra-offline-v0-9-93.
+4. Se un dispositivo conserva ancora la build precedente, chiudi e riapri la PWA; in ultima istanza rimuovi e reinstalla l’app.
 
-I file con lo stesso nome sostituiscono quelli già presenti. Non devi cancellare prima i vecchi file.
-
-AGGIORNAMENTO DELLA PWA INSTALLATA
-
-La nuova versione viene cercata quando il sito o la PWA vengono aperti con una connessione. Questa versione ricarica automaticamente la pagina quando il nuovo service worker prende il controllo. Se un telefono continua a mostrare la versione precedente, chiudi completamente la PWA e riaprila online; in caso estremo apri una volta il link in Chrome e ricarica. Non serve reinstallarla.
+Il numero di versione resta 0.9.93.
