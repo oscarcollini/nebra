@@ -1,20 +1,18 @@
 N•E•B•R•A v0.9.93
 Copyright © 2026 Oscar Collini
 
-Quest'opera è distribuita con licenza
-Creative Commons Attribuzione - Condividi allo stesso modo 4.0 Internazionale
-(CC BY-SA 4.0).
+Quest'opera è distribuita con licenza Creative Commons
+Attribuzione - Condividi allo stesso modo 4.0 Internazionale (CC BY-SA 4.0).
 
 È consentito condividere e adattare il materiale a condizione di:
 - attribuire adeguatamente l'opera a Oscar Collini e a N•E•B•R•A;
 - indicare le modifiche effettuate;
 - distribuire il materiale derivato con la stessa licenza.
 
-Testo ufficiale della licenza:
+Testo ufficiale:
 https://creativecommons.org/licenses/by-sa/4.0/legalcode.it
 
-Riassunto leggibile:
+Riassunto:
 https://creativecommons.org/licenses/by-sa/4.0/deed.it
 
-Il software e i contenuti sono forniti senza garanzie, nei limiti consentiti
-dalla legge applicabile.
+Il software e i contenuti sono forniti senza garanzie, nei limiti consentiti dalla legge applicabile.

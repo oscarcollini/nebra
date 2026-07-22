@@ -1984,10 +1984,10 @@ function lunarGG(date){
   const {y,m,d} = ymd(date);
   return (m === 2 && d === 29 && isLeapYear(y)) ? 28 : d;
 }
-// La Luna è calcolata per stato cronologico, non con un modulo universale.
-// Al 1 gennaio la prima lunazione che termina in gennaio ha N=30.
-// Ogni giorno ordinario incrementa L; dopo 29/0 o 30/0 riparte L=1 e N alterna.
-// Il 29 febbraio ripete lo stato del 28.
+// L è ricavata dalla successione annuale esplicita delle età 1..30 / 1..29.
+// sequenceN serve soltanto a svolgere la tavola annuale dell'epatta:
+// non è N della lunazione usato in L+30−N.
+// Il vero N viene ricavato dal termine effettivo della lunazione, anche oltre il 31 dicembre.
 const LUNAR_YEAR_CACHE = new Map();
 function lunarCivilDayOfYear(date){
   const {y} = ymd(date);
@@ -2001,17 +2001,17 @@ function buildLunarYearState(year){
   const completedTerms = [];
   let cursor = new Date(Date.UTC(year,0,1));
   let ageValue = E + 1;
-  let N = 30;
+  let sequenceN = 30;
 
   for(let dayIndex=1; dayIndex<=totalDays; dayIndex++){
     const {m,d} = ymd(cursor);
     if(dayIndex > 1){
       if(m === 2 && d === 29){
-        // Il 29 febbraio ripete L e N del 28.
-      }else if(ageValue === N){
-        completedTerms.push(N);
+        // Il 29 febbraio ripete l'età del 28.
+      }else if(ageValue === sequenceN){
+        completedTerms.push(sequenceN);
         ageValue = 1;
-        N = N === 30 ? 29 : 30;
+        sequenceN = sequenceN === 30 ? 29 : 30;
       }else{
         ageValue += 1;
       }
@@ -2030,12 +2030,64 @@ function buildLunarYearState(year){
       throw new Error(`Riduzione lunare incoerente per ${year}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`);
     }
 
-    states[dayIndex] = {ageValue, N, reductionSteps};
+    states[dayIndex] = {ageValue, reductionSteps};
     cursor = addCalendarDays(cursor, 1);
   }
 
   const result = {E, states};
   LUNAR_YEAR_CACHE.set(year, result);
+  return result;
+}
+function lunarAgeValueAt(date){
+  const {y} = ymd(date);
+  const dayIndex = lunarCivilDayOfYear(date);
+  return buildLunarYearState(y).states[dayIndex].ageValue;
+}
+function lunarDateKey(date){
+  const {y,m,d} = ymd(date);
+  return `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+}
+const LUNAR_CYCLE_CACHE = new Map();
+function lunarCycleBounds(date){
+  const key = lunarDateKey(date);
+  if(LUNAR_CYCLE_CACHE.has(key)) return LUNAR_CYCLE_CACHE.get(key);
+
+  let startDate = date;
+  let startAge = lunarAgeValueAt(startDate);
+  let previousEnd = null;
+  for(let i=0;i<40;i++){
+    const previousDate = addCalendarDays(startDate,-1);
+    const previousAge = lunarAgeValueAt(previousDate);
+    if(startAge < previousAge){
+      previousEnd = previousDate;
+      break;
+    }
+    startDate = previousDate;
+    startAge = previousAge;
+  }
+  if(!previousEnd) throw new Error(`Inizio lunazione non trovato per ${key}`);
+
+  let endDate = date;
+  let endAge = lunarAgeValueAt(endDate);
+  let nextStart = null;
+  let nextStartAge = null;
+  for(let i=0;i<40;i++){
+    const nextDate = addCalendarDays(endDate,1);
+    const nextAge = lunarAgeValueAt(nextDate);
+    if(nextAge < endAge){
+      nextStart = nextDate;
+      nextStartAge = nextAge;
+      break;
+    }
+    endDate = nextDate;
+    endAge = nextAge;
+  }
+  if(!nextStart || (endAge !== 29 && endAge !== 30)){
+    throw new Error(`Termine lunazione non trovato per ${key}`);
+  }
+
+  const result = {startDate, endDate, previousEnd, nextStart, nextStartAge, N:endAge};
+  LUNAR_CYCLE_CACHE.set(key,result);
   return result;
 }
 function lunarAgeAt(date){
@@ -2047,7 +2099,8 @@ function lunarAgeAt(date){
   const dayIndex = lunarCivilDayOfYear(date);
   const state = buildLunarYearState(y).states[dayIndex];
   const ageValue = state.ageValue;
-  const N = state.N;
+  const cycle = lunarCycleBounds(date);
+  const N = cycle.N;
   const L = ageValue === N ? 0 : ageValue;
   return {
     E, R, GG, civilDay:d, rawL, dayNumber:dayIndex-1, ageValue, L, N,
@@ -2059,41 +2112,16 @@ function lunarAgeAt(date){
 function lunarCurrentCycle(date, age){
   return age.N;
 }
-function lunarAdvanceCountingDays(date, increments){
-  let cursor = date;
-  let done = 0;
-  while(done < increments){
-    cursor = addCalendarDays(cursor, 1);
-    const {y,m,d} = ymd(cursor);
-    if(m === 2 && d === 29 && isLeapYear(y)) continue;
-    done++;
-  }
-  return cursor;
-}
-function lunarRetreatCountingDays(date, increments){
-  let cursor = date;
-  let done = 0;
-  while(done < increments){
-    const {y,m,d} = ymd(cursor);
-    cursor = addCalendarDays(cursor, -1);
-    if(m === 2 && d === 29 && isLeapYear(y)) continue;
-    done++;
-  }
-  return cursor;
-}
-function lunarEffectiveEndFromAge(date, ageValue, N){
-  let endDate = lunarAdvanceCountingDays(date, N - ageValue);
-  const {y,m,d} = ymd(endDate);
-  if(m === 2 && d === 28 && isLeapYear(y)) endDate = addCalendarDays(endDate, 1);
-  return endDate;
-}
 function lunarCycleContext(date, age){
-  const startDate = lunarRetreatCountingDays(date, age.ageValue - 1);
-  const endDate = lunarEffectiveEndFromAge(date, age.ageValue, age.N);
-  const previousEnd = lunarRetreatCountingDays(startDate, 1);
-  const a = ymd(previousEnd), b = ymd(endDate);
+  const cycle = lunarCycleBounds(date);
+  const a = ymd(cycle.previousEnd), b = ymd(cycle.endDate);
   const order = a.y === b.y && a.m === b.m ? 2 : 1;
-  return {startDate, endDate, previousEnd, order};
+  return {
+    startDate:cycle.startDate,
+    endDate:cycle.endDate,
+    previousEnd:cycle.previousEnd,
+    order
+  };
 }
 const LUNAR_FEBRUARY_EMPTY_CACHE = new Map();
 function lunarFebruaryHasNoTermination(year){
@@ -2989,11 +3017,11 @@ const NebraHorizon = (() => {
 
   /* PWA_PROFILE_BEGIN */
   const EMBEDDED_TEST_PROFILE = Object.freeze({
-    id: "nebra-profilo-di-prova",
+    id: "nebra-profilo-di-prova-v2",
     name: "Profilo di prova",
     source: "profilo-di-prova.txt · incorporato nella PWA",
     created: "2026-07-21T00:00:00.000Z",
-    points: [[0,4],[10,5],[20,5],[30,6],[40,6],[50,8],[60,9],[70,11],[80,10],[90,8],[100,5],[110,4],[120,3],[130,2],[140,2],[150,3],[160,3],[170,4],[180,4],[190,5],[200,7],[210,9],[220,12],[230,15],[240,16],[250,16],[260,14],[270,10],[280,7],[290,5],[300,3],[310,3],[320,3],[330,3],[340,3],[350,3],[360,4]]
+    points: [[0,7],[5,8],[10,7],[15,9],[20,11],[25,14],[30,18],[35,22],[40,17],[45,13],[50,10],[55,8],[60,6],[65,5],[70,4],[75,3],[80,2],[85,2],[90,3],[95,5],[100,7],[105,5],[110,3],[115,2],[120,2],[125,1],[130,1],[135,2],[140,1],[145,1],[150,0],[155,1],[160,1],[165,0],[170,1],[175,1],[180,1],[185,2],[190,2],[195,3],[200,4],[205,6],[210,8],[215,7],[220,9],[225,12],[230,15],[235,18],[240,16],[245,13],[250,11],[255,9],[260,7],[265,6],[270,5],[275,8],[280,11],[285,14],[290,12],[295,9],[300,7],[305,6],[310,8],[315,10],[320,9],[325,7],[330,6],[335,5],[340,6],[345,8],[350,7],[355,6],[360,7]]
   });
   /* PWA_PROFILE_END */
 
@@ -3534,7 +3562,7 @@ function calcUI(){
       stationary:"Stationary interval: −60 to +60 days", rise:"rise", set:"set", semiarc:"semiarc", heightCulm:"culm. H", culminates:"culminates", expanded:"Expanded formula", riseAz:"rise az.", setAz:"set az.", arcManual:"Manual arc calculation",
       sunNote:"The highlighted column is the month used.", interpNote:"The highlighted columns bound the selected interval.",
       sunLead:"gamma is the day of the Sun’s entry into ARI00, read from the database.",
-      moonLead:"L is lunar age; N is the duration of the current lunation. L follows the chronological 30/29 sequence; when February has no termination, the junction continues into March without skipping a lunation. L=1 first crescent; 29/0 or 30/0 conjunction.",
+      moonLead:"L is lunar age; N is the duration of the current lunation. The 29/30 reductions follow the lunations already completed; N is obtained from the actual end of the current lunation, even across 31 December. If February has no termination, the sequence continues into March without skipping a lunation. L=1 first crescent; 29/0 or 30/0 conjunction.",
       leapNote:"On 29 February use GG = 28.", at:"at", of:"of", fromDate:"on", and:"and", betweenArc:"between",
       venusDays:"Venus (days)", marsDays:"Mars (days)", jupiterDays:"Jupiter (days)", saturnDays:"Saturn (days)",
       elongSun:"Sun elong.", eclLon:"Ecl. long.", notation:"Notation", culmination:"Culmination X", horizon:"Horizon X", references:"References"
@@ -3548,7 +3576,7 @@ function calcUI(){
     stationary:"Fermata: da −60 a +60 giorni", rise:"levata", set:"tramonto", semiarc:"semiarco", heightCulm:"H culmine", culminates:"culmina", expanded:"Formula sviluppata", riseAz:"az. levata", setAz:"az. tramonto", arcManual:"Calcolo manuale degli archi",
     sunNote:"La colonna evidenziata è il mese usato.", interpNote:"Le colonne evidenziate delimitano il tratto scelto.",
     sunLead:"gamma è il giorno d’ingresso del Sole in ARI00, letto dal database.",
-    moonLead:"L è l’età; N è la durata della lunazione in corso. L segue la successione cronologica 30/29; quando febbraio non contiene termini, il raccordo prosegue in marzo senza saltare una lunazione. L=1 prima falce; 29/0 o 30/0 congiunzione.",
+    moonLead:"L è l’età; N è la durata della lunazione in corso. Le riduzioni 29/30 seguono le lunazioni già terminate; N deriva dal termine effettivo della lunazione corrente, anche oltre il 31 dicembre. Se febbraio non contiene termini, la sequenza prosegue in marzo senza saltare una lunazione. L=1 prima falce; 29/0 o 30/0 congiunzione.",
     leapNote:"Il 29 febbraio usa GG = 28.", at:"a", of:"di", fromDate:"il", and:"e", betweenArc:"tra",
     venusDays:"Venere (gg)", marsDays:"Marte (gg)", jupiterDays:"Giove (gg)", saturnDays:"Saturno (gg)",
     elongSun:"Elong. Sole", eclLon:"Longit.ecl.", notation:"Notazione", culmination:"Culmine X", horizon:"Orizzonte X", references:"Riferimenti"
@@ -3886,8 +3914,9 @@ ${displayName("Sole")} = ${sunRow.sg}`;
   const lunarFormula = currentLang() === "en"
     ? `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
 L = E + R + GG
-Follow the chronological 30/29 sequence of lunations.
-If February has no termination, the junction continues into March without skipping a lunation.
+Subtract, in order, the 29/30 lunations already completed.
+N is the duration at the actual end of the current lunation, even across 31 December.
+If February has no termination, the sequence continues into March without skipping a lunation.
 29/0 | 30/0 = conjunction   [29/02: GG=28]
 
 N = duration of the current lunation
@@ -3896,8 +3925,9 @@ gr  = ((L+30−N)×2%5)×6
 Moon = Sun + SGN + gr`
     : `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
 L = E + R + GG
-Segui la successione cronologica 30/29 delle lunazioni.
-Se febbraio non contiene termini, il raccordo prosegue in marzo senza saltare una lunazione.
+Sottrai nell’ordine le lunazioni 29/30 già terminate.
+N è la durata al termine effettivo della lunazione corrente, anche oltre il 31 dicembre.
+Se febbraio non contiene termini, la sequenza prosegue in marzo senza saltare una lunazione.
 29/0 | 30/0 = congiunzione   [29/02: GG=28]
 
 N = durata della lunazione in corso

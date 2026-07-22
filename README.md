@@ -1,36 +1,23 @@
-# N•E•B•R•A v0.9.93 — pacchetto PWA
+# N•E•B•R•A v0.9.93 — PWA completa
 
-Questo archivio contiene la versione installabile e utilizzabile offline di
-N•E•B•R•A.
+Contenuto:
+- `index.html`: applicazione PWA;
+- `manifest.webmanifest` e `sw.js`: installazione e funzionamento offline;
+- icone 192, 512 e Apple Touch;
+- `profilo-di-prova.txt`: orizzonte fittizio importabile;
+- istruzioni di pubblicazione e aggiornamento;
+- `LICENSE.txt`: CC BY-SA 4.0.
 
-## Contenuto
+## Coerenza con lo standalone
 
-- `index.html` — applicazione PWA.
-- `manifest.webmanifest` — metadati di installazione.
-- `sw.js` — cache offline.
-- `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — icone.
-- `profilo-di-prova.txt` — orizzonte fittizio importabile.
-- `ISTRUZIONI-PUBBLICAZIONE.txt` — pubblicazione su GitHub Pages.
-- `ISTRUZIONI-AGGIORNAMENTO.txt` — aggiornamento di una pubblicazione esistente.
-- `LICENSE.txt` — licenza CC BY-SA 4.0.
+`index.html` deriva dallo stesso sorgente dello standalone. Le sole aggiunte sono:
+1. l'involucro tecnico PWA;
+2. il profilo d'orizzonte fittizio `Profilo di prova`.
 
-## Differenza funzionale rispetto allo standalone
+Il profilo viene inserito soltanto se il browser non contiene già profili salvati. Non rappresenta un luogo reale e può essere eliminato o sostituito.
 
-L'applicazione è ricavata dallo stesso sorgente della versione standalone.
-La PWA incorpora un profilo d'orizzonte fittizio, denominato `Profilo di prova`,
-che viene attivato soltanto quando nel browser non esistono già profili salvati.
-Il profilo non rappresenta un luogo reale e può essere eliminato o sostituito.
+## Intervalli
 
-I collegamenti al manifest e al service worker sono il solo involucro tecnico
-necessario all'installazione e all'uso offline.
-
-## Validità
-
-- Intervallo del calcolo calendariale: 1583–4199.
-- Ancore planetarie interne dell'app: 1900–2199.
-- Modello astronomico approssimato per osservazione a occhio nudo.
-
-## Licenza
-
-N•E•B•R•A è distribuito con licenza CC BY-SA 4.0.
-Vedi `LICENSE.txt`.
+- calcolo calendariale: 1583–4199;
+- ancore planetarie esatte interne: 1900–2199;
+- fuori da tale fascia: ricostruzione failsafe.
