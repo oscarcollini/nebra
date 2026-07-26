@@ -3830,11 +3830,123 @@ se p &lt; 210:  gg = 809 − p//4
 se p ≥ 210:  gg = 690 + p//3
 OP+ = OP + gg</pre><p>Alla data stimata, una CI di Venere assume la posizione del Sole; un’opposizione assume <code>M24 = Sole + 6 segni</code>. L’errore può crescere con il numero dei passaggi dall’ancora reale.</p>${table}`);
 }
+function calcSingleAnchorReference(){
+  if(currentLang() === "en"){
+    return calcStaticBlock("calc-ancora-unica", "R3 · Propagation from one fixed anchor", `<p>When no nearby anchor is available, the calculation can start from four real events in 1583:</p><pre class="calc-code">Venus   CI  22.12.1583
+Mars    OP  07.01.1583
+Jupiter OP  17.09.1583
+Saturn  OP  13.09.1583</pre><p>Long jumps, intermediate jumps and finally steps between consecutive events are combined to approach the required date. Jumps may be applied forward or backward. In a jump expressed in calendar years and days, shift the calendar year first, then add or subtract the days. For Mars, <code>g(p)</code> gives only the next opposition: the last intermediate anchor must therefore precede the target date.</p>
+<h3>Venus · inferior conjunctions</h3><p><b>Rule.</b> Use jumps of <code>±251 years</code>. Then use jumps of <code>±8 years</code>: forward corrections repeat <code>−2, −3, −2 days</code>; backward corrections repeat <code>+2, +3, +2 days</code>. The cycle starts from its first term when leaving the anchor obtained with the 251-year jumps. Consecutive inferior conjunctions are separated by <code>±584 days</code>.</p><pre class="calc-code">22.12.1583 +251y = 22.12.1834
+22.12.1834 +251y = 22.12.2085
+
+22.12.2085 −8y +2d = 24.12.2077
+24.12.2077 −8y +3d = 27.12.2069
+27.12.2069 −8y +2d = 29.12.2061
+29.12.2061 −8y +2d = 31.12.2053
+31.12.2053 −8y +3d = 03.01.2046
+03.01.2046 −8y +2d = 05.01.2038
+05.01.2038 −8y +2d = 07.01.2030
+07.01.2030 −8y +3d = 10.01.2022
+10.01.2022 −8y +2d = 12.01.2014
+12.01.2014 −8y +2d = 14.01.2006
+
+14.01.2006 −584d = 09.06.2004
+09.06.2004 −584d = 03.11.2002
+03.11.2002 −584d = 29.03.2001</pre><p><b>Calculated CI:</b> <code>29.03.2001</code>.</p>
+<h3>Mars · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±79 years ±3 days</code>. Then correct the total by one day for every leap century crossed: <code>1600, 2000, 2400, 2800…</code>. Forward, subtract this correction <code>C</code>; backward, reverse its sign. An intermediate jump of <code>±17 years ±22 days</code> may be used up to four times within a 79-year block.</p><pre class="calc-code">p = (pos − 292 − F) % 360
+if p &lt; 210: g(p) = 809 − p//4
+if p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> is the longitude of Mars at the current opposition, equal to the Sun plus 180gr. <code>F=0</code> in 1840–2199; it is <code>−5</code> in 1583–1839, <code>+5</code> in 2200–2559, and changes by 5gr every 360 years. Recalculate <code>pos</code>, <code>p</code> and <code>g(p)</code> after every opposition.</p><pre class="calc-code">07.01.1583 +5×79y = 07.01.1978
++5×3d −C        = 21.01.1978   [C=1: 1600]
++17y +22d       = 12.02.1995
+
+12.02.1995  Sun=AQU22  pos=LEO22=142  F=0
+p=(142−292)%360=210
+g(p)=690+210//3=760d
+12.02.1995 +760d = 13.03.1997
+
+13.03.1997  Sun=PIS23  pos=VIR23=173  F=0
+p=(173−292)%360=241
+g(p)=690+241//3=770d
+13.03.1997 +770d = 22.04.1999
+
+22.04.1999  Sun=TAU01  pos=SCO01=211  F=0
+p=(211−292)%360=279
+g(p)=690+279//3=783d
+22.04.1999 +783d = 13.06.2001</pre><p><b>Calculated OP:</b> <code>13.06.2001</code>.</p>
+<h3>Jupiter · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±83 years</code>, then—when useful—jumps of <code>±12 years ±5 days</code>. Consecutive oppositions are separated by <code>±399 days</code>.</p><pre class="calc-code">17.09.1583 +5×83y = 17.09.1998
+17.09.1998 +399d  = 21.10.1999
+21.10.1999 +399d  = 23.11.2000</pre><p><b>Calculated OP:</b> <code>23.11.2000</code>.</p>
+<h3>Saturn · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±59 years ±2 days</code>. For consecutive oppositions use 378 days per step and add one day to the total after every ten complete steps; backward, subtract it.</p><pre class="calc-code">1–9 steps:    n×378d
+10–19 steps:  n×378d +1d
+20–29 steps:  n×378d +2d
+
+23 steps: 23×378d +2d</pre><pre class="calc-code">13.09.1583 +7×59y +7×2d = 27.09.1996
+27.09.1996 +378d = 10.10.1997
+10.10.1997 +378d = 23.10.1998
+23.10.1998 +378d = 05.11.1999
+05.11.1999 +378d = 17.11.2000</pre><p><b>Calculated OP:</b> <code>17.11.2000</code>. Only four local steps were used, so no extra day is added.</p>
+<p class="calc-table-caption">Check against real events near 2000</p><div class="calc-table-wrap"><table class="calc-vertical-table"><tr><th>Planet</th><th>Calculated</th><th>Real</th><th>Difference</th></tr><tr><td>Venus · CI</td><td>29.03.2001</td><td>30.03.2001</td><td>−1d</td></tr><tr><td>Mars · OP</td><td>13.06.2001</td><td>13.06.2001</td><td>0d</td></tr><tr><td>Jupiter · OP</td><td>23.11.2000</td><td>28.11.2000</td><td>−5d</td></tr><tr><td>Saturn · OP</td><td>17.11.2000</td><td>19.11.2000</td><td>−2d</td></tr></table></div>`);
+  }
+  return calcStaticBlock("calc-ancora-unica", "R3 · Propagazione da un’ancora unica", `<p>Quando non si dispone di un’ancora vicina, il calcolo può partire da quattro eventi reali del 1583:</p><pre class="calc-code">Venere   CI  22.12.1583
+Marte    OP  07.01.1583
+Giove    OP  17.09.1583
+Saturno  OP  13.09.1583</pre><p>Per avvicinarsi alla data cercata si combinano salti lunghi, salti intermedi e infine passi fra eventi consecutivi. I salti si possono applicare in avanti o a ritroso. Nei salti espressi in anni e giorni si sposta prima l’anno di calendario, poi si aggiungono o sottraggono i giorni. Per Marte, <code>g(p)</code> conduce soltanto all’opposizione successiva: l’ultima ancora intermedia deve quindi precedere la data cercata.</p>
+<h3>Venere · congiunzioni inferiori</h3><p><b>Regola.</b> Si usano salti di <code>±251 anni</code>. Poi salti di <code>±8 anni</code>: in avanti le correzioni ripetono <code>−2, −3, −2 giorni</code>; a ritroso ripetono <code>+2, +3, +2 giorni</code>. La sequenza comincia dal primo termine quando si lascia l’ancora ottenuta con i salti da 251 anni. Fra due congiunzioni inferiori consecutive si usano <code>±584 giorni</code>.</p><pre class="calc-code">22.12.1583 +251a = 22.12.1834
+22.12.1834 +251a = 22.12.2085
+
+22.12.2085 −8a +2g = 24.12.2077
+24.12.2077 −8a +3g = 27.12.2069
+27.12.2069 −8a +2g = 29.12.2061
+29.12.2061 −8a +2g = 31.12.2053
+31.12.2053 −8a +3g = 03.01.2046
+03.01.2046 −8a +2g = 05.01.2038
+05.01.2038 −8a +2g = 07.01.2030
+07.01.2030 −8a +3g = 10.01.2022
+10.01.2022 −8a +2g = 12.01.2014
+12.01.2014 −8a +2g = 14.01.2006
+
+14.01.2006 −584g = 09.06.2004
+09.06.2004 −584g = 03.11.2002
+03.11.2002 −584g = 29.03.2001</pre><p><b>CI calcolata:</b> <code>29.03.2001</code>.</p>
+<h3>Marte · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±79 anni ±3 giorni</code>. Al totale si applica poi una correzione di un giorno per ogni secolo bisestile attraversato: <code>1600, 2000, 2400, 2800…</code>. In avanti la correzione <code>C</code> si sottrae; a ritroso si cambia anche il suo segno. Entro un blocco di 79 anni si può usare fino a quattro volte il salto intermedio di <code>±17 anni ±22 giorni</code>.</p><pre class="calc-code">p = (pos − 292 − F) % 360
+se p &lt; 210: g(p) = 809 − p//4
+se p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> è la longitudine di Marte all’opposizione corrente, uguale al Sole più 180gr. <code>F=0</code> nel 1840–2199; vale <code>−5</code> nel 1583–1839, <code>+5</code> nel 2200–2559 e cambia di 5gr ogni 360 anni. Dopo ogni opposizione si ricalcolano <code>pos</code>, <code>p</code> e <code>g(p)</code>.</p><pre class="calc-code">07.01.1583 +5×79a = 07.01.1978
++5×3g −C          = 21.01.1978   [C=1: 1600]
++17a +22g          = 12.02.1995
+
+12.02.1995  Sole=AQU22  pos=LEO22=142  F=0
+p=(142−292)%360=210
+g(p)=690+210//3=760g
+12.02.1995 +760g = 13.03.1997
+
+13.03.1997  Sole=PIS23  pos=VIR23=173  F=0
+p=(173−292)%360=241
+g(p)=690+241//3=770g
+13.03.1997 +770g = 22.04.1999
+
+22.04.1999  Sole=TAU01  pos=SCO01=211  F=0
+p=(211−292)%360=279
+g(p)=690+279//3=783g
+22.04.1999 +783g = 13.06.2001</pre><p><b>OP calcolata:</b> <code>13.06.2001</code>.</p>
+<h3>Giove · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±83 anni</code> e poi, quando conviene, salti di <code>±12 anni ±5 giorni</code>. Fra opposizioni consecutive si usano <code>±399 giorni</code>.</p><pre class="calc-code">17.09.1583 +5×83a = 17.09.1998
+17.09.1998 +399g  = 21.10.1999
+21.10.1999 +399g  = 23.11.2000</pre><p><b>OP calcolata:</b> <code>23.11.2000</code>.</p>
+<h3>Saturno · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±59 anni ±2 giorni</code>. Fra opposizioni consecutive si contano 378 giorni per passo e si aggiunge un giorno al totale dopo ogni gruppo completo di dieci passi; a ritroso lo si sottrae.</p><pre class="calc-code">1–9 passi:    n×378g
+10–19 passi:  n×378g +1g
+20–29 passi:  n×378g +2g
+
+23 passi: 23×378g +2g</pre><pre class="calc-code">13.09.1583 +7×59a +7×2g = 27.09.1996
+27.09.1996 +378g = 10.10.1997
+10.10.1997 +378g = 23.10.1998
+23.10.1998 +378g = 05.11.1999
+05.11.1999 +378g = 17.11.2000</pre><p><b>OP calcolata:</b> <code>17.11.2000</code>. I passi locali sono soltanto quattro, quindi non si aggiunge ancora alcun giorno.</p>
+<p class="calc-table-caption">Controllo con gli eventi reali attorno al 2000</p><div class="calc-table-wrap"><table class="calc-vertical-table"><tr><th>Pianeta</th><th>Calcolata</th><th>Reale</th><th>Scarto</th></tr><tr><td>Venere · CI</td><td>29.03.2001</td><td>30.03.2001</td><td>−1g</td></tr><tr><td>Marte · OP</td><td>13.06.2001</td><td>13.06.2001</td><td>0g</td></tr><tr><td>Giove · OP</td><td>23.11.2000</td><td>28.11.2000</td><td>−5g</td></tr><tr><td>Saturno · OP</td><td>17.11.2000</td><td>19.11.2000</td><td>−2g</td></tr></table></div>`);
+}
 function calcValidityReference(){
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-validita", "R3 · Validity", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Ecliptic positions</b>The ruler positions are general. Fiducials and pillars retain 5gr-rounded marks and shift together by 5gr every 360 years.</div><div class="calc-mini-card"><b>Local sky</b>ARC, altitude, rise, set and arc shape depend on place. The standard table is designed for 45N and is practical at about 42N–48N.</div><div class="calc-mini-card"><b>Time</b>The app covers 1583–4199; exact anchors are used in 1900–2199 and decennial failsafe reconstruction outside it.</div><div class="calc-mini-card"><b>Observation</b>Positions are normally within about 15gr in useful observing situations. The Moon may differ by roughly one lunar day.</div></div>`);
+    return calcStaticBlock("calc-validita", "R4 · Validity", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Ecliptic positions</b>The ruler positions are general. Fiducials and pillars retain 5gr-rounded marks and shift together by 5gr every 360 years.</div><div class="calc-mini-card"><b>Local sky</b>ARC, altitude, rise, set and arc shape depend on place. The standard table is designed for 45N and is practical at about 42N–48N.</div><div class="calc-mini-card"><b>Time</b>The app covers 1583–4199; exact anchors are used in 1900–2199 and decennial failsafe reconstruction outside it.</div><div class="calc-mini-card"><b>Observation</b>Positions are normally within about 15gr in useful observing situations. The Moon may differ by roughly one lunar day.</div></div>`);
   }
-  return calcStaticBlock("calc-validita", "R3 · Validità", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Posizioni eclittiche</b>Le posizioni sul righello hanno valore generale. Fiduciali e pilastri conservano tacche arrotondate a 5gr e scattano insieme di 5gr ogni 360 anni.</div><div class="calc-mini-card"><b>Cielo locale</b>ARC, altezza, levata, tramonto e forma dell’arco dipendono dal luogo. La tavola standard è pensata per 45N ed è pratica fra circa 42N e 48N.</div><div class="calc-mini-card"><b>Tempo</b>L’app copre il 1583–4199; usa ancore esatte nel 1900–2199 e la ricostruzione failsafe da ancore decennali fuori da questa fascia.</div><div class="calc-mini-card"><b>Osservazione</b>Le posizioni restano normalmente entro circa 15gr nelle situazioni utili. Per la Luna lo scarto può raggiungere l’ordine di un giorno lunare.</div></div>`);
+  return calcStaticBlock("calc-validita", "R4 · Validità", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Posizioni eclittiche</b>Le posizioni sul righello hanno valore generale. Fiduciali e pilastri conservano tacche arrotondate a 5gr e scattano insieme di 5gr ogni 360 anni.</div><div class="calc-mini-card"><b>Cielo locale</b>ARC, altezza, levata, tramonto e forma dell’arco dipendono dal luogo. La tavola standard è pensata per 45N ed è pratica fra circa 42N e 48N.</div><div class="calc-mini-card"><b>Tempo</b>L’app copre il 1583–4199; usa ancore esatte nel 1900–2199 e la ricostruzione failsafe da ancore decennali fuori da questa fascia.</div><div class="calc-mini-card"><b>Osservazione</b>Le posizioni restano normalmente entro circa 15gr nelle situazioni utili. Per la Luna lo scarto può raggiungere l’ordine di un giorno lunare.</div></div>`);
 }
 function renderCalculationTrace(date, rows, state, meta, extra){
   const box = document.getElementById("calcTrace");
@@ -4069,6 +4181,7 @@ Az: punto 114</pre><ol class="calc-build-list"><li>Traccia orizzonte e meridiano
     tableBlock,
     calcExactAnchorReference(y),
     calcDecadeAnchorReference(y),
+    calcSingleAnchorReference(),
     calcValidityReference()
   ].join("");
 }
