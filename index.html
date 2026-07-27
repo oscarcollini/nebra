@@ -3832,7 +3832,7 @@ OP+ = OP + gg</pre><p>Alla data stimata, una CI di Venere assume la posizione de
 }
 function calcSingleAnchorReference(){
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-ancora-unica", "R3 · Propagation from one known anchor", `<p>For each planet, the calculation can start from any real inferior conjunction or opposition whose date is known. This date is indicated by <code>t₀</code>. From <code>t₀</code>, long and intermediate jumps are combined to approach the required epoch; the final steps then follow consecutive events until the desired one is reached.</p><p>Jumps may be applied forward or backward. In a jump expressed in calendar years and days, shift the calendar year first, then add or subtract the days. For Mars, <code>g(p)</code> gives only the next opposition: the last intermediate anchor must therefore precede the target date.</p><p>The examples below use the real anchors of 1583 as <code>t₀</code>, to show an extended propagation to the events near 2000. The same rules apply from any other known real anchor.</p><p><b>Anchors used in the examples</b></p><pre class="calc-code">Venus   CI  22.12.1583
+    return calcStaticBlock("calc-ancora-unica", "R3 · Propagation from one known anchor", `<p>For each planet, the calculation can start from any real inferior conjunction or opposition whose date is known. This date is indicated by <code>t₀</code>. From <code>t₀</code>, use long jumps and, when useful, intermediate jumps to reach a region from which only a few consecutive events are needed to reach the required one.</p><p>Jumps may be applied forward or backward. In a jump expressed in calendar years and days, shift the calendar year first, then add or subtract the days. For Mars, <code>g(p)</code> gives only the next opposition: the last intermediate anchor must therefore precede the target date.</p><p>The examples below use the real anchors of 1583 as <code>t₀</code>, to show an extended propagation to the events near 2000. The same rules apply from any other known real anchor.</p><p><b>Anchors used in the examples</b></p><pre class="calc-code">Venus   CI  22.12.1583
 Mars    OP  07.01.1583
 Jupiter OP  17.09.1583
 Saturn  OP  13.09.1583</pre>
@@ -3853,9 +3853,9 @@ Saturn  OP  13.09.1583</pre>
 14.01.2006 −584d = 09.06.2004
 09.06.2004 −584d = 03.11.2002
 03.11.2002 −584d = 29.03.2001</pre><p><b>Calculated CI:</b> <code>29.03.2001</code>.</p>
-<h3>Mars · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±79 years ±3 days</code>. Then correct the total by one day for every leap century crossed: <code>1600, 2000, 2400, 2800…</code>. Forward, subtract this correction <code>C</code>; backward, reverse its sign. An intermediate jump of <code>±17 years ±22 days</code> may be used up to four times within a 79-year block.</p><pre class="calc-code">p = (pos − 292 − F) % 360
+<h3>Mars · oppositions</h3><p><b>Rule.</b> Use long jumps of <code>+79 years +3 days</code> forward and <code>−79 years −3 days</code> backward. After the 79-year jumps, apply a correction of one day for every leap century passed: <code>1600, 2000, 2400, 2800…</code>. Forward, subtract the correction <code>C</code>; backward, add it. Within a 79-year block, an intermediate jump may be used up to four times: <code>+17 years +22 days</code> forward and <code>−17 years −22 days</code> backward.</p><pre class="calc-code">p = (pos − 292 − F) % 360
 if p &lt; 210: g(p) = 809 − p//4
-if p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> is the longitude of Mars at the current opposition, equal to the Sun plus 180gr. <code>F=0</code> in 1840–2199; it is <code>−5</code> in 1583–1839, <code>+5</code> in 2200–2559, and changes by 5gr every 360 years. Recalculate <code>pos</code>, <code>p</code> and <code>g(p)</code> after every opposition.</p><pre class="calc-code">07.01.1583 +5×79y = 07.01.1978
+if p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> is the longitude of Mars at the current opposition, equal to the Sun plus 180gr. Calculate the Sun’s position with the rule in block G. If the annual value of <code>Γ</code> is unavailable, the mean value <code>Γ=20</code> may be used, with a possible additional error of ±1gr. <code>F=0</code> in 1840–2199; it is <code>−5</code> in 1583–1839, <code>+5</code> in 2200–2559, and changes by 5gr every 360 years. Recalculate <code>pos</code>, <code>p</code> and <code>g(p)</code> after every opposition.</p><pre class="calc-code">07.01.1583 +5×79y = 07.01.1978
 +5×3d −C        = 21.01.1978   [C=1: 1600]
 +17y +22d       = 12.02.1995
 
@@ -3873,21 +3873,17 @@ g(p)=690+241//3=770d
 p=(211−292)%360=279
 g(p)=690+279//3=783d
 22.04.1999 +783d = 13.06.2001</pre><p><b>Calculated OP:</b> <code>13.06.2001</code>.</p>
-<h3>Jupiter · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±83 years</code>, then—when useful—jumps of <code>±12 years ±5 days</code>. Consecutive oppositions are separated by <code>±399 days</code>.</p><pre class="calc-code">17.09.1583 +5×83y = 17.09.1998
+<h3>Jupiter · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±83 years</code>, then—when useful—intermediate jumps of <code>+12 years +5 days</code> forward and <code>−12 years −5 days</code> backward. Consecutive oppositions are separated by <code>±399 days</code>.</p><pre class="calc-code">17.09.1583 +5×83y = 17.09.1998
 17.09.1998 +399d  = 21.10.1999
 21.10.1999 +399d  = 23.11.2000</pre><p><b>Calculated OP:</b> <code>23.11.2000</code>.</p>
-<h3>Saturn · oppositions</h3><p><b>Rule.</b> Use jumps of <code>±59 years ±2 days</code>. For consecutive oppositions use 378 days per step and add one day to the total after every ten complete steps; backward, subtract it.</p><pre class="calc-code">1–9 steps:    n×378d
-10–19 steps:  n×378d +1d
-20–29 steps:  n×378d +2d
-
-23 steps: 23×378d +2d</pre><pre class="calc-code">13.09.1583 +7×59y +7×2d = 27.09.1996
+<h3>Saturn · oppositions</h3><p><b>Rule.</b> Use long jumps of <code>+59 years +2 days</code> forward and <code>−59 years −2 days</code> backward. For consecutive oppositions use 378 days; every tenth cycle adds one day, using 379 days instead of 378. Backward, subtract the same intervals.</p><pre class="calc-code">13.09.1583 +7×59y +7×2d = 27.09.1996
 27.09.1996 +378d = 10.10.1997
 10.10.1997 +378d = 23.10.1998
 23.10.1998 +378d = 05.11.1999
 05.11.1999 +378d = 17.11.2000</pre><p><b>Calculated OP:</b> <code>17.11.2000</code>. Only four local steps were used, so no extra day is added.</p>
 <p class="calc-table-caption">Check against real events near 2000</p><div class="calc-table-wrap"><table class="calc-vertical-table"><tr><th>Planet</th><th>Calculated</th><th>Real</th><th>Difference</th></tr><tr><td>Venus · CI</td><td>29.03.2001</td><td>30.03.2001</td><td>−1d</td></tr><tr><td>Mars · OP</td><td>13.06.2001</td><td>13.06.2001</td><td>0d</td></tr><tr><td>Jupiter · OP</td><td>23.11.2000</td><td>28.11.2000</td><td>−5d</td></tr><tr><td>Saturn · OP</td><td>17.11.2000</td><td>19.11.2000</td><td>−2d</td></tr></table></div>`);
   }
-  return calcStaticBlock("calc-ancora-unica", "R3 · Propagazione da una sola ancora nota", `<p>Per ciascun pianeta il calcolo può partire da qualunque congiunzione inferiore o opposizione reale di data nota. Questa data è indicata con <code>t₀</code>. Da <code>t₀</code> ci si avvicina all’epoca cercata combinando salti lunghi e intermedi; gli ultimi passi percorrono poi gli eventi consecutivi fino a raggiungere quello desiderato.</p><p>I salti si possono applicare in avanti o a ritroso. Nei salti espressi in anni e giorni si sposta prima l’anno di calendario, poi si aggiungono o sottraggono i giorni. Per Marte, <code>g(p)</code> conduce soltanto all’opposizione successiva: l’ultima ancora intermedia deve quindi precedere la data cercata.</p><p>Gli esempi seguenti usano come <code>t₀</code> le ancore reali del 1583, per mostrare una propagazione estesa fino agli eventi attorno al 2000. Le stesse regole si applicano partendo da qualsiasi altra ancora reale nota.</p><p><b>Ancore usate negli esempi</b></p><pre class="calc-code">Venere   CI  22.12.1583
+  return calcStaticBlock("calc-ancora-unica", "R3 · Propagazione da una sola ancora nota", `<p>Per ciascun pianeta il calcolo può partire da qualunque congiunzione inferiore o opposizione reale di data nota. Questa data è indicata con <code>t₀</code>. Da <code>t₀</code> si usano i salti lunghi e, se utili, quelli intermedi per portarsi in una zona da cui bastino pochi eventi consecutivi per raggiungere quello cercato.</p><p>I salti si possono applicare in avanti o a ritroso. Nei salti espressi in anni e giorni si sposta prima l’anno di calendario, poi si aggiungono o sottraggono i giorni. Per Marte, <code>g(p)</code> conduce soltanto all’opposizione successiva: l’ultima ancora intermedia deve quindi precedere la data cercata.</p><p>Gli esempi seguenti usano come <code>t₀</code> le ancore reali del 1583, per mostrare una propagazione estesa fino agli eventi attorno al 2000. Le stesse regole si applicano partendo da qualsiasi altra ancora reale nota.</p><p><b>Ancore usate negli esempi</b></p><pre class="calc-code">Venere   CI  22.12.1583
 Marte    OP  07.01.1583
 Giove    OP  17.09.1583
 Saturno  OP  13.09.1583</pre>
@@ -3908,9 +3904,9 @@ Saturno  OP  13.09.1583</pre>
 14.01.2006 −584g = 09.06.2004
 09.06.2004 −584g = 03.11.2002
 03.11.2002 −584g = 29.03.2001</pre><p><b>CI calcolata:</b> <code>29.03.2001</code>.</p>
-<h3>Marte · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±79 anni ±3 giorni</code>. Al totale si applica poi una correzione di un giorno per ogni secolo bisestile attraversato: <code>1600, 2000, 2400, 2800…</code>. In avanti la correzione <code>C</code> si sottrae; a ritroso si cambia anche il suo segno. Entro un blocco di 79 anni si può usare fino a quattro volte il salto intermedio di <code>±17 anni ±22 giorni</code>.</p><pre class="calc-code">p = (pos − 292 − F) % 360
+<h3>Marte · opposizioni</h3><p><b>Regola.</b> Si usano salti lunghi di <code>+79 anni +3 giorni</code> in avanti e <code>−79 anni −3 giorni</code> a ritroso. Compiuti i salti da 79 anni, si applica una correzione di un giorno per ogni secolo bisestile superato: <code>1600, 2000, 2400, 2800…</code>. In avanti la correzione <code>C</code> si sottrae; a ritroso si aggiunge. Entro un blocco di 79 anni si può usare fino a quattro volte il salto intermedio: <code>+17 anni +22 giorni</code> in avanti e <code>−17 anni −22 giorni</code> a ritroso.</p><pre class="calc-code">p = (pos − 292 − F) % 360
 se p &lt; 210: g(p) = 809 − p//4
-se p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> è la longitudine di Marte all’opposizione corrente, uguale al Sole più 180gr. <code>F=0</code> nel 1840–2199; vale <code>−5</code> nel 1583–1839, <code>+5</code> nel 2200–2559 e cambia di 5gr ogni 360 anni. Dopo ogni opposizione si ricalcolano <code>pos</code>, <code>p</code> e <code>g(p)</code>.</p><pre class="calc-code">07.01.1583 +5×79a = 07.01.1978
+se p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> è la longitudine di Marte all’opposizione corrente, uguale al Sole più 180gr. La posizione del Sole si ricava con la regola del blocco G. In mancanza del valore annuale di <code>Γ</code> si può usare il valore medio <code>Γ=20</code>, con un possibile errore aggiuntivo di ±1gr. <code>F=0</code> nel 1840–2199; vale <code>−5</code> nel 1583–1839, <code>+5</code> nel 2200–2559 e cambia di 5gr ogni 360 anni. Dopo ogni opposizione si ricalcolano <code>pos</code>, <code>p</code> e <code>g(p)</code>.</p><pre class="calc-code">07.01.1583 +5×79a = 07.01.1978
 +5×3g −C          = 21.01.1978   [C=1: 1600]
 +17a +22g          = 12.02.1995
 
@@ -3928,14 +3924,10 @@ g(p)=690+241//3=770g
 p=(211−292)%360=279
 g(p)=690+279//3=783g
 22.04.1999 +783g = 13.06.2001</pre><p><b>OP calcolata:</b> <code>13.06.2001</code>.</p>
-<h3>Giove · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±83 anni</code> e poi, quando conviene, salti di <code>±12 anni ±5 giorni</code>. Fra opposizioni consecutive si usano <code>±399 giorni</code>.</p><pre class="calc-code">17.09.1583 +5×83a = 17.09.1998
+<h3>Giove · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±83 anni</code> e poi, quando conviene, salti intermedi di <code>+12 anni +5 giorni</code> in avanti e <code>−12 anni −5 giorni</code> a ritroso. Fra opposizioni consecutive si usano <code>±399 giorni</code>.</p><pre class="calc-code">17.09.1583 +5×83a = 17.09.1998
 17.09.1998 +399g  = 21.10.1999
 21.10.1999 +399g  = 23.11.2000</pre><p><b>OP calcolata:</b> <code>23.11.2000</code>.</p>
-<h3>Saturno · opposizioni</h3><p><b>Regola.</b> Si usano salti di <code>±59 anni ±2 giorni</code>. Fra opposizioni consecutive si contano 378 giorni per passo e si aggiunge un giorno al totale dopo ogni gruppo completo di dieci passi; a ritroso lo si sottrae.</p><pre class="calc-code">1–9 passi:    n×378g
-10–19 passi:  n×378g +1g
-20–29 passi:  n×378g +2g
-
-23 passi: 23×378g +2g</pre><pre class="calc-code">13.09.1583 +7×59a +7×2g = 27.09.1996
+<h3>Saturno · opposizioni</h3><p><b>Regola.</b> Si usano salti lunghi di <code>+59 anni +2 giorni</code> in avanti e <code>−59 anni −2 giorni</code> a ritroso. Fra opposizioni consecutive si usano 378 giorni; ogni decimo ciclo si aggiunge un giorno, cioè si usano 379 giorni invece di 378. A ritroso si sottraggono gli stessi intervalli.</p><pre class="calc-code">13.09.1583 +7×59a +7×2g = 27.09.1996
 27.09.1996 +378g = 10.10.1997
 10.10.1997 +378g = 23.10.1998
 23.10.1998 +378g = 05.11.1999
