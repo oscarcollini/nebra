@@ -1,11 +1,10 @@
-<!-- v0.9.93: Luna implementata con stato logico esplicito -->
 <!DOCTYPE html>
 
 <html lang="it">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>N•E•B•R•A · v0.9.93</title>
+<title>N•E•B•R•A · v0.9.93 · UI v11</title>
 <meta content="Calcolatore astronomico N•E•B•R•A per Sole, Luna, pianeti e orizzonte locale." name="description"/>
 <meta content="#078783" name="theme-color"/>
 <!-- PWA_SHELL_BEGIN -->
@@ -32,14 +31,18 @@
     border-bottom:1px solid #ccc;
   }
   .header-wrap{
+    max-width:1480px;
+    margin:0 auto;
+  }
+  .header-title-row{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:18px;
+    gap:14px;
   }
   .hero-img{
     width:230px;
-    max-width:34vw;
+    max-width:100%;
     height:auto;
     border-radius:10px;
     border:1px solid #bdbdbd;
@@ -47,24 +50,8 @@
   }
   body.red-mode .hero-img{
     opacity:.32;
-    filter: sepia(1) saturate(8) hue-rotate(310deg) brightness(.55) contrast(1.15);
+    filter:sepia(1) saturate(8) hue-rotate(310deg) brightness(.55) contrast(1.15);
     border-color:#5a0000;
-  }
-  @media(max-width:800px){
-    .header-wrap{display:block}
-    .header-tools{
-      display:grid;
-      grid-template-columns:max-content max-content 28px;
-      justify-content:start;
-      gap:8px 12px;
-      margin-bottom:10px;
-    }
-    .lang-switch{max-width:150px}
-    .dst-device-note{grid-column:1 / -1;max-width:none;margin:0;}
-    #nightFab{
-      right:max(14px, env(safe-area-inset-right));
-      bottom:calc(14px + env(safe-area-inset-bottom));
-    }
   }
   h1{margin:0;font-size:24px;letter-spacing:.03em}
   .nebra-logo{
@@ -74,38 +61,39 @@
   }
   .nebra-logo .g{color:#2f8f37}
   .nebra-logo .o{color:#b88a17}
-  .header-tools{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:8px;
-    flex-wrap:wrap;
-  }
   .lang-switch{
     display:flex;
     align-items:center;
-    gap:7px;
-    margin-top:0;
-    max-width:160px;
-  }
-  .night-switch{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    margin:0;
-    font-size:12px;
-    color:#555;
-  }
-  .night-switch input{width:auto;}
-  .lang-switch label{
-    margin:0;
-    font-size:12px;
-    color:#555;
+    flex:0 0 auto;
   }
   .lang-switch select{
-    width:74px;
+    width:64px;
     padding:5px 7px;
     font-size:12px;
+  }
+  .hero-column{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    margin-top:8px;
+  }
+  .header-more-link{
+    color:#245b68;
+    font-size:11.5px;
+    font-weight:800;
+    line-height:1.25;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  body.red-mode .header-more-link{color:#ff9999}
+  @media(max-width:800px){
+    header{padding:12px 16px 9px}
+    .hero-column .hero-img{width:min(300px,86vw)}
+    #nightFab{
+      right:max(14px, env(safe-area-inset-right));
+      bottom:calc(14px + env(safe-area-inset-bottom));
+    }
   }
   .dst-info-button{
     width:28px;
@@ -397,7 +385,6 @@
     color:#ff5555;
   }
   body.red-mode label,
-  body.red-mode .night-switch,
   body.red-mode .smallnote,
   body.red-mode .summary,
   body.red-mode .warn{
@@ -469,8 +456,6 @@
     background:#1d1308;
   }
   body.red-mode .chart-point.chart-highlight{
-    stroke:#ffffff !important;
-    stroke-width:3.4px !important;
     opacity:1 !important;
   }
   body.red-mode .chart-highlight-halo.outer{
@@ -568,12 +553,12 @@
     font-size:12px;
   }
   #resultTable{table-layout:fixed}
-  #resultTable col:nth-child(1){width:29%}
-  #resultTable col:nth-child(2){width:18%}
-  #resultTable col:nth-child(3){width:13%}
-  #resultTable col:nth-child(4){width:14%}
-  #resultTable col:nth-child(5){width:14%}
-  #resultTable col:nth-child(6){width:12%}
+  #resultTable col:nth-child(1){width:25%}
+  #resultTable col:nth-child(2){width:16%}
+  #resultTable col:nth-child(3){width:14%}
+  #resultTable col:nth-child(4){width:17%}
+  #resultTable col:nth-child(5){width:15%}
+  #resultTable col:nth-child(6){width:13%}
   th,td{
     border-bottom:1px solid #ddd;
     padding:5px 4px;
@@ -637,9 +622,17 @@
   }
 
   th.col-help{
-    cursor:help;
-    text-decoration: underline dotted #999;
-    text-underline-offset:3px;
+    cursor:pointer;
+    color:#0645ad;
+    text-decoration-line:underline;
+    text-decoration-style:solid;
+    text-decoration-color:#0645ad;
+    text-decoration-thickness:1px;
+    text-underline-offset:2px;
+  }
+  body.red-mode th.col-help{
+    color:#ff9999;
+    text-decoration-color:#ff7777;
   }
   .col-help-row th{
     text-align:left;
@@ -650,8 +643,6 @@
     line-height:1.35;
   }
   .chart-point.chart-highlight{
-    stroke:#111 !important;
-    stroke-width:3.4px !important;
     opacity:1 !important;
   }
   .chart-highlight-halo{
@@ -660,12 +651,12 @@
   }
   .chart-highlight-halo.outer{
     stroke:#fff;
-    stroke-width:7px;
-    opacity:.95;
+    stroke-width:6px;
+    opacity:.98;
   }
   .chart-highlight-halo.inner{
     stroke:#111;
-    stroke-width:3.2px;
+    stroke-width:2.6px;
     opacity:1;
   }
   .chart-point{
@@ -975,49 +966,6 @@
       padding-right:12px;
     }
   }
-
-
-  .hero-column{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
-    width:min(560px,48vw);
-    min-width:430px;
-  }
-  .hero-column .hero-img{width:230px;max-width:100%}
-  .header-paths{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:6px;
-    width:100%;
-  }
-  .header-paths a{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:34px;
-    padding:6px 8px;
-    border:1px solid #bfc9ca;
-    border-radius:7px;
-    background:#f7faf9;
-    color:#245b68;
-    font-size:11px;
-    font-weight:800;
-    line-height:1.15;
-    text-align:center;
-    text-decoration:none;
-    white-space:nowrap;
-  }
-  .header-paths a:hover{text-decoration:underline}
-  body.red-mode .header-paths a{background:#160000;border-color:#5a0000;color:#ff9999}
-  @media(max-width:800px){
-    .hero-column{width:100%;max-width:560px;min-width:0;margin:10px auto 0}
-    .hero-column .hero-img{width:100%;max-width:420px}
-  }
-  @media(max-width:560px){
-    .header-paths{grid-template-columns:1fr}
-  }
   .calc-section-label{margin:11px 0 4px;color:#555;font-size:11px;font-weight:800;letter-spacing:.055em;text-transform:uppercase}
   .calc-section-description{margin:0 0 8px;font-size:11.8px;line-height:1.45;color:#444}
   .calc-current-html{margin-top:2px}
@@ -1048,44 +996,188 @@
   body.red-mode .about-term span{color:#cc7777}
   @media(max-width:650px){.about-glossary-body{grid-template-columns:1fr}}
 
+  /* UI hierarchy revision: setup → settings → movement → reading */
+  .panel-title{margin:0 0 11px;font-size:15px;line-height:1.2}
+  .setup-controls{grid-template-columns:repeat(5,minmax(110px,1fr));align-items:start}
+  .setup-controls .date-time-controls{grid-column:span 3}
+  .label-inline-note{font-size:10.5px;font-weight:400;color:#777;white-space:nowrap}
+  .settings-panel{margin-top:12px;border:1px solid #cfcfcf;border-radius:8px;background:#fafafa}
+  .settings-panel>summary{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;cursor:pointer;padding:9px 11px;font-size:13px;font-weight:800;list-style:none}
+  .settings-panel>summary::-webkit-details-marker{display:none}
+  .settings-panel>summary::before{content:"▸";color:#666}
+  .settings-panel[open]>summary{border-bottom:1px solid #ddd}
+  .settings-panel[open]>summary::before{content:"▾"}
+  .settings-status{font-size:11px;font-weight:400;line-height:1.35;color:#666}
+  .settings-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px}
+  .settings-group{min-width:0;border:1px solid #ddd;border-radius:7px;background:#fff;padding:9px}
+  .settings-group h3{margin:0 0 9px;font-size:12.5px;line-height:1.25}
+  .settings-group>div+div{margin-top:8px}
+  .dst-auto-row{display:flex;align-items:center;gap:6px;margin-top:8px}
+  .dst-auto-row .checkline{flex:1;height:auto;min-height:30px}
+  .dst-auto-row .dst-info-button{flex:0 0 28px}
+  .settings-group .dst-device-note{display:block;max-width:none;margin:5px 0 0}
+  .settings-group .dst-device-note[hidden]{display:none!important}
+  .settings-group .arc-advanced,.settings-group .horizon-profiles{grid-column:auto;align-self:auto;margin-top:9px}
+  .settings-group .horizon-profile-actions{grid-template-columns:1.2fr 1fr .8fr}
+  .scene-control-panel{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:8px 12px}
+  .scene-control-label{font-size:12px;font-weight:800;color:#555;padding:0 0 8px 2px}
+  .scene-control-panel .step-controls{grid-column:auto;grid-template-columns:repeat(2,minmax(170px,1fr));width:min(440px,100%);margin-left:auto}
+  .scene-summary-panel{padding:0;margin-bottom:14px}
+  .scene-summary-panel .summary{margin:0;border:0;border-radius:9px;padding:9px 11px}
+  .scene-meta-line{margin-bottom:5px;font-size:12px;color:#555}
+  .results-panel{padding-top:10px}
+  body.red-mode body.red-mode .label-inline-note,body.red-mode .settings-status,body.red-mode .scene-meta-line,body.red-mode .scene-control-label{color:#bb5555}
+  body.red-mode .settings-panel{background:#100000;border-color:#4d0000}
+  body.red-mode .settings-panel>summary{border-bottom-color:#4d0000;color:#ff7777}
+  body.red-mode .settings-panel>summary::before{color:#cc5555}
+  body.red-mode .settings-group{background:#100000;border-color:#4d0000}
+  body.red-mode .settings-group h3{color:#ff9999}
+  @media(max-width:1050px){
+    .setup-controls{grid-template-columns:repeat(2,minmax(130px,1fr))}
+    .setup-controls .date-time-controls{grid-column:1 / -1}
+    .settings-grid{grid-template-columns:1fr}
+    .settings-group .horizon-profile-actions{grid-template-columns:1.2fr 1fr .8fr}
+  }
+  @media(max-width:800px){
+    .setup-panel{padding:12px}
+    .settings-panel>summary{align-items:flex-start;flex-direction:column;gap:4px}
+    .settings-panel>summary::before{position:absolute}
+    .settings-panel>summary>span:first-child{padding-left:17px}
+    .settings-status{padding-left:17px}
+    .scene-control-panel{display:block}
+    .scene-control-label{display:none}
+    .scene-control-panel .step-controls{width:100%;max-width:none;margin:0;grid-template-columns:repeat(4,minmax(0,1fr))}
+  }
+  @media(max-width:650px){
+    .settings-group .horizon-profile-actions{grid-template-columns:1fr}
+  }
+
+
+  .chart-column{min-width:0}
+  .chart-column .scene-control-panel{margin-top:0;margin-bottom:0}
+  .calc-section-nav{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 12px}
+  .calc-section-nav a{display:inline-block;border:1px solid #cfcfcf;border-radius:999px;background:#fff;color:#245b68;padding:5px 9px;font-size:11px;font-weight:800;text-decoration:none}
+  .calc-section-nav a:hover{text-decoration:underline}
+  .calc-group-heading{scroll-margin-top:12px;margin:14px 0 7px;padding:7px 9px;border-left:4px solid #7a8d91;background:#f3f6f6;color:#36484d;font-size:12px;font-weight:800;letter-spacing:.02em}
+  .ascii-graph-box{overflow:auto;border:1px solid #ddd;border-radius:8px;background:#fafafa}
+  .ascii-graph-box .ascii-pre{margin:0;border:0;border-radius:0}
+  .ascii-tap-hint{border-radius:0}
+  body.red-mode .calc-section-nav a{background:#100000;border-color:#4d0000;color:#ff9999}
+  body.red-mode .calc-group-heading{border-left-color:#9f6b54;background:#170b00;color:#e0a66f}
+  body.red-mode .ascii-graph-box{background:#080000;border-color:#4d0000}
+  @media(max-width:800px){
+    .ascii-graph-box{overflow:hidden;cursor:zoom-in}
+    .ascii-graph-box.zoomed{overflow:auto;cursor:zoom-out}
+    .ascii-graph-box .ascii-pre{width:100%;min-width:0;font-size:8.2px}
+    .ascii-graph-box.zoomed .ascii-pre{width:max-content;min-width:980px;font-size:12px}
+  }
+
+  .visible-block{margin-top:8px;padding-top:7px;border-top:1px solid #e2e2e2}
+  .visible-title{font-size:12.5px;line-height:1.3}
+  .visible-help{margin-top:2px;font-size:10.8px;line-height:1.35;color:#666}
+  .visible-pills{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:7px}
+  .visible-pills .pill-button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    width:auto;
+    min-width:0;
+    margin:0;
+    padding:5px 9px;
+    border:1px solid #2e67a8;
+    border-radius:8px;
+    background:#f2f7ff;
+    color:#245b9a;
+    font-size:11.5px;
+    font-weight:800;
+    line-height:1.2;
+    box-shadow:0 1px 1px rgba(0,0,0,.10);
+    transition:background .12s ease,color .12s ease,border-color .12s ease,box-shadow .12s ease;
+  }
+  .visible-pills .pill-button:hover{background:#e5effc;border-color:#1f5798}
+  .visible-pills .pill-button.obscured > *{opacity:.55}
+  .visible-pills .pill-button:focus-visible{outline:2px solid #1f4aff;outline-offset:2px}
+  .visible-pills .pill-button.active,
+  .visible-pills .pill-button[aria-pressed="true"]{
+    background:#285f9f;
+    border-color:#285f9f;
+    color:#fff;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 1px 1px rgba(0,0,0,.12);
+  }
+  .visible-body-glyph{display:block;width:15px!important;min-width:15px!important;max-width:15px!important;height:15px!important;flex:0 0 15px;color:inherit;overflow:visible;background:transparent!important}
+  body.red-mode .visible-block{border-top-color:#3a0000}
+  body.red-mode .visible-help{color:#bb6666}
+  body.red-mode .visible-pills .pill-button{
+    background:#170909;
+    border-color:#9b4646;
+    color:#ff9999;
+    box-shadow:0 1px 1px rgba(0,0,0,.28);
+  }
+  body.red-mode .visible-pills .pill-button:hover{background:#2a0c0c;border-color:#c06060}
+  body.red-mode .visible-pills .pill-button.active,
+  body.red-mode .visible-pills .pill-button[aria-pressed="true"]{
+    background:#7a1f1f;
+    border-color:#ff8d8d;
+    color:#fff;
+  }
+
+  .calc-section-nav{scroll-margin-top:12px}
+  .calc-group-back{display:inline-block;margin:7px 0 2px;color:#245b68;font-size:10.8px;font-weight:800;text-decoration:none}
+  .calc-group-back:hover{text-decoration:underline}
+  .ascii-date-meta{margin:8px 0 0;font-size:11.5px;line-height:1.4;color:#555}
+  body.red-mode .calc-group-back{color:#ff9999}
+  body.red-mode .ascii-date-meta{color:#bb7777}
+
+  .glyph-defs{
+    position:absolute!important;
+    width:0!important;
+    min-width:0!important;
+    height:0!important;
+    overflow:hidden!important;
+    pointer-events:none!important;
+  }
+
 </style>
 </head>
 <body>
+<svg aria-hidden="true" class="glyph-defs" focusable="false">
+<defs>
+<symbol id="astro-sun" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="6.4"/><circle cx="10" cy="10" r="1.5" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="astro-moon" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"><path d="M13.7 2.8A7.4 7.4 0 1 0 13.7 17.2"/><path d="M13.7 2.8A6.1 6.1 0 0 0 13.7 17.2"/></g></symbol>
+<symbol id="astro-venus" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"><circle cx="10" cy="6.8" r="4.5"/><path d="M10 11.3V18M6.6 15.1H13.4"/></g></symbol>
+<symbol id="astro-mars" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><circle cx="7.3" cy="12.7" r="4.4"/><path d="M10.5 9.5L17 3M12.8 3H17V7.2"/></g></symbol>
+<symbol id="astro-jupiter" viewBox="0 0 20 20"><path d="M15.138 18.3V13.927H3.334V12.422H4.463Q6.461 12.422 7.907 11.693Q9.353 10.964 10.141 9.683Q10.929 8.401 10.929 6.802Q10.929 5.039 10.071 4.122Q9.212 3.205 7.896 3.205Q6.602 3.205 5.732 4.087Q4.862 4.968 4.862 6.52H3.217Q3.217 5.109 3.781 4.028Q4.345 2.946 5.403 2.323Q6.461 1.7 7.896 1.7Q10.106 1.7 11.34 3.064Q12.575 4.427 12.575 6.661Q12.575 7.672 12.269 8.742Q11.963 9.812 11.27 10.764Q10.576 11.716 9.353 12.422H15.138V1.982H16.783V18.3Z" fill="currentColor"/></symbol>
+<symbol id="astro-saturn" viewBox="0 0 20 20"><path d="M6.199 18.3V5.02H4.539V3.841H6.199V1.7H7.728V3.841H11.769V5.02H7.728V7.008Q7.728 7.488 7.696 7.881Q7.663 8.274 7.619 8.624H7.75Q8.296 7.75 9.257 7.281Q10.218 6.811 11.42 6.811Q13.538 6.811 14.499 7.87Q15.461 8.93 15.461 10.917Q15.461 11.944 14.805 13.451Q14.128 14.958 14.128 15.635Q14.128 16.312 14.39 17.066Q14.652 17.819 14.958 18.3H13.298Q12.992 17.819 12.763 17.033Q12.534 16.247 12.534 15.548Q12.534 14.696 13.189 13.189Q13.866 11.616 13.866 10.917Q13.866 9.432 13.189 8.788Q12.512 8.143 11.158 8.143Q9.432 8.143 8.58 9.225Q7.728 10.306 7.728 12.665V18.3Z" fill="currentColor"/></symbol>
+</defs>
+</svg>
 <header id="app-top">
 <div class="header-wrap">
-<div>
-<div class="header-tools">
+<div class="header-title-row">
+<h1 class="nebra-logo"><span class="g">N</span><span class="o">•</span><span class="g">E</span><span class="o">•</span><span class="g">B</span><span class="o">•</span><span class="g">R</span><span class="o">•</span><span class="g">A</span></h1>
 <div class="lang-switch">
-<label data-i18n="label_language" for="langInput">Lingua</label>
+<label class="visually-hidden" data-i18n="label_language" for="langInput">Lingua</label>
 <select id="langInput">
 <option value="it">IT</option>
 <option value="en">EN</option>
 </select>
 </div>
-<label class="night-switch" for="dstAutoInput">
-<input checked="" id="dstAutoInput" type="checkbox"/> <span data-i18n="label_dst_auto">DST auto</span>
-</label>
-<button aria-controls="dstDeviceNote" aria-expanded="false" class="dst-info-button" id="dstInfoBtn" type="button">ⓘ</button>
-<span class="dst-device-note" data-i18n="dst_device_note" hidden="" id="dstDeviceNote">DST auto: usa le regole di ora legale del dispositivo.</span>
 </div>
 <input aria-hidden="true" class="visually-hidden" id="redModeInput" tabindex="-1" type="checkbox"/>
 <button aria-pressed="false" id="nightFab" type="button">🌙</button>
-<h1 class="nebra-logo"><span class="g">N</span><span class="o">•</span><span class="g">E</span><span class="o">•</span><span class="g">B</span><span class="o">•</span><span class="g">R</span><span class="o">•</span><span class="g">A</span></h1>
+<div class="hero-column">
+<img alt="N•E•B•R•A — immagine introduttiva" class="hero-img" src="data:image/webp;base64,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"/>
+<a class="header-more-link" data-i18n="route_more" href="#aboutDetails">Guida e approfondimenti ↓</a>
 </div>
-<div class="hero-column"><img alt="N•E•B•R•A — immagine introduttiva" class="hero-img" src="data:image/webp;base64,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"/>
-<nav aria-label="Percorsi N•E•B•R•A" class="header-paths">
-<a data-i18n="route_about" data-open-details="aboutDetails" href="#aboutDetails">Conoscere N•E•B•R•A</a>
-<a data-i18n="route_guide" data-open-details="screenGuideDetails" href="#screenGuideDetails">Leggere la tavola</a>
-<a data-i18n="route_calcs" data-open-details="calcDetails" href="#calcDetails">Le formule e i calcoli</a>
-</nav></div>
 </div>
 </header>
 <main>
-<section class="panel">
-<div class="controls">
+<section class="panel setup-panel">
+<h2 class="panel-title" data-i18n="setup_heading">Quando e dove</h2>
+<div class="controls setup-controls">
 <div class="date-time-controls">
 <div>
-<label data-i18n="label_date" for="dateInput">Data (1583-4199)</label>
+<label data-i18n-html="label_date_with_range" for="dateInput">Data <span class="label-inline-note">1583-4199</span></label>
 <input id="dateInput" max="4199-12-31" min="1583-01-01" type="date" value="2025-01-22"/>
 </div>
 <div>
@@ -1112,50 +1204,40 @@
 <label data-i18n="label_lon" for="lonInput">Longitudine</label>
 <input id="lonInput" step="0.01" type="number" value="11"/>
 </div>
+</div>
+
+<details class="settings-panel" id="settingsDetails">
+<summary><span data-i18n="settings_summary">Impostazioni</span><span class="settings-status" id="settingsStatus"></span></summary>
+<div class="settings-grid">
+<section class="settings-group">
+<h3 data-i18n="settings_time_title">Tempo civile</h3>
 <div>
 <label data-i18n="label_zone_meridian" for="zoneMeridianInput">Meridiano del fuso (E+/O−)</label>
 <input id="zoneMeridianInput" step="15" type="number" value="15"/>
 </div>
+<div class="dst-auto-row">
+<label class="checkline" for="dstAutoInput">
+<input checked="" id="dstAutoInput" type="checkbox"/> <span data-i18n="label_dst_auto">Ora legale automatica</span>
+</label>
+<button aria-controls="dstDeviceNote" aria-expanded="false" class="dst-info-button" id="dstInfoBtn" type="button">ⓘ</button>
+</div>
+<span class="dst-device-note" data-i18n="dst_device_note" hidden="" id="dstDeviceNote">Usa le regole di ora legale del dispositivo.</span>
 <div>
-<label data-i18n="label_dst" for="dstInput">Ora legale</label>
-<div class="checkline"><input id="dstInput" type="checkbox"/> <span data-i18n="check_dst" id="dstStatus">+1h DST</span></div>
+<label data-i18n="label_dst" for="dstInput">Ora legale manuale</label>
+<div class="checkline"><input id="dstInput" type="checkbox"/> <span data-i18n="check_dst" id="dstStatus">Attiva (+1h)</span></div>
 </div>
-<div>
-<label data-i18n="label_moon" for="moonSegmentInput">Luna</label>
-<div class="checkline"><input checked="" id="moonSegmentInput" type="checkbox"/> <span data-i18n="check_moon_range">intorno posizione</span></div>
-</div>
-<div id="straightHorizonControl">
-<label data-i18n="label_horizon" for="horizonInput">Orizzonte rettilineo</label>
-<input id="horizonInput" max="72" min="0" step="1" type="number" value="0"/>
-</div>
-<details class="horizon-profiles" id="horizonProfilesDetails">
-<summary data-i18n="horizon_profiles_summary">Profili dell’orizzonte</summary>
-<div class="horizon-profiles-body">
-<p class="horizon-profiles-intro" data-i18n="horizon_profiles_intro">Il profilo è facoltativo. Senza un profilo attivo, N•E•B•R•A usa l’orizzonte rettilineo impostato qui sopra. La linea sulla tavola è orientativa; il segno ! confronta ogni oggetto con il profilo nella sua direzione stimata.</p>
-<label data-i18n="horizon_profile_active" for="horizonProfileSelect">Profilo attivo</label>
-<select id="horizonProfileSelect"></select>
-<div class="horizon-profile-actions">
-<button class="btnsmall" data-i18n="horizon_profile_import" id="horizonProfileImport" type="button">Importa profilo</button>
-<button class="btnsmall" data-i18n="horizon_profile_export" disabled="" id="horizonProfileExport" type="button">Esporta</button>
-<button class="btnsmall horizon-delete" data-i18n="horizon_profile_delete" disabled="" id="horizonProfileDelete" type="button">Elimina</button>
-</div>
-<input accept=".txt,.csv,text/plain,text/csv" hidden="" id="horizonProfileFile" type="file"/>
-<div class="horizon-profile-meta" id="horizonProfileMeta"></div>
-<div class="horizon-profile-status" id="horizonProfileStatus" role="status"></div>
-<details class="horizon-help" open="">
-<summary data-i18n="horizon_help_summary">Istruzioni per preparare e importare un profilo</summary>
-<p data-i18n-html="horizon_help_peakfinder"><b>Da PeakFinder.</b> Apri PeakFinder web, porta la mappa sul punto esatto dal quale osserverai e apri il menu <b>☰</b>. Scegli <b>Export</b> → <b>Horizon for Stellarium</b>, poi conferma l’esportazione. Verrà scaricato uno ZIP: estrai il file interno <code>horizon.txt</code>, premi qui sopra <b>Importa profilo</b> e selezionalo.</p>
-<p data-i18n-html="horizon_help_manual"><b>Creato a mano.</b> Va bene anche un file TXT o CSV con due colonne: <code>azimut altezza</code>, entrambe in gradi. Per coprire tutta la tavola, il profilo deve contenere punti da <b>50gr</b> a <b>310gr</b> di azimut; un profilo completo da 0gr a 360gr è ugualmente valido.</p>
-<p data-i18n-html="horizon_help_example">Esempio: <code>50 12</code>   <code>180 4</code>   <code>310 18</code></p>
-<p data-i18n="horizon_help_after">Dopo l’importazione, scegli il profilo nell’elenco. Puoi conservarne più di uno nel browser.</p>
-</details>
-</div>
-</details>
+</section>
+
+<section class="settings-group">
+<h3 data-i18n="settings_table_title">Aspetto della tavola</h3>
+<label class="checkline" for="moonSegmentInput">
+<input checked="" id="moonSegmentInput" type="checkbox"/> <span data-i18n="check_moon_range">Mostra la fascia lunare ±6gr</span>
+</label>
 <details class="arc-advanced" id="arcAdvancedDetails">
-<summary data-i18n="arc_advanced_summary">Modalità avanzata</summary>
+<summary data-i18n="arc_advanced_summary">Tavola adattata alla latitudine · sperimentale</summary>
 <div class="arc-advanced-body">
 <label class="checkline" for="arcAdvancedInput">
-<input id="arcAdvancedInput" type="checkbox"/> <span data-i18n="arc_advanced_enable">Abilita adattamento ARC alla latitudine · 30N–60N</span>
+<input id="arcAdvancedInput" type="checkbox"/> <span data-i18n="arc_advanced_enable">Usa la tavola adattata</span>
 </label>
 <div class="arc-mode-wrap" hidden="" id="latModeWrap">
 <label data-i18n="label_arc_table" for="latMode">Tavola degli archi</label>
@@ -1167,6 +1249,54 @@
 <div class="arc-advanced-note" id="arcAdvancedNote"></div>
 </div>
 </details>
+</section>
+
+<section class="settings-group settings-horizon-group">
+<h3 data-i18n="settings_horizon_title">Orizzonte</h3>
+<div id="straightHorizonControl">
+<label data-i18n="label_horizon" for="horizonInput">Altezza dell’orizzonte · gr</label>
+<input id="horizonInput" max="72" min="0" step="1" type="number" value="0"/>
+</div>
+<details class="horizon-profiles" id="horizonProfilesDetails">
+<summary data-i18n="horizon_profiles_summary">Profilo locale</summary>
+<div class="horizon-profiles-body">
+<p class="horizon-profiles-intro" data-i18n="horizon_profiles_intro">Importa un profilo locale per confrontare i corpi con rilievi e ostacoli. Senza un profilo attivo viene usato l’orizzonte rettilineo indicato sopra.</p>
+<label data-i18n="horizon_profile_active" for="horizonProfileSelect">Profilo attivo</label>
+<select id="horizonProfileSelect"></select>
+<div class="horizon-profile-actions">
+<button class="btnsmall" data-i18n="horizon_profile_import" id="horizonProfileImport" type="button">Importa profilo</button>
+<button class="btnsmall" data-i18n="horizon_profile_export" disabled="" id="horizonProfileExport" type="button">Esporta</button>
+<button class="btnsmall horizon-delete" data-i18n="horizon_profile_delete" disabled="" id="horizonProfileDelete" type="button">Elimina</button>
+</div>
+<input accept=".txt,.csv,text/plain,text/csv" hidden="" id="horizonProfileFile" type="file"/>
+<div class="horizon-profile-meta" id="horizonProfileMeta"></div>
+<div class="horizon-profile-status" id="horizonProfileStatus" role="status"></div>
+<details class="horizon-help">
+<summary data-i18n="horizon_help_summary">Come preparare e importare un profilo</summary>
+<p data-i18n-html="horizon_help_peakfinder"><b>Da PeakFinder.</b> Apri PeakFinder web, porta la mappa sul punto esatto dal quale osserverai e apri il menu <b>☰</b>. Scegli <b>Export</b> → <b>Horizon for Stellarium</b>, poi conferma l’esportazione. Verrà scaricato uno ZIP: estrai il file interno <code>horizon.txt</code>, premi qui sopra <b>Importa profilo</b> e selezionalo.</p>
+<p data-i18n-html="horizon_help_manual"><b>Creato a mano.</b> Va bene anche un file TXT o CSV con due colonne: <code>azimut altezza</code>, entrambe in gradi. Per coprire tutta la tavola, il profilo deve contenere punti da <b>50gr</b> a <b>310gr</b> di azimut; un profilo completo da 0gr a 360gr è ugualmente valido.</p>
+<p data-i18n-html="horizon_help_example">Esempio: <code>50 12</code>   <code>180 4</code>   <code>310 18</code></p>
+<p data-i18n="horizon_help_after">Dopo l’importazione, scegli il profilo nell’elenco. Puoi conservarne più di uno nel browser.</p>
+</details>
+</div>
+</details>
+</section>
+</div>
+</details>
+</section>
+
+<section class="panel scene-summary-panel">
+<div class="summary" id="summary"></div>
+</section>
+
+<section class="grid2">
+<div class="chart-column">
+<div class="panel" id="chartBox" style="padding:0">
+<div class="tap-hint" data-i18n="tap_hint">Tocca il grafico per ingrandire / ridurre.</div>
+<svg aria-label="Tavola degli archi N•E•B•R•A" id="chart" role="img" viewbox="0 0 1180 706"></svg>
+</div>
+<section class="panel scene-control-panel" aria-label="Movimento della scena">
+<div class="scene-control-label" data-i18n="scene_move_label">Muovi la scena</div>
 <div class="step-controls">
 <div>
 <label data-i18n="label_time_step">Ora</label>
@@ -1183,67 +1313,16 @@
 </div>
 </div>
 </div>
-</div>
 </section>
-<section class="grid2">
-<div class="panel" id="chartBox" style="padding:0">
-<div class="tap-hint" data-i18n="tap_hint">Tocca il grafico per ingrandire / ridurre.</div>
-<svg aria-label="Tavola degli archi N•E•B•R•A" id="chart" role="img" viewbox="0 0 1180 706"></svg>
 </div>
-<div class="panel">
-<div class="summary" id="summary"></div>
+<div class="panel results-panel">
 <table id="resultTable"></table>
 <div class="smallnote" id="notes"></div>
-<a class="table-tool-link" data-i18n="ascii_open_link" href="#asciiPlanetDetails" id="planetEphemerisLink">→ Apri le effemeridi grafiche dei pianeti</a>
+<a class="table-tool-link" data-i18n="ascii_open_link" href="#asciiPlanetDetails" id="planetEphemerisLink">→ Vedi le effemeridi grafiche dei pianeti</a>
 </div>
 </section>
 </main>
 <section aria-label="Materiali N•E•B•R•A" class="after-app">
-<details class="foldout calc-foldout" id="screenGuideDetails">
-<summary data-i18n="screen_guide_summary">Leggere la tavola</summary>
-<div class="screen-guide-body">
-<p class="calc-intro" data-i18n="screen_guide_intro">La tavola e la tabella descrivono la stessa scena.</p>
-<h3 data-i18n="screen_guide_setup_title">Impostare la scena</h3>
-<p data-i18n-html="screen_guide_setup_1">Scegli data, ora e luogo oppure premi <b>Adesso</b>. Latitudine, longitudine, meridiano del fuso e ora legale collegano l’ora civile al TSL.</p>
-<p data-i18n-html="screen_guide_setup_2">L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; la modalità avanzata consente l’adattamento sperimentale alla latitudine inserita.</p>
-<h3 data-i18n="screen_guide_chart_title">Leggere la tavola</h3>
-<p data-i18n-html="screen_guide_chart_1">Il righello eclittico mostra le posizioni <code>SGNgr</code>. Il centro della tavola corrisponde al meridiano; i due lati mostrano le ore prima e dopo il culmine.</p>
-<p data-i18n-html="screen_guide_chart_2">Ogni corpo compare sul righello, nella propria posizione eclittica, e sulla curva del proprio <code>ARC</code>, nella posizione stimata per l’ora scelta.</p>
-<p data-i18n-html="screen_guide_chart_3">La linea dell’orizzonte separa la parte visibile della tavola. Con un profilo locale attivo, il simbolo <code>!</code> segnala un corpo che può trovarsi dietro l’ostacolo nella direzione calcolata.</p>
-<h3 data-i18n="screen_guide_table_title">Leggere la tabella</h3>
-<p data-i18n="screen_guide_table_lead">Per ogni corpo e fiduciale la tabella riporta:</p>
-<div class="screen-guide-defs">
-<p data-i18n-html="screen_guide_table_sgngr"><strong><code>SGNgr</code></strong> posizione lungo l’eclittica.</p>
-<p data-i18n-html="screen_guide_table_arc"><strong><code>ARC</code></strong> arco diurno.</p>
-<p data-i18n-html="screen_guide_table_dc"><strong><code>ΔC</code></strong> distanza temporale dal meridiano.</p>
-<p data-i18n-html="screen_guide_table_alt"><strong><code>Alt</code></strong> altezza stimata.</p>
-<p data-i18n-html="screen_guide_table_az"><strong><code>Az</code></strong> direzione approssimativa.</p>
-</div>
-<p data-i18n-html="screen_guide_table_2"><code>ΔC</code> negativo indica il lato orientale, prima del culmine; positivo il lato occidentale, dopo il culmine.</p>
-<p data-i18n-html="screen_guide_table_3">Le righe finali raccolgono i fiduciali: stelle e gruppi riconoscibili che permettono di confrontare il risultato con il cielo reale. Le intestazioni sottolineate aprono una definizione breve delle colonne.</p>
-<h3 data-i18n="screen_guide_sky_title">Dalla tabella al cielo</h3>
-<p data-i18n-html="screen_guide_sky_1">Scegli un corpo e leggi, nell’ordine: il lato del meridiano da <code>ΔC</code>, l’altezza, la direzione e il fiduciale più vicino lungo il righello.</p>
-<p data-i18n="screen_guide_sky_2">La tavola offre la scena d’insieme; la tabella fornisce i valori utili per orientare lo sguardo.</p>
-<h3 data-i18n="screen_guide_move_title">Muovere la scena</h3>
-<p data-i18n-html="screen_guide_move_1"><code>±1h</code> fa scorrere la tavola con la rotazione della volta.</p>
-<p data-i18n-html="screen_guide_move_2"><code>±1g</code> mostra l’avanzamento del Sole e della Luna e il moto più lento dei pianeti.</p>
-<p data-i18n="screen_guide_move_3">Il pulsante notturno passa alla visualizzazione rossa.</p>
-<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna su</a>
-</div>
-</details>
-<details class="foldout calc-foldout" id="calcDetails">
-<summary data-i18n="calc_summary">Le formule e i calcoli</summary>
-<div class="calc-intro" data-i18n="calc_intro">Regole generali, tabelle e calcolo della data selezionata.</div>
-<div class="calc-stack" id="calcTrace"></div>
-<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna su</a>
-</details>
-<details class="foldout ascii-planet-foldout" id="asciiPlanetDetails">
-<summary data-i18n="ascii_summary">Effemeridi grafiche dei pianeti</summary>
-<div class="guide-body">
-<p data-i18n="ascii_intro">Il grafico triennale sviluppa nel tempo le stesse curve a tratti usate dal calcolo planetario. L’asse orizzontale segue le date; quello verticale la posizione lungo l’eclittica. Mostra punti caratteristici, stazioni, opposizioni, congiunzioni e sovrapposizioni fra cicli.</p>
-</div>
-<pre class="ascii-pre" data-i18n="ascii_placeholder" id="asciiPlanetGraph">Il grafico segue la data selezionata.</pre>
-</details>
 <details class="foldout calc-foldout" id="aboutDetails">
 <summary data-i18n="about_summary">Cos’è N•E•B•R•A</summary>
 <div class="about-body">
@@ -1263,18 +1342,18 @@
 <p data-i18n="about_fiducials_text">Pleiadi, Aldebaran, Castore e Polluce, Presepe, Regolo, Spica e Antares segnano posizioni riconoscibili vicine all’eclittica. Permettono di confrontare un valore calcolato con stelle e gruppi visibili.</p>
 <h4 data-i18n="about_vault_title">Volta e pilastri</h4>
 <p data-i18n-html="about_vault_text">La tavola degli archi trasforma il righello nella volta locale. Aldebaran, Denebola e Altair formano tre pilastri distribuiti lungo il cielo: le figure <code>V</code>, <code>?</code> e <code>Y</code> aiutano a riconoscere grandi settori della volta e il tratto zodiacale sottostante.</p>
-<h3 data-i18n="about_hand_title">A mano</h3>
-<p data-i18n="about_hand_text_1">Il procedimento manuale segue lo stesso ordine dell’app: posizione del Sole, età e distanza della Luna, curve planetarie, culmine e arco diurno.</p>
-<p data-i18n-html="about_hand_text_2">Nel blocco <strong>Le formule e i calcoli</strong> ogni settore contiene una descrizione, la formula generale, la tabella prevista e lo sviluppo con i dati selezionati. Nello stesso blocco si trovano le istruzioni per disegnare le effemeridi planetarie e la tavola degli archi.</p>
-<div class="about-links">
-<a class="about-link" data-i18n="about_link_calcs" data-open-details="calcDetails" href="#calcDetails">→ Le formule e i calcoli</a>
-<a class="about-link" data-i18n="about_link_ephemerides" data-open-child="calc-effemeridi" data-open-details="calcDetails" href="#calc-effemeridi">→ Disegnare le effemeridi</a>
-<a class="about-link" data-i18n="about_link_table" data-open-child="calc-tavola" data-open-details="calcDetails" href="#calc-tavola">→ Disegnare la tavola</a>
-</div>
 <h3 data-i18n="about_app_title">L’app</h3>
 <p data-i18n-html="about_app_text_1">L’app esegue lo stesso percorso con la data, l’ora e il luogo scelti. La tavola mostra la scena complessiva; la tabella riporta per ogni corpo posizione, <code>ARC</code>, distanza dal meridiano, altezza e azimut. I comandi <code>±1h</code> e <code>±1g</code> permettono di seguire il movimento della volta e l’evoluzione della scena.</p>
 <p data-i18n="about_app_text_2">Il profilo dell’orizzonte confronta le traiettorie con ostacoli e rilievi locali. Le effemeridi grafiche mostrano invece il moto dei pianeti lungo intervalli più ampi.</p>
 <div class="about-links"><a class="about-link" data-i18n="about_link_guide" data-open-details="screenGuideDetails" href="#screenGuideDetails">→ Leggere la tavola</a></div>
+<h3 data-i18n="about_hand_title">A mano</h3>
+<p data-i18n="about_hand_text_1">Il procedimento manuale segue lo stesso ordine dell’app: posizione del Sole, età e distanza della Luna, curve planetarie, culmine e arco diurno.</p>
+<p data-i18n-html="about_hand_text_2">Nel blocco <strong>Metodo e calcoli</strong> ogni settore contiene una descrizione, la formula generale, la tabella prevista e lo sviluppo con i dati selezionati. Nello stesso blocco si trovano le istruzioni per disegnare le effemeridi planetarie e la tavola degli archi.</p>
+<div class="about-links">
+<a class="about-link" data-i18n="about_link_calcs" data-open-details="calcDetails" href="#calcDetails">→ Metodo e calcoli</a>
+<a class="about-link" data-i18n="about_link_ephemerides" data-open-child="calc-effemeridi" data-open-details="calcDetails" href="#calc-effemeridi">→ Disegnare le effemeridi</a>
+<a class="about-link" data-i18n="about_link_table" data-open-child="calc-tavola" data-open-details="calcDetails" href="#calc-tavola">→ Disegnare la tavola</a>
+</div>
 <details class="about-glossary">
 <summary data-i18n="about_glossary">Glossario</summary>
 <div class="about-glossary-body">
@@ -1282,12 +1361,65 @@
 <div class="about-term"><b>ARC</b><span data-i18n="gloss_arc">Valore del modello che identifica la forma dell’arco diurno.</span></div>
 <div class="about-term"><b>ΔC</b><span data-i18n="gloss_dc">Distanza temporale dal meridiano: negativa a est, positiva a ovest.</span></div>
 <div class="about-term"><b>TSL</b><span data-i18n="gloss_tsl">Tempo solare locale, usato per collocare la scena rispetto al meridiano.</span></div>
-<div class="about-term"><b data-i18n="gloss_anchor_term">Ancora</b><span data-i18n="gloss_anchor">Data di una congiunzione inferiore o opposizione usata come origine di una curva planetaria.</span></div>
-<div class="about-term"><b>M24</b><span data-i18n="gloss_m24">Posizione opposta al Sole, usata come riferimento delle opposizioni.</span></div>
+<div class="about-term"><b>Alt</b><span data-i18n="gloss_alt">Altezza stimata del corpo sopra l’orizzonte.</span></div>
+<div class="about-term"><b>Az</b><span data-i18n="gloss_az">Direzione del corpo lungo l’orizzonte.</span></div>
+<div class="about-term"><b data-i18n="gloss_fiducial_term">Fiduciale</b><span data-i18n="gloss_fiducial">Stella o gruppo riconoscibile vicino all’eclittica, usato per confrontare il calcolo con il cielo.</span></div>
+<div class="about-term"><b data-i18n="gloss_culmination_term">Culmine</b><span data-i18n="gloss_culmination">Passaggio di un corpo al meridiano, dove raggiunge la massima altezza del proprio arco.</span></div>
 </div>
 </details>
-<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna su</a>
+<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna all’app</a>
 </div>
+</details>
+<details class="foldout calc-foldout" id="screenGuideDetails">
+<summary data-i18n="screen_guide_summary">Leggere la tavola</summary>
+<div class="screen-guide-body">
+<p class="calc-intro" data-i18n="screen_guide_intro">La tavola e la tabella descrivono la stessa scena.</p>
+<h3 data-i18n="screen_guide_setup_title">Impostare la scena</h3>
+<p data-i18n-html="screen_guide_setup_1">Inserisci il luogo; scegli data e ora oppure premi <b>Adesso</b>. Latitudine, longitudine, meridiano del fuso e ora legale collegano l’ora civile al TSL.</p>
+<p data-i18n-html="screen_guide_setup_2">L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; nelle Impostazioni è disponibile la tavola adattata alla latitudine · sperimentale.</p>
+<h3 data-i18n="screen_guide_chart_title">Leggere la tavola</h3>
+<p data-i18n-html="screen_guide_chart_1">Il righello eclittico mostra le posizioni <code>SGNgr</code>. Il centro della tavola corrisponde al meridiano; i due lati mostrano le ore prima e dopo il culmine.</p>
+<p data-i18n-html="screen_guide_chart_2">Sul righello, il pallino e il glifo indicano la posizione eclittica del corpo. Il secondo punto, collocato sulla curva del suo <code>ARC</code>, mostra la posizione stimata nella volta.</p>
+<p data-i18n-html="screen_guide_chart_4">I pulsanti <strong>Sopra l’orizzonte (E → O)</strong> seguono lo stesso ordine spaziale della tavola. Toccando un nome viene evidenziato il punto corrispondente nella volta.</p>
+<p data-i18n-html="screen_guide_chart_3">La linea dell’orizzonte separa la parte visibile della tavola. Con un profilo locale attivo, il simbolo <code>!</code> segnala un corpo che può trovarsi dietro l’ostacolo nella direzione calcolata.</p>
+<h3 data-i18n="screen_guide_table_title">Leggere la tabella</h3>
+<p data-i18n="screen_guide_table_lead">Per ogni corpo e fiduciale la tabella riporta:</p>
+<div class="screen-guide-defs">
+<p data-i18n-html="screen_guide_table_sgngr"><strong><code>SGNgr</code></strong> posizione lungo l’eclittica.</p>
+<p data-i18n-html="screen_guide_table_arc"><strong><code>ARC</code></strong> arco diurno.</p>
+<p data-i18n-html="screen_guide_table_dc"><strong><code>ΔC</code></strong> distanza temporale dal meridiano.</p>
+<p data-i18n-html="screen_guide_table_alt"><strong><code>Alt</code></strong> altezza stimata.</p>
+<p data-i18n-html="screen_guide_table_az"><strong><code>Az</code></strong> direzione approssimativa.</p>
+</div>
+<p data-i18n-html="screen_guide_table_2"><code>ΔC</code> negativo indica il lato orientale, prima del culmine; positivo il lato occidentale, dopo il culmine.</p>
+<p data-i18n-html="screen_guide_table_3">Le righe finali raccolgono i fiduciali: stelle e gruppi riconoscibili che permettono di confrontare il risultato con il cielo reale. Le intestazioni blu e sottolineate aprono una breve definizione della colonna.</p>
+<h3 data-i18n="screen_guide_sky_title">Dalla tabella al cielo</h3>
+<p data-i18n-html="screen_guide_sky_1">Scegli un corpo e leggi, nell’ordine: il lato del meridiano da <code>ΔC</code>, l’altezza, la direzione e il fiduciale più vicino lungo il righello.</p>
+<p data-i18n="screen_guide_sky_2">La tavola offre la scena d’insieme; la tabella fornisce i valori utili per orientare lo sguardo.</p>
+<h3 data-i18n="screen_guide_move_title">Muovere la scena</h3>
+<p data-i18n-html="screen_guide_move_1"><code>−1h</code> e <code>+1h</code> cambiano l’ora; <code>−1g</code> e <code>+1g</code> cambiano la data. Tavola e tabella si aggiornano insieme.</p>
+<p data-i18n-html="screen_guide_move_2">Lo spostamento orario segue la rotazione della volta; quello giornaliero mostra l’avanzamento del Sole e della Luna e il moto più lento dei pianeti.</p>
+<p data-i18n="screen_guide_move_3">Il pulsante flottante 🌙/☀ passa dalla visualizzazione normale a quella rossa.</p>
+<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna all’app</a>
+</div>
+</details>
+<details class="foldout calc-foldout" id="calcDetails">
+<summary data-i18n="calc_summary">Metodo e calcoli</summary>
+<div class="calc-intro" data-i18n="calc_intro">Regole generali, tabelle e calcolo della data selezionata.</div>
+<div class="calc-stack" id="calcTrace"></div>
+<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna all’app</a>
+</details>
+<details class="foldout ascii-planet-foldout" id="asciiPlanetDetails">
+<summary data-i18n="ascii_summary">Effemeridi grafiche dei pianeti</summary>
+<div class="guide-body">
+<p data-i18n="ascii_intro">Il grafico è centrato sulla data selezionata e copre circa tre anni. Sviluppa nel tempo le stesse curve a tratti usate dal calcolo planetario: l’asse orizzontale segue le date, quello verticale la posizione lungo l’eclittica.</p>
+<p class="ascii-date-meta" id="asciiDateMeta"></p>
+</div>
+<div class="ascii-graph-box" id="asciiGraphBox">
+<div class="tap-hint ascii-tap-hint" data-i18n="ascii_tap_hint">Tocca il grafico per ingrandire / ridurre.</div>
+<pre class="ascii-pre" data-i18n="ascii_placeholder" id="asciiPlanetGraph">Il grafico segue la data selezionata.</pre>
+</div>
+<a class="foldout-back-top" data-i18n="back_to_top" href="#app-top">↑ Torna all’app</a>
 </details>
 </section>
 <script>
@@ -1311,8 +1443,23 @@ const MS_DAY = 86400000;
 const I18N = {
   it:{
     label_language:"Lingua",
-    route_about:"Conoscere N•E•B•R•A", route_guide:"Leggere la tavola", route_calcs:"Le formule e i calcoli",
-    label_date:"Data (1583-4199)",
+    setup_heading:"Quando e dove",
+    label_date_with_range:'Data <span class="label-inline-note">1583-4199</span>',
+    settings_summary:"Impostazioni",
+    settings_status_prefix:"Valori attuali:",
+    settings_time_title:"Tempo civile",
+    settings_table_title:"Aspetto della tavola",
+    settings_horizon_title:"Orizzonte",
+    scene_move_label:"Muovi la scena",
+    settings_zone:"fuso",
+    settings_dst_auto:"ora legale automatica",
+    settings_dst_on:"ora legale attiva",
+    settings_dst_off:"ora legale disattivata",
+    settings_horizon_value:"orizzonte",
+    settings_profile:"profilo",
+    settings_moon_on:"fascia lunare attiva",
+    settings_moon_off:"fascia lunare nascosta",
+    route_more:"Guida e approfondimenti ↓",
     label_civil_time:"Ora civile",
     label_lat:"Latitudine",
     lat_info:"Validità rispetto alla latitudine",
@@ -1320,38 +1467,38 @@ const I18N = {
     lat_info_local:"La tavola degli archi usa invece questi valori per stimare la scena locale: altezza, azimut, levata, tramonto e rapporto con l’orizzonte.",
     lat_info_standard:"tavola standard 45N±3",
     lat_info_extended:"uso orientativo con margine maggiore",
-    lat_info_advanced:"adattamento ARC disponibile in modalità avanzata",
+    lat_info_advanced:"adattamento ARC disponibile nelle Impostazioni",
     lat_info_out:"nessuna tavola locale N•E•B•R•A",
     lat_msg_extended:"Latitudine nella fascia estesa 45N±5. La tavola standard conserva valore orientativo; vicino all’orizzonte usa un margine maggiore.",
-    lat_msg_advanced:"Fuori dalla tavola standard. Apri Modalità avanzata per adattare la tavola ARC alla latitudine inserita.",
-    lat_msg_advanced_on:"Modalità avanzata attiva: scegli la tavola adattata per proiettare gli archi sulla latitudine inserita.",
+    lat_msg_advanced:"Fuori dalla tavola standard. Nelle Impostazioni puoi usare la tavola ARC adattata alla latitudine inserita.",
+    lat_msg_advanced_on:"Adattamento alla latitudine attivo: scegli la tavola adattata per proiettare gli archi sulla latitudine inserita.",
     lat_msg_adapted:"Tavola degli archi adattata alla latitudine inserita.",
     lat_msg_out:"N•E•B•R•A non dispone di una tavola locale per questa latitudine. Restano disponibili SGNgr, ARC di riferimento, ancore, TSL e ΔC. Alt, Az, levata, tramonto, visibilità locale e orizzonte non vengono calcolati.",
     lat_msg_invalid:"Inserire una latitudine fra 0N e 90N.",
-    arc_advanced_summary:"Modalità avanzata",
-    arc_advanced_enable:"Abilita adattamento sperimentale ARC alla latitudine · 30N–60N",
-    arc_advanced_note:"Attivando la modalità avanzata puoi scegliere fra la tavola degli archi standard e quella sperimentale adattata.",
-    arc_advanced_unavailable:"L’adattamento ARC non è disponibile per questa latitudine.",
+    arc_advanced_summary:"Tavola adattata alla latitudine · sperimentale",
+    arc_advanced_enable:"Usa la tavola adattata",
+    arc_advanced_note:"Scegli fra la tavola degli archi standard e quella sperimentale adattata.",
     reference45:"45N rif.",
     label_lon:"Longitudine",
     label_zone_meridian:"Meridiano del fuso (E+/O−)",
-    label_dst:"Ora legale",
-    check_dst:"+1h DST",
-    label_dst_auto:"DST auto",
-    check_dst_auto:"auto",
-    dst_device_note:"DST auto: usa le regole di ora legale del dispositivo.",
+    label_dst:"Ora legale manuale",
+    check_dst:"Attiva (+1h)",
+    label_dst_auto:"Ora legale automatica",
+    check_dst_auto:"automatica",
+    dst_device_note:"Usa le regole di ora legale del dispositivo.",
     table_day_rule:"Le posizioni giornaliere sono aggiornate a mezzogiorno TSL, così la stessa notte resta continua.",
     chart_ruler:"righello",
-    ascii_intro:"Il grafico triennale sviluppa nel tempo le stesse curve a tratti usate dal calcolo planetario. L’asse orizzontale segue le date; quello verticale la posizione lungo l’eclittica. Mostra punti caratteristici, stazioni, opposizioni, congiunzioni e sovrapposizioni fra cicli.",
-    ascii_open_link:"→ Apri le effemeridi grafiche dei pianeti",
+    ascii_intro:"Il grafico è centrato sulla data selezionata e copre circa tre anni. Sviluppa nel tempo le stesse curve a tratti usate dal calcolo planetario: l’asse orizzontale segue le date, quello verticale la posizione lungo l’eclittica.",
+    ascii_open_link:"→ Vedi le effemeridi grafiche dei pianeti",
     screen_guide_summary:"Leggere la tavola",
     screen_guide_intro:"La tavola e la tabella descrivono la stessa scena.",
     screen_guide_setup_title:"Impostare la scena",
-    screen_guide_setup_1:"Scegli data, ora e luogo oppure premi <b>Adesso</b>. Latitudine, longitudine, meridiano del fuso e ora legale collegano l’ora civile al TSL.",
-    screen_guide_setup_2:"L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; la modalità avanzata consente l’adattamento sperimentale alla latitudine inserita.",
+    screen_guide_setup_1:"Inserisci il luogo; scegli data e ora oppure premi <b>Adesso</b>. Latitudine, longitudine, meridiano del fuso e ora legale collegano l’ora civile al TSL.",
+    screen_guide_setup_2:"L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; nelle Impostazioni è disponibile la tavola adattata alla latitudine · sperimentale.",
     screen_guide_chart_title:"Leggere la tavola",
     screen_guide_chart_1:"Il righello eclittico mostra le posizioni <code>SGNgr</code>. Il centro della tavola corrisponde al meridiano; i due lati mostrano le ore prima e dopo il culmine.",
-    screen_guide_chart_2:"Ogni corpo compare sul righello, nella propria posizione eclittica, e sulla curva del proprio <code>ARC</code>, nella posizione stimata per l’ora scelta.",
+    screen_guide_chart_2:"Sul righello, il pallino e il glifo indicano la posizione eclittica del corpo. Il secondo punto, collocato sulla curva del suo <code>ARC</code>, mostra la posizione stimata nella volta.",
+    screen_guide_chart_4:"I pulsanti <strong>Sopra l’orizzonte (E → O)</strong> seguono lo stesso ordine spaziale della tavola. Toccando un nome viene evidenziato il punto corrispondente nella volta.",
     screen_guide_chart_3:"La linea dell’orizzonte separa la parte visibile della tavola. Con un profilo locale attivo, il simbolo <code>!</code> segnala un corpo che può trovarsi dietro l’ostacolo nella direzione calcolata.",
     screen_guide_table_title:"Leggere la tabella",
     screen_guide_table_lead:"Per ogni corpo e fiduciale la tabella riporta:",
@@ -1361,15 +1508,15 @@ const I18N = {
     screen_guide_table_alt:"<strong><code>Alt</code></strong> altezza stimata.",
     screen_guide_table_az:"<strong><code>Az</code></strong> direzione approssimativa.",
     screen_guide_table_2:"<code>ΔC</code> negativo indica il lato orientale, prima del culmine; positivo il lato occidentale, dopo il culmine.",
-    screen_guide_table_3:"Le righe finali raccolgono i fiduciali: stelle e gruppi riconoscibili che permettono di confrontare il risultato con il cielo reale. Le intestazioni sottolineate aprono una definizione breve delle colonne.",
+    screen_guide_table_3:"Le righe finali raccolgono i fiduciali: stelle e gruppi riconoscibili che permettono di confrontare il risultato con il cielo reale. Le intestazioni blu e sottolineate aprono una breve definizione della colonna.",
     screen_guide_sky_title:"Dalla tabella al cielo",
     screen_guide_sky_1:"Scegli un corpo e leggi, nell’ordine: il lato del meridiano da <code>ΔC</code>, l’altezza, la direzione e il fiduciale più vicino lungo il righello.",
     screen_guide_sky_2:"La tavola offre la scena d’insieme; la tabella fornisce i valori utili per orientare lo sguardo.",
     screen_guide_move_title:"Muovere la scena",
-    screen_guide_move_1:"<code>±1h</code> fa scorrere la tavola con la rotazione della volta.",
-    screen_guide_move_2:"<code>±1g</code> mostra l’avanzamento del Sole e della Luna e il moto più lento dei pianeti.",
-    screen_guide_move_3:"Il pulsante notturno passa alla visualizzazione rossa.",
-    back_to_top:"↑ Torna su",
+    screen_guide_move_1:"<code>−1h</code> e <code>+1h</code> cambiano l’ora; <code>−1g</code> e <code>+1g</code> cambiano la data. Tavola e tabella si aggiornano insieme.",
+    screen_guide_move_2:"Lo spostamento orario segue la rotazione della volta; quello giornaliero mostra l’avanzamento del Sole e della Luna e il moto più lento dei pianeti.",
+    screen_guide_move_3:"Il pulsante flottante 🌙/☀ passa dalla visualizzazione normale a quella rossa.",
+    back_to_top:"↑ Torna all’app",
     about_summary:"Cos’è N•E•B•R•A",
     about_intro:"N•E•B•R•A collega calendario, eclittica e volta locale.",
     about_what_title:"Cosa fa",
@@ -1389,8 +1536,8 @@ const I18N = {
     about_vault_text:"La tavola degli archi trasforma il righello nella volta locale. Aldebaran, Denebola e Altair formano tre pilastri distribuiti lungo il cielo: le figure <code>V</code>, <code>?</code> e <code>Y</code> aiutano a riconoscere grandi settori della volta e il tratto zodiacale sottostante.",
     about_hand_title:"A mano",
     about_hand_text_1:"Il procedimento manuale segue lo stesso ordine dell’app: posizione del Sole, età e distanza della Luna, curve planetarie, culmine e arco diurno.",
-    about_hand_text_2:"Nel blocco <strong>Le formule e i calcoli</strong> ogni settore contiene una descrizione, la formula generale, la tabella prevista e lo sviluppo con i dati selezionati. Nello stesso blocco si trovano le istruzioni per disegnare le effemeridi planetarie e la tavola degli archi.",
-    about_link_calcs:"→ Le formule e i calcoli",
+    about_hand_text_2:"Nel blocco <strong>Metodo e calcoli</strong> ogni settore contiene una descrizione, la formula generale, la tabella prevista e lo sviluppo con i dati selezionati. Nello stesso blocco si trovano le istruzioni per disegnare le effemeridi planetarie e la tavola degli archi.",
+    about_link_calcs:"→ Metodo e calcoli",
     about_link_ephemerides:"→ Disegnare le effemeridi",
     about_link_table:"→ Disegnare la tavola",
     about_app_title:"L’app",
@@ -1402,24 +1549,26 @@ const I18N = {
     gloss_arc:"Valore del modello che identifica la forma dell’arco diurno.",
     gloss_dc:"Distanza temporale dal meridiano: negativa a est, positiva a ovest.",
     gloss_tsl:"Tempo solare locale, usato per collocare la scena rispetto al meridiano.",
-    gloss_anchor_term:"Ancora",
-    gloss_anchor:"Data di una congiunzione inferiore o opposizione usata come origine di una curva planetaria.",
-    gloss_m24:"Posizione opposta al Sole, usata come riferimento delle opposizioni.",
-    calc_summary:"Le formule e i calcoli",
+    gloss_alt:"Altezza stimata del corpo sopra l’orizzonte.",
+    gloss_az:"Direzione del corpo lungo l’orizzonte.",
+    gloss_fiducial_term:"Fiduciale",
+    gloss_fiducial:"Stella o gruppo riconoscibile vicino all’eclittica, usato per confrontare il calcolo con il cielo.",
+    gloss_culmination_term:"Culmine",
+    gloss_culmination:"Passaggio di un corpo al meridiano, dove raggiunge la massima altezza del proprio arco.",
+    calc_summary:"Metodo e calcoli",
     calc_intro:"Regole generali, tabelle e calcolo della data selezionata.",
-    label_moon:"Luna",
-    check_moon_range:"fascia ±6gr",
+    check_moon_range:"Mostra la fascia lunare ±6gr",
     label_arc_table:"Tavola degli archi",
     option_arc_standard:"standard 45N±3",
     option_arc_refinement:"adattata alla latitudine · sperimentale",
-    label_horizon:"Orizzonte rettilineo",
-    horizon_profiles_summary:"Profili dell’orizzonte",
-    horizon_profiles_intro:"Il profilo è facoltativo. Senza un profilo attivo, N•E•B•R•A usa l’orizzonte rettilineo impostato qui sopra. La linea sulla tavola è orientativa; il segno ! confronta ogni oggetto con il profilo nella sua direzione stimata.",
+    label_horizon:"Altezza dell’orizzonte · gr",
+    horizon_profiles_summary:"Profilo locale",
+    horizon_profiles_intro:"Importa un profilo locale per confrontare i corpi con rilievi e ostacoli. Senza un profilo attivo viene usato l’orizzonte rettilineo indicato sopra.",
     horizon_profile_active:"Profilo attivo",
     horizon_profile_import:"Importa profilo",
     horizon_profile_export:"Esporta",
     horizon_profile_delete:"Elimina",
-    horizon_help_summary:"Istruzioni per preparare e importare un profilo",
+    horizon_help_summary:"Come preparare e importare un profilo",
     horizon_help_peakfinder:"<b>Da PeakFinder.</b> Apri PeakFinder web, porta la mappa sul punto esatto dal quale osserverai e apri il menu <b>☰</b>. Scegli <b>Export</b> → <b>Horizon for Stellarium</b>, poi conferma l’esportazione. Verrà scaricato uno ZIP: estrai il file interno <code>horizon.txt</code>, premi qui sopra <b>Importa profilo</b> e selezionalo.",
     horizon_help_manual:"<b>Creato a mano.</b> Va bene anche un file TXT o CSV con due colonne: <code>azimut altezza</code>, entrambe in gradi. Per coprire tutta la tavola, il profilo deve contenere punti da <b>50gr</b> a <b>310gr</b> di azimut; un profilo completo da 0gr a 360gr è ugualmente valido.",
     horizon_help_example:"Esempio: <code>50 12</code>   <code>180 4</code>   <code>310 18</code>",
@@ -1429,13 +1578,17 @@ const I18N = {
     label_day_step:"Giorno",
     btn_minus_day:"−1g",
     btn_plus_day:"+1g",
-    dst_info:"Informazioni su DST auto",
+    dst_info:"Informazioni sull’ora legale automatica",
     night_to_red:"Attiva la luce rossa",
     night_to_day:"Torna alla luce normale",
     close:"Chiudi",
-    tap_hint:"Tocca il grafico per ingrandire / ridurre.",
+    tap_hint:"Tocca la tavola per ingrandire / ridurre.",
+    ascii_tap_hint:"Tocca il grafico per ingrandire / ridurre.",
     ascii_summary:"Effemeridi grafiche dei pianeti",
     ascii_placeholder:"Il grafico segue la data selezionata.",
+    ascii_center_date:"Data centrale",
+    ascii_interval:"intervallo",
+    ascii_interval_value:"circa tre anni",
     arc_table:"N•E•B•R•A — TAVOLA DEGLI ARCHI",
     civil:"civ.",
     out:"fuori",
@@ -1448,8 +1601,8 @@ const I18N = {
     mars:"Marte",
     jupiter:"Giove",
     saturn:"Saturno",
-    visible:"Corpi celesti sopra l’orizzonte",
-    fid_visible:"Fiduciali sopra l’orizzonte",
+    visible:"Sopra l’orizzonte (E → O)",
+    visible_help:"Tocca un nome per evidenziarlo sulla tavola.",
     culminates_now:"C sul meridiano",
     moon_segment_note:"Fascia Luna",
     moon_segment_text:"segmento grigio = posizione lunare ±6gr lungo l’eclittica (≈±12h di moto medio; sul righello ±24m).",
@@ -1490,8 +1643,23 @@ const I18N = {
   },
   en:{
     label_language:"Language",
-    route_about:"About N•E•B•R•A", route_guide:"Read the table", route_calcs:"Formulas and calculations",
-    label_date:"Date (1583-4199)",
+    setup_heading:"When and where",
+    label_date_with_range:'Date <span class="label-inline-note">1583-4199</span>',
+    settings_summary:"Settings",
+    settings_status_prefix:"Current values:",
+    settings_time_title:"Civil time",
+    settings_table_title:"Table appearance",
+    settings_horizon_title:"Horizon",
+    scene_move_label:"Move the scene",
+    settings_zone:"zone",
+    settings_dst_auto:"automatic daylight saving",
+    settings_dst_on:"daylight saving on",
+    settings_dst_off:"daylight saving off",
+    settings_horizon_value:"horizon",
+    settings_profile:"profile",
+    settings_moon_on:"lunar band on",
+    settings_moon_off:"lunar band hidden",
+    route_more:"Guide and further reading ↓",
     label_civil_time:"Civil time",
     label_lat:"Latitude",
     lat_info:"Latitude validity",
@@ -1499,38 +1667,38 @@ const I18N = {
     lat_info_local:"The ARC table instead projects them into the local scene: altitude, azimuth, rising, setting and relation to the horizon.",
     lat_info_standard:"standard 45N±3 table",
     lat_info_extended:"orienting use with a larger margin",
-    lat_info_advanced:"ARC adaptation available in Advanced mode",
+    lat_info_advanced:"ARC adaptation available in Settings",
     lat_info_out:"no local N•E•B•R•A table",
     lat_msg_extended:"Latitude in the extended 45N±5 band. The standard table remains useful for orientation; use a larger margin close to the horizon.",
-    lat_msg_advanced:"Outside the standard table. Open Advanced mode to adapt the ARC table to the entered latitude.",
-    lat_msg_advanced_on:"Advanced mode is enabled: choose the adapted table to project arcs at the entered latitude.",
+    lat_msg_advanced:"Outside the standard table. In Settings you can use the ARC table adapted to the entered latitude.",
+    lat_msg_advanced_on:"Latitude adaptation is enabled: choose the adapted table to project arcs at the entered latitude.",
     lat_msg_adapted:"ARC table adapted to the entered latitude.",
     lat_msg_out:"N•E•B•R•A has no local table for this latitude. SGNgr, reference ARC, anchors, TSL and ΔC remain available. Alt, Az, rising, setting, local visibility and horizon are not calculated.",
     lat_msg_invalid:"Enter a latitude between 0N and 90N.",
-    arc_advanced_summary:"Advanced mode",
-    arc_advanced_enable:"Enable experimental ARC adaptation to latitude · 30N–60N",
-    arc_advanced_note:"With Advanced mode enabled, choose between the standard table and the experimental adapted table.",
-    arc_advanced_unavailable:"ARC adaptation is not available for this latitude.",
+    arc_advanced_summary:"Latitude-adapted table · experimental",
+    arc_advanced_enable:"Use the adapted table",
+    arc_advanced_note:"Choose between the standard arc table and the experimental adapted table.",
     reference45:"45N ref.",
     label_lon:"Longitude",
     label_zone_meridian:"Time-zone meridian (E+/W−)",
-    label_dst:"Daylight saving",
-    check_dst:"+1h DST",
-    label_dst_auto:"DST auto",
-    check_dst_auto:"auto",
-    dst_device_note:"DST auto uses the daylight-saving rules of the device.",
+    label_dst:"Manual daylight saving",
+    check_dst:"Enable (+1h)",
+    label_dst_auto:"Automatic daylight saving",
+    check_dst_auto:"automatic",
+    dst_device_note:"Uses the daylight-saving rules of the device.",
     table_day_rule:"Daily positions update at 12:00 TSL, so the same observing night remains continuous.",
     chart_ruler:"ruler",
-    ascii_intro:"The three-year graph develops over time the same piecewise curves used by the planetary calculation. The horizontal axis follows dates and the vertical axis the position along the ecliptic. It shows characteristic points, stations, oppositions, conjunctions and cycle overlaps.",
-    ascii_open_link:"→ Open the graphical planetary ephemerides",
+    ascii_intro:"The graph is centred on the selected date and covers about three years. It develops over time the same piecewise curves used by the planetary calculation: the horizontal axis follows dates and the vertical axis the position along the ecliptic.",
+    ascii_open_link:"→ View the graphical planetary ephemerides",
     screen_guide_summary:"Read the table",
     screen_guide_intro:"The table and the results describe the same sky scene.",
     screen_guide_setup_title:"Set the scene",
-    screen_guide_setup_1:"Choose date, time and place, or press <b>Now</b>. Latitude, longitude, time-zone meridian and daylight saving connect civil time to TSL.",
-    screen_guide_setup_2:"The horizon can be straight or taken from a local profile. The standard table refers to 45N; Advanced mode allows experimental adaptation to the entered latitude.",
+    screen_guide_setup_1:"Enter the location; choose date and time or press <b>Now</b>. Latitude, longitude, time-zone meridian and daylight saving connect civil time to TSL.",
+    screen_guide_setup_2:"The horizon can be straight or taken from a local profile. The standard table refers to 45N; Settings provides the experimental table adapted to the entered latitude.",
     screen_guide_chart_title:"Read the chart",
     screen_guide_chart_1:"The ecliptic ruler shows <code>SGNgr</code> positions. The centre of the chart is the meridian; the two sides show hours before and after culmination.",
-    screen_guide_chart_2:"Each body appears on the ruler at its ecliptic position and on its <code>ARC</code> curve at the estimated position for the selected time.",
+    screen_guide_chart_2:"On the ruler, the dot and glyph mark the body’s ecliptic position. The second point, placed on its <code>ARC</code> curve, shows the estimated position on the sky vault.",
+    screen_guide_chart_4:"The <strong>Above the horizon (E → W)</strong> buttons follow the same spatial order as the chart. Tapping a name highlights the corresponding point on the sky vault.",
     screen_guide_chart_3:"The horizon line separates the visible part of the chart. With an active local profile, <code>!</code> marks a body that may lie behind the obstacle in the calculated direction.",
     screen_guide_table_title:"Read the results",
     screen_guide_table_lead:"For each body and fiducial, the table gives:",
@@ -1540,15 +1708,15 @@ const I18N = {
     screen_guide_table_alt:"<strong><code>Alt</code></strong> estimated altitude.",
     screen_guide_table_az:"<strong><code>Az</code></strong> approximate direction.",
     screen_guide_table_2:"Negative <code>ΔC</code> means the eastern side, before culmination; positive means the western side, after culmination.",
-    screen_guide_table_3:"The final rows list fiducials: recognizable stars and groups used to compare the result with the real sky. Underlined headings open a short definition of each column.",
+    screen_guide_table_3:"The final rows list fiducials: recognizable stars and groups used to compare the result with the real sky. Blue underlined headings open a short definition of the column.",
     screen_guide_sky_title:"From results to sky",
     screen_guide_sky_1:"Choose a body and read, in order: the meridian side from <code>ΔC</code>, altitude, direction and the nearest fiducial along the ruler.",
     screen_guide_sky_2:"The chart gives the overall scene; the table gives the values used to aim your view.",
     screen_guide_move_title:"Move the scene",
-    screen_guide_move_1:"<code>±1h</code> scrolls the chart with the rotation of the sky.",
-    screen_guide_move_2:"<code>±1d</code> shows the advance of the Sun and Moon and the slower motion of the planets.",
-    screen_guide_move_3:"The night button switches to the red display.",
-    back_to_top:"↑ Back to top",
+    screen_guide_move_1:"<code>−1h</code> and <code>+1h</code> change the time; <code>−1d</code> and <code>+1d</code> change the date. Chart and results update together.",
+    screen_guide_move_2:"Hourly steps follow the rotation of the sky; daily steps show the advance of the Sun and Moon and the slower motion of the planets.",
+    screen_guide_move_3:"The floating 🌙/☀ button switches between the normal and red displays.",
+    back_to_top:"↑ Back to app",
     about_summary:"About N•E•B•R•A",
     about_intro:"N•E•B•R•A links the calendar, the ecliptic and the local sky vault.",
     about_what_title:"What it does",
@@ -1568,8 +1736,8 @@ const I18N = {
     about_vault_text:"The arc table turns the ruler into the local sky vault. Aldebaran, Denebola and Altair form three pillars distributed across the sky: the <code>V</code>, <code>?</code> and <code>Y</code> shapes help identify broad sectors of the vault and the zodiac below them.",
     about_hand_title:"By hand",
     about_hand_text_1:"The manual procedure follows the same order as the app: Sun position, Moon age and distance, planetary curves, culmination and diurnal arc.",
-    about_hand_text_2:"In <strong>Formulas and calculations</strong>, each section contains a brief description, the general formula, the relevant table and the worked calculation for the selected date. The same block includes instructions for drawing planetary ephemerides and the arc table.",
-    about_link_calcs:"→ Formulas and calculations",
+    about_hand_text_2:"In <strong>Method and calculations</strong>, each section contains a brief description, the general formula, the relevant table and the worked calculation for the selected date. The same block includes instructions for drawing planetary ephemerides and the arc table.",
+    about_link_calcs:"→ Method and calculations",
     about_link_ephemerides:"→ Draw the ephemerides",
     about_link_table:"→ Draw the arc table",
     about_app_title:"The app",
@@ -1581,24 +1749,26 @@ const I18N = {
     gloss_arc:"Model value identifying the shape of the diurnal arc.",
     gloss_dc:"Time distance from the meridian: negative to the east, positive to the west.",
     gloss_tsl:"Local solar time, used to place the scene relative to the meridian.",
-    gloss_anchor_term:"Anchor",
-    gloss_anchor:"Date of an inferior conjunction or opposition used as the origin of a planetary curve.",
-    gloss_m24:"Position opposite the Sun, used as the reference for oppositions.",
-    calc_summary:"Formulas and calculations",
+    gloss_alt:"Estimated height of the body above the horizon.",
+    gloss_az:"Direction of the body along the horizon.",
+    gloss_fiducial_term:"Fiducial",
+    gloss_fiducial:"Recognizable star or group near the ecliptic, used to compare the calculation with the sky.",
+    gloss_culmination_term:"Culmination",
+    gloss_culmination:"Passage of a body across the meridian, where it reaches the greatest height of its arc.",
+    calc_summary:"Method and calculations",
     calc_intro:"General rules, tables and calculation for the selected date.",
-    label_moon:"Moon",
-    check_moon_range:"±6gr band",
+    check_moon_range:"Show the ±6gr lunar band",
     label_arc_table:"ARC table",
     option_arc_standard:"standard 45N±3",
     option_arc_refinement:"adapted to latitude · experimental",
-    label_horizon:"Straight horizon",
-    horizon_profiles_summary:"Horizon profiles",
-    horizon_profiles_intro:"The profile is optional. With no active profile, N•E•B•R•A uses the straight horizon set above. The line on the table is indicative; ! compares each object with the profile in its estimated direction.",
+    label_horizon:"Horizon height · deg",
+    horizon_profiles_summary:"Local profile",
+    horizon_profiles_intro:"Import a local profile to compare bodies with terrain and obstacles. Without an active profile, the straight horizon set above is used.",
     horizon_profile_active:"Active profile",
     horizon_profile_import:"Import profile",
     horizon_profile_export:"Export",
     horizon_profile_delete:"Delete",
-    horizon_help_summary:"How to prepare and import a profile",
+    horizon_help_summary:"Prepare and import a profile",
     horizon_help_peakfinder:"<b>From PeakFinder.</b> Open PeakFinder web, place the map on the exact observing point and open the <b>☰</b> menu. Choose <b>Export</b> → <b>Horizon for Stellarium</b>, then confirm the export. A ZIP file will be downloaded: extract the internal <code>horizon.txt</code> file, press <b>Import profile</b> above and select it.",
     horizon_help_manual:"<b>Created manually.</b> A TXT or CSV file with two columns also works: <code>azimuth altitude</code>, both in degrees. To cover the whole table, the profile must contain points from <b>50gr</b> to <b>310gr</b> in azimuth; a complete 0gr to 360gr profile works as well.",
     horizon_help_example:"Example: <code>50 12</code>   <code>180 4</code>   <code>310 18</code>",
@@ -1608,13 +1778,17 @@ const I18N = {
     label_day_step:"Day",
     btn_minus_day:"−1d",
     btn_plus_day:"+1d",
-    dst_info:"About DST auto",
+    dst_info:"About automatic daylight saving",
     night_to_red:"Enable red light",
     night_to_day:"Return to normal light",
     close:"Close",
-    tap_hint:"Tap the chart to zoom in / out.",
+    tap_hint:"Tap the arc table to zoom in / out.",
+    ascii_tap_hint:"Tap the graph to zoom in / out.",
     ascii_summary:"Graphic planetary ephemerides",
     ascii_placeholder:"The graph follows the selected date.",
+    ascii_center_date:"Central date",
+    ascii_interval:"range",
+    ascii_interval_value:"about three years",
     arc_table:"N•E•B•R•A — ARC TABLE",
     civil:"civil",
     out:"out",
@@ -1627,8 +1801,8 @@ const I18N = {
     mars:"Mars",
     jupiter:"Jupiter",
     saturn:"Saturn",
-    visible:"Celestial bodies above horizon",
-    fid_visible:"Fiducials above horizon",
+    visible:"Above the horizon (E → W)",
+    visible_help:"Tap a name to highlight it on the chart.",
     culminates_now:"C on the meridian",
     moon_segment_note:"Moon band",
     moon_segment_text:"grey segment = lunar position ±6gr along the ecliptic (≈±12h of mean motion; ±24m on the hour ruler).",
@@ -1900,16 +2074,16 @@ function fmtHM(minutes){
   return sign + String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
 }
 function fmtDT(hours){
-  const sign = hours >= 0 ? "+" : "-";
-  let a = Math.abs(hours);
-  let h = Math.floor(a);
-  let m = Math.round((a-h)*60);
-  if(m===60){h++;m=0;}
-  return sign + h + "h" + String(m).padStart(2,"0");
+  const roundedMinutes = Math.round(hours * 60);
+  if(roundedMinutes === 0) return "00:00";
+  const sign = roundedMinutes > 0 ? "+" : "−";
+  const a = Math.abs(roundedMinutes);
+  const h = Math.floor(a/60);
+  const m = a%60;
+  return sign + String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0");
 }
 function fmtDCSide(hours){
-  if(Math.abs(hours) < 1/120) return fmtDT(0);
-  return fmtDT(hours) + " " + (hours < 0 ? T("east") : T("west"));
+  return fmtDT(hours);
 }
 function norm180(a){ return mod(a+180,360)-180; }
 
@@ -2108,9 +2282,6 @@ function lunarAgeAt(date){
     zeroCycle:L === 0 ? N : null,
     reductionCycle:N
   };
-}
-function lunarCurrentCycle(date, age){
-  return age.N;
 }
 function lunarCycleContext(date, age){
   const cycle = lunarCycleBounds(date);
@@ -2449,7 +2620,6 @@ function renderLatitudeUI(lat){
   const advanced = document.getElementById("arcAdvancedInput");
   const wrap = document.getElementById("latModeWrap");
   const mode = document.getElementById("latMode");
-  const adaptOption = mode?.querySelector('option[value="adapt"]');
   const advancedNote = document.getElementById("arcAdvancedNote");
   const localAvailable = latitudeLocalArcAvailable(lat);
   const showAdvanced = profile === "extended" || profile === "advanced";
@@ -2463,12 +2633,10 @@ function renderLatitudeUI(lat){
     if(mode) mode.value = "nebra45";
   }
 
-  if(adaptOption) adaptOption.disabled = !localAvailable;
-  if(mode && !localAvailable && mode.value === "adapt") mode.value = "nebra45";
   if(wrap) wrap.hidden = !showAdvanced || !advanced?.checked;
 
   if(advancedNote){
-    advancedNote.textContent = !showAdvanced || !advanced?.checked ? "" : localAvailable ? T("arc_advanced_note") : T("arc_advanced_unavailable");
+    advancedNote.textContent = showAdvanced && advanced?.checked ? T("arc_advanced_note") : "";
   }
   updateLatitudePopup(lat);
   return {profile, localAvailable, advancedEnabled: showAdvanced && !!advanced?.checked, modeValue: mode?.value || "nebra45"};
@@ -2634,6 +2802,27 @@ function svgEl(name, attrs={}, text=null){
   return el;
 }
 
+const CELESTIAL_GLYPH_IDS=Object.freeze({
+  Sole:"astro-sun",Luna:"astro-moon",Venere:"astro-venus",
+  Marte:"astro-mars",Giove:"astro-jupiter",Saturno:"astro-saturn"
+});
+const CELESTIAL_GLYPH_NAMES=new Set(Object.keys(CELESTIAL_GLYPH_IDS));
+
+function appendCelestialGlyph(parent,name,x,y,color,opacity=1){
+  const id=CELESTIAL_GLYPH_IDS[name];
+  if(!id) return null;
+  const g=svgEl("g",{transform:`translate(${x-9} ${y-9})`,color,opacity,
+    "pointer-events":"none",role:"img","aria-label":displayName(name)});
+  g.appendChild(svgEl("title",{},displayName(name)));
+  g.appendChild(svgEl("use",{href:`#${id}`,width:18,height:18}));
+  parent.appendChild(g);
+  return g;
+}
+function celestialGlyphHTML(name){
+  const id=CELESTIAL_GLYPH_IDS[name];
+  return id?`<svg class="visible-body-glyph" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="#${id}"></use></svg>`:"";
+}
+
 
 let activeChartHighlightName = null;
 
@@ -2648,11 +2837,11 @@ function applyChartHighlight(){
       const cx = el.getAttribute("cx"), cy = el.getAttribute("cy");
       const baseR = parseFloat(el.getAttribute("r") || "5");
       const outer = svgEl("circle", {
-        cx, cy, r:baseR + 7.2,
+        cx, cy, r:baseR + 5.8,
         class:"chart-highlight-halo outer"
       });
       const inner = svgEl("circle", {
-        cx, cy, r:baseR + 7.2,
+        cx, cy, r:baseR + 5.8,
         class:"chart-highlight-halo inner"
       });
       el.parentNode.insertBefore(outer, el);
@@ -2660,7 +2849,9 @@ function applyChartHighlight(){
     }
   });
   document.querySelectorAll(".pill-button").forEach(btn => {
-    btn.classList.toggle("active", btn.getAttribute("data-highlight-name") === activeChartHighlightName);
+    const active = btn.getAttribute("data-highlight-name") === activeChartHighlightName;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
   });
 }
 
@@ -2688,7 +2879,7 @@ function drawChart(rows, state){
   chartLayer.appendChild(svgEl("rect",{x:0,y:0,width:W,height:H,fill:"#fff"}));
   chartLayer.appendChild(svgEl("text",{x:W/2,y:32,"text-anchor":"middle","font-size":26,"font-weight":"700","font-family":"monospace"},T("arc_table")));
   chartLayer.appendChild(svgEl("text",{x:W/2,y:58,"text-anchor":"middle","font-size":14,"font-family":"monospace"},
-    `${state.dateLabel} — ${state.timeLabel} ${T("civil")} — ${state.latLabel} lon ${state.lonLabel} — F ${state.zoneLabel} — TSL ${state.tslLabel} — C = ${fmtSG(state.centerLon)}`));
+    `C = ${fmtSG(state.centerLon)}`));
   for(const [x,lab] of [[-8,"-8"],[-6,"-6"],[-4,"-4"],[-2,"-2"],[0,"C"],[2,"+2"],[4,"+4"],[6,"+6"],[8,"+8"]]){
     chartLayer.appendChild(svgEl("text",{x:xMap(x),y:111,"text-anchor":"middle","font-size":23,"font-family":"monospace"},lab));
     chartLayer.appendChild(svgEl("line",{x1:xMap(x),x2:xMap(x),y1:121,y2:137,stroke:"#111","stroke-width":1.3}));
@@ -2856,6 +3047,18 @@ function drawChart(rows, state){
   }
 
 
+  const celestialGlyphLanes = {};
+  const glyphLaneLastX = [-Infinity,-Infinity,-Infinity];
+  rows.filter(r => r.kind === "body" && CELESTIAL_GLYPH_NAMES.has(r.name) && r.x >= -8 && r.x <= 8)
+    .map(r => ({name:r.name,sx:xMap(r.x)}))
+    .sort((a,b) => a.sx-b.sx)
+    .forEach(item => {
+      let lane = glyphLaneLastX.findIndex(lastX => item.sx-lastX >= 28);
+      if(lane < 0) lane = glyphLaneLastX.indexOf(Math.min(...glyphLaneLastX));
+      celestialGlyphLanes[item.name] = lane;
+      glyphLaneLastX[lane] = item.sx;
+    });
+
   const drawRows = [...rows].sort((a,b) => (a.kind === "fid" ? 0 : 1) - (b.kind === "fid" ? 0 : 1));
   for(const r of drawRows){
     const x = r.x;
@@ -2877,9 +3080,17 @@ function drawChart(rows, state){
 
     if(r.kind === "body"){
       const baseRadius = r.name === "Sole" ? 8.2 : (r.name === "Luna" ? 6.4 : 4.2);
-      chartLayer.appendChild(svgEl("circle",{cx:sx,cy:stripY,r:baseRadius,fill:bodyColor,stroke:"#000","stroke-width":0.6,opacity:inRange?1:0.45,class:"chart-point","data-label":displayName(r.name),"data-name":r.name,"data-kind":r.kind,"data-visible":r.visible?"1":"0"}));
-      if(r.name !== "Sole"){
-        chartLayer.appendChild(svgEl("text",{x:sx,y:stripY-10,"text-anchor":"middle","font-size":11,"font-weight":"700","font-family":"monospace"}, inRange ? lab : `${lab} ${T("out")}`));
+      chartLayer.appendChild(svgEl("circle",{cx:sx,cy:stripY,r:baseRadius,fill:bodyColor,stroke:"#000","stroke-width":0.6,opacity:inRange?1:0.45,class:"chart-strip-marker","data-label":displayName(r.name),"data-name":r.name,"data-kind":r.kind,"data-visible":r.visible?"1":"0"}));
+      if(CELESTIAL_GLYPH_NAMES.has(r.name)){
+        const lane = inRange ? (celestialGlyphLanes[r.name] || 0) : 0;
+        const glyphY = stripY - 20 - lane*21;
+        if(lane > 0){
+          chartLayer.appendChild(svgEl("line",{x1:sx,x2:sx,y1:glyphY+9,y2:stripY-baseRadius-2,stroke:bodyColor,"stroke-width":0.8,opacity:0.55}));
+        }
+        appendCelestialGlyph(chartLayer,r.name,sx,glyphY,bodyColor,inRange?1:0.45);
+        if(!inRange){
+          chartLayer.appendChild(svgEl("text",{x:sx,y:glyphY-12,"text-anchor":"middle","font-size":9,"font-family":"monospace",fill:"#666"},T("out")));
+        }
       }
     }
 
@@ -2893,7 +3104,7 @@ function drawChart(rows, state){
       chartLayer.appendChild(svgEl("circle",{cx:px,cy:py,r:r.name==="Sole"?10.0:(r.name==="Luna"?8.2:(r.kind==="body"?6.0:5.0)),fill:r.kind==="body"?bodyColor:"#fff",stroke:r.kind==="body"?"#000":bodyColor,"stroke-width":r.kind==="body"?0.8:1.4,opacity:pointOpacity,class:"chart-point","data-label":displayName(r.name),"data-name":r.name,"data-kind":r.kind,"data-visible":r.visible?"1":"0"}));
     } else if(inRange && r.kind === "body"){
       chartLayer.appendChild(svgEl("line",{x1:sx,x2:sx,y1:stripY,y2:baseline,stroke:"#888","stroke-width":0.5,opacity:0.18}));
-      chartLayer.appendChild(svgEl("circle",{cx:sx,cy:baseline+8,r:r.name==="Sole"?6.8:(r.name==="Luna"?5.2:3.5),fill:bodyColor,stroke:"#000","stroke-width":0.5,opacity:0.35,class:"chart-point","data-label":displayName(r.name),"data-name":r.name,"data-kind":r.kind,"data-visible":r.visible?"1":"0"}));
+      chartLayer.appendChild(svgEl("circle",{cx:sx,cy:baseline+8,r:r.name==="Sole"?6.8:(r.name==="Luna"?5.2:3.5),fill:bodyColor,stroke:"#000","stroke-width":0.5,opacity:0.35,class:"chart-strip-marker","data-label":displayName(r.name),"data-name":r.name,"data-kind":r.kind,"data-visible":r.visible?"1":"0"}));
     }
   }
 }
@@ -2962,6 +3173,8 @@ function renderRangeError(date){
   errorLayer.appendChild(svgEl("text",{x:660,y:425,"text-anchor":"middle","font-size":15,"font-family":"monospace",fill:"#666"},T("range_svg_text")));
   const ap = document.getElementById("asciiPlanetGraph");
   if(ap) ap.textContent = "";
+  const asciiMeta = document.getElementById("asciiDateMeta");
+  if(asciiMeta) asciiMeta.textContent = "";
   const trace = document.getElementById("calcTrace");
   if(trace) trace.innerHTML = "";
   const calcDetails = document.getElementById("calcDetails");
@@ -3281,6 +3494,7 @@ function refreshApp(){
     referenceShift:meta.referenceShift,
     dateLabel:formatDateDMY(civilDate),
     timeLabel:time,
+    observerLatLabel:`${lat.toFixed(1).replace(/\.0$/," ").trim()}N`,
     latLabel: !localArcAvailable ? T("reference45") : mode==="nebra45" ? "45N" : lat.toFixed(1)+"N",
     localArcAvailable,
     arcMode: mode,
@@ -3318,6 +3532,10 @@ function drawAsciiPlanetGraph(focusDate){
   if(!pre) return;
 
   const f = ymd(focusDate);
+  const meta = document.getElementById("asciiDateMeta");
+  if(meta){
+    meta.innerHTML = `<b>${T("ascii_center_date")}:</b> ${formatDateDMY(focusDate)} · <b>${T("ascii_interval")}:</b> ${T("ascii_interval_value")}`;
+  }
   const referenceShift = referenceShiftForYear(f.y);
   let start = new Date(Date.UTC(f.y, f.m-1-18, 1));
   let end = new Date(Date.UTC(f.y, f.m-1+19, 1));
@@ -3418,16 +3636,37 @@ function drawAsciiPlanetGraph(focusDate){
 }
 
 
+function updateSettingsStatus(state, extra){
+  const el = document.getElementById("settingsStatus");
+  if(!el) return;
+  const dstText = extra.dstAuto ? T("settings_dst_auto") : (extra.dst ? T("settings_dst_on") : T("settings_dst_off"));
+  const horizonText = state.horizonProfile ? `${T("settings_profile")} ${state.horizonProfile.name}` : `${T("settings_horizon_value")} ${state.localHorizon}gr`;
+  const moonText = state.showMoonSegment ? T("settings_moon_on") : T("settings_moon_off");
+  el.textContent = `${T("settings_status_prefix")} ${T("settings_zone")} ${state.zoneLabel} · ${dstText} · ${horizonText} · ${moonText}`;
+}
+
 function renderTable(rows, state, meta, extra){
-  const visibleBodies = rows.filter(r=>r.visible && r.kind==="body");
-  const fidOrder = ["Antares","Spica","Regolo","Presepe","Cast/Poll","Aldebaran","Pleiadi"];
-  const visibleFid = fidOrder.map(name=>rows.find(r=>r.name===name && r.visible && r.kind==="fid")).filter(Boolean);
-  const pillButton = r => `<button type="button" class="pill pill-button" data-highlight-name="${r.name}">${displayName(r.name)}</button>`;
+  const visibleAll = rows
+    .filter(r => r.onSky !== undefined ? r.onSky : r.visible)
+    .sort((a,b) => a.x - b.x);
+  if(activeChartHighlightName && !visibleAll.some(r => r.name === activeChartHighlightName)){
+    activeChartHighlightName = null;
+  }
+  const pillButton = r => {
+    const glyph = r.kind === "body" ? celestialGlyphHTML(r.name) : "";
+    const obscured = !r.visible ? " obscured" : "";
+    return `<button type="button" class="pill pill-button${obscured}" data-highlight-name="${r.name}" aria-pressed="false">${glyph}<span>${displayName(r.name)}</span></button>`;
+  };
   const summary = document.getElementById("summary");
+  updateSettingsStatus(state, extra);
   summary.innerHTML = `
-    <div><b>${T("sun")}</b> ${fmtSG(extra.sun)} · <b>${T("culminates_now")}</b> ${fmtSG(state.centerLon)} · <b>TSL</b> ${state.tslLabel}</div>
-    <div style="margin-top:5px"><b>${T("visible")}</b> ${visibleBodies.length ? visibleBodies.map(pillButton).join("") : "—"}</div>
-    <div><b>${T("fid_visible")}</b> ${visibleFid.length ? visibleFid.map(pillButton).join("") : "—"}</div>
+    <div class="scene-meta-line"><b>${state.dateLabel}</b> · ${state.timeLabel} ${T("civil")} · ${state.observerLatLabel} ${state.lonLabel} · <b>TSL</b> ${state.tslLabel}</div>
+    <div><b>${T("sun")}</b> ${fmtSG(extra.sun)} · <b>${T("culminates_now")}</b> ${fmtSG(state.centerLon)}</div>
+    <div class="visible-block">
+      <div class="visible-title"><b>${T("visible")}</b></div>
+      <div class="visible-help">${T("visible_help")}</div>
+      <div class="visible-pills">${visibleAll.length ? visibleAll.map(pillButton).join("") : "—"}</div>
+    </div>
   `;
   summary.querySelectorAll(".pill-button").forEach(btn => {
     btn.addEventListener("click", () => toggleChartHighlightName(btn.getAttribute("data-highlight-name")));
@@ -3513,10 +3752,11 @@ function calcSigned(v, digits=1){
   const shown = Number.isInteger(a) ? String(a) : a.toFixed(digits).replace(/0+$/," ").trim();
   return (n > 0 ? "+" : n < 0 ? "−" : "") + shown;
 }
-function calcDateDMY(iso){
-  if(!iso) return "—";
-  const p = String(iso).split("-");
-  return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : String(iso);
+function calcDateDMY(value){
+  if(!value) return "—";
+  if(value instanceof Date) return formatDateDMY(value);
+  const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return match ? `${match[3]}.${match[2]}.${match[1]}` : String(value);
 }
 function calcHours(h){
   let m = Math.round(h * 60);
@@ -3746,8 +3986,8 @@ function calcSkyReference(year){
 }
 function calcPlanetReference(){
   const description = currentLang() === "en"
-    ? "Choose the nearest anchor t₀. The two nodes containing X are (t1,d1) and (t2,d2); interpolate d(X) between them."
-    : "Si sceglie l’ancora t₀ più vicina. I due nodi che contengono X sono (t1,d1) e (t2,d2); fra essi si interpola d(X).";
+    ? "An anchor is the date of a real inferior conjunction or opposition used as t₀. M24 is the point opposite the Sun and is the reference for oppositions. Choose the nearest anchor; between the two nodes containing X, interpolate d(X)."
+    : "Un’ancora è la data di una congiunzione inferiore o opposizione reale usata come t₀. M24 è il punto opposto al Sole e costituisce il riferimento delle opposizioni. Si sceglie l’ancora più vicina e si interpola d(X) fra i due nodi che contengono X.";
   const formula = currentLang() === "en"
     ? `X = date − t₀
 d(X) = d1 + (X−t1)/(t2−t1) × (d2−d1)`
@@ -4159,22 +4399,43 @@ Az: punto 114</pre><ol class="calc-build-list"><li>Traccia orizzonte e meridiano
   const datesDiffer = calendarDayIndex(extra.civilDate) !== calendarDayIndex(extra.tableDate);
   const tableDateLine = datesDiffer ? `<br><b>${u.tableDate}:</b> ${tableLabel}` : "";
   const dateReference=`<div class="calc-date-reference"><b>${u.civilDate}:</b> ${state.dateLabel} ${state.timeLabel} · <b>TSL:</b> ${state.tslLabel}${tableDateLine}<br>${u.rule}</div>`;
-  box.innerHTML=dateReference+[
+  const groupText = currentLang() === "en" ? {
+    refs:"References and calendar", current:"Selected-date calculation", build:"Constructing the tables", anchors:"Anchors and validity"
+  } : {
+    refs:"Riferimenti e calendario", current:"Calcolo della data selezionata", build:"Costruzione delle tavole", anchors:"Ancore e validità"
+  };
+  const calcNav = `<nav class="calc-section-nav" id="calc-index" aria-label="${currentLang()==="en"?"Calculation sections":"Sezioni dei calcoli"}">
+    <a href="#calc-group-refs">${groupText.refs}</a>
+    <a href="#calc-group-current">${groupText.current}</a>
+    <a href="#calc-group-build">${groupText.build}</a>
+    <a href="#calc-group-anchors">${groupText.anchors}</a>
+  </nav>`;
+  const groupHeading = (id,label) => `<div class="calc-group-heading" id="${id}">${label}</div>`;
+  const groupBack = `<a class="calc-group-back" href="#calc-index">${currentLang()==="en"?"↑ Calculation index":"↑ Indice dei calcoli"}</a>`;
+  box.innerHTML=dateReference+calcNav+[
+    groupHeading("calc-group-refs",groupText.refs),
     calcRulerReference(),
     calcSkyReference(y),
     calcDoomsdayReference(civilYMD.y,civilYMD.m,civilYMD.d),
+    groupBack,
+    groupHeading("calc-group-current",groupText.current),
     solarBlock,
     lunarBlock,
     calcPlanetReference(),
     venusBlock,marsBlock,jupiterBlock,saturnBlock,
     culmineBlock,
     horizonBlock,
+    groupBack,
+    groupHeading("calc-group-build",groupText.build),
     ephemerisBlock,
     tableBlock,
+    groupBack,
+    groupHeading("calc-group-anchors",groupText.anchors),
     calcExactAnchorReference(y),
     calcDecadeAnchorReference(y),
     calcSingleAnchorReference(),
-    calcValidityReference()
+    calcValidityReference(),
+    groupBack
   ].join("");
 }
 
@@ -4310,6 +4571,12 @@ document.getElementById("chartBox").addEventListener("click", () => {
     document.getElementById("chartBox").classList.toggle("zoomed");
   }
 });
+const asciiGraphBox = document.getElementById("asciiGraphBox");
+if(asciiGraphBox){
+  asciiGraphBox.addEventListener("click", () => {
+    if(window.innerWidth <= 800) asciiGraphBox.classList.toggle("zoomed");
+  });
+}
 
 
 document.getElementById("nowBtn").addEventListener("click", setTodayNow);
