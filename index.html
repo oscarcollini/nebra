@@ -1365,7 +1365,7 @@
 <div class="about-links"><a class="about-link" data-i18n="about_link_guide" data-open-details="screenGuideDetails" href="#screenGuideDetails">→ Leggere la tavola</a></div>
 <h3 data-i18n="about_hand_title">A mano</h3>
 <p data-i18n="about_hand_text_1">Il procedimento manuale segue lo stesso ordine dell’app: posizione del Sole, età e distanza della Luna, curve planetarie, culmine e arco diurno.</p>
-<p data-i18n-html="about_hand_text_2">Nel blocco <strong>Metodo e calcoli</strong> ogni settore contiene una descrizione, la formula generale, la tabella prevista e lo sviluppo con i dati selezionati. Nello stesso blocco si trovano le istruzioni per disegnare le effemeridi planetarie e la tavola degli archi.</p>
+<p data-i18n-html="about_hand_text_2">Nel blocco <strong>Metodo e calcoli</strong> i riferimenti comuni compaiono una sola volta; seguono regole, tabelle e sviluppo con i dati selezionati. In coda si trovano la costruzione delle effemeridi e della tavola, le ancore e i limiti di validità.</p>
 <div class="about-links">
 <a class="about-link" data-i18n="about_link_calcs" data-open-details="calcDetails" href="#calcDetails">→ Metodo e calcoli</a>
 <a class="about-link" data-i18n="about_link_ephemerides" data-open-child="calc-effemeridi" data-open-details="calcDetails" href="#calc-effemeridi">→ Disegnare le effemeridi</a>
@@ -1393,10 +1393,11 @@
 <p class="calc-intro" data-i18n="screen_guide_intro">La tavola e la tabella descrivono la stessa scena.</p>
 <h3 data-i18n="screen_guide_setup_title">Impostare la scena</h3>
 <p data-i18n-html="screen_guide_setup_1">Inserisci il luogo; scegli data e ora oppure premi <b>Adesso</b>. Latitudine, longitudine, meridiano del fuso e ora legale collegano l’ora civile al TSL.</p>
-<p data-i18n-html="screen_guide_setup_2">L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; nelle altre impostazioni è disponibile la tavola adattata alla latitudine · sperimentale.</p>
+<p data-i18n-html="screen_guide_setup_2">L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; in <strong>Altre impostazioni</strong> è disponibile la tavola adattata alla latitudine · sperimentale.</p>
 <h3 data-i18n="screen_guide_chart_title">Leggere la tavola</h3>
 <p data-i18n-html="screen_guide_chart_1">Il righello eclittico mostra le posizioni <code>SGNgr</code>. Il centro della tavola corrisponde al meridiano; i due lati mostrano le ore prima e dopo il culmine.</p>
 <p data-i18n-html="screen_guide_chart_2">Sul righello, il pallino e il glifo indicano la posizione eclittica del corpo. Il secondo punto, collocato sulla curva del suo <code>ARC</code>, mostra la posizione stimata nella volta.</p>
+<p data-i18n-html="screen_guide_chart_moon_band">La fascia grigia, quando attiva, indica la posizione della Luna ±6gr lungo l’eclittica.</p>
 <p data-i18n-html="screen_guide_chart_4">I pulsanti <strong>Sopra l’orizzonte (E → O)</strong> seguono lo stesso ordine spaziale della tavola. Toccando un nome viene evidenziato il punto corrispondente nella volta.</p>
 <p data-i18n-html="screen_guide_chart_3">La linea dell’orizzonte separa la parte visibile della tavola. Con un profilo locale attivo, il simbolo <code>!</code> segnala un corpo che può trovarsi dietro l’ostacolo nella direzione calcolata.</p>
 <h3 data-i18n="screen_guide_table_title">Leggere la tabella</h3>
@@ -1509,10 +1510,11 @@ const I18N = {
     screen_guide_intro:"La tavola e la tabella descrivono la stessa scena.",
     screen_guide_setup_title:"Impostare la scena",
     screen_guide_setup_1:"Inserisci il luogo; scegli data e ora oppure premi <b>Adesso</b>. Latitudine, longitudine, meridiano del fuso e ora legale collegano l’ora civile al TSL.",
-    screen_guide_setup_2:"L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; nelle altre impostazioni è disponibile la tavola adattata alla latitudine · sperimentale.",
+    screen_guide_setup_2:"L’orizzonte può essere rettilineo oppure ricavato da un profilo locale. La tavola standard è riferita a 45N; in <strong>Altre impostazioni</strong> è disponibile la tavola adattata alla latitudine · sperimentale.",
     screen_guide_chart_title:"Leggere la tavola",
     screen_guide_chart_1:"Il righello eclittico mostra le posizioni <code>SGNgr</code>. Il centro della tavola corrisponde al meridiano; i due lati mostrano le ore prima e dopo il culmine.",
     screen_guide_chart_2:"Sul righello, il pallino e il glifo indicano la posizione eclittica del corpo. Il secondo punto, collocato sulla curva del suo <code>ARC</code>, mostra la posizione stimata nella volta.",
+    screen_guide_chart_moon_band:"La fascia grigia, quando attiva, indica la posizione della Luna ±6gr lungo l’eclittica.",
     screen_guide_chart_4:"I pulsanti <strong>Sopra l’orizzonte (E → O)</strong> seguono lo stesso ordine spaziale della tavola. Toccando un nome viene evidenziato il punto corrispondente nella volta.",
     screen_guide_chart_3:"La linea dell’orizzonte separa la parte visibile della tavola. Con un profilo locale attivo, il simbolo <code>!</code> segnala un corpo che può trovarsi dietro l’ostacolo nella direzione calcolata.",
     screen_guide_table_title:"Leggere la tabella",
@@ -1552,7 +1554,7 @@ const I18N = {
     about_vault_text:"La tavola degli archi trasforma il righello nella volta locale. Aldebaran, Denebola e Altair formano tre pilastri distribuiti lungo il cielo: le figure <code>V</code>, <code>?</code> e <code>Y</code> aiutano a riconoscere grandi settori della volta e il tratto zodiacale sottostante.",
     about_hand_title:"A mano",
     about_hand_text_1:"Il procedimento manuale segue lo stesso ordine dell’app: posizione del Sole, età e distanza della Luna, curve planetarie, culmine e arco diurno.",
-    about_hand_text_2:"Nel blocco <strong>Metodo e calcoli</strong> ogni settore contiene una descrizione, la formula generale, la tabella prevista e lo sviluppo con i dati selezionati. Nello stesso blocco si trovano le istruzioni per disegnare le effemeridi planetarie e la tavola degli archi.",
+    about_hand_text_2:"Nel blocco <strong>Metodo e calcoli</strong> i riferimenti comuni compaiono una sola volta; seguono regole, tabelle e sviluppo con i dati selezionati. In coda si trovano la costruzione delle effemeridi e della tavola, le ancore e i limiti di validità.",
     about_link_calcs:"→ Metodo e calcoli",
     about_link_ephemerides:"→ Disegnare le effemeridi",
     about_link_table:"→ Disegnare la tavola",
@@ -1710,10 +1712,11 @@ const I18N = {
     screen_guide_intro:"The table and the results describe the same sky scene.",
     screen_guide_setup_title:"Set the scene",
     screen_guide_setup_1:"Enter the location; choose date and time or press <b>Now</b>. Latitude, longitude, time-zone meridian and daylight saving connect civil time to TSL.",
-    screen_guide_setup_2:"The horizon can be straight or taken from a local profile. The standard table refers to 45N; More settings provides the experimental table adapted to the entered latitude.",
+    screen_guide_setup_2:"The horizon can be straight or taken from a local profile. The standard table refers to 45N; under <strong>More settings</strong> the experimental table adapted to the entered latitude is available.",
     screen_guide_chart_title:"Read the chart",
     screen_guide_chart_1:"The ecliptic ruler shows <code>SGNgr</code> positions. The centre of the chart is the meridian; the two sides show hours before and after culmination.",
     screen_guide_chart_2:"On the ruler, the dot and glyph mark the body’s ecliptic position. The second point, placed on its <code>ARC</code> curve, shows the estimated position on the sky vault.",
+    screen_guide_chart_moon_band:"When active, the grey band marks the Moon’s position ±6gr along the ecliptic.",
     screen_guide_chart_4:"The <strong>Above the horizon (E → W)</strong> buttons follow the same spatial order as the chart. Tapping a name highlights the corresponding point on the sky vault.",
     screen_guide_chart_3:"The horizon line separates the visible part of the chart. With an active local profile, <code>!</code> marks a body that may lie behind the obstacle in the calculated direction.",
     screen_guide_table_title:"Read the results",
@@ -1753,7 +1756,7 @@ const I18N = {
     about_vault_text:"The arc table turns the ruler into the local sky vault. Aldebaran, Denebola and Altair form three pillars distributed across the sky: the <code>V</code>, <code>?</code> and <code>Y</code> shapes help identify broad sectors of the vault and the zodiac below them.",
     about_hand_title:"By hand",
     about_hand_text_1:"The manual procedure follows the same order as the app: Sun position, Moon age and distance, planetary curves, culmination and diurnal arc.",
-    about_hand_text_2:"In <strong>Method and calculations</strong>, each section contains a brief description, the general formula, the relevant table and the worked calculation for the selected date. The same block includes instructions for drawing planetary ephemerides and the arc table.",
+    about_hand_text_2:"In <strong>Method and calculations</strong>, common references appear once; rules, tables and the worked calculation for the selected date follow. The final sections cover construction of the ephemerides and arc table, anchors and validity limits.",
     about_link_calcs:"→ Method and calculations",
     about_link_ephemerides:"→ Draw the ephemerides",
     about_link_table:"→ Draw the arc table",
@@ -3781,11 +3784,11 @@ function calcUI(){
       anchorCI:"t₀ (CI)", anchorOP:"t₀ (OP)", reconstructed:"reconstructed", between:"Between", failsafe:"Failsafe", control:"decennial anchor", steps:"steps",
       stationary:"Stationary interval: −60 to +60 days", rise:"rise", set:"set", semiarc:"semiarc", heightCulm:"culm. H", culminates:"culminates", expanded:"Expanded formula", riseAz:"rise az.", setAz:"set az.", arcManual:"Manual arc calculation",
       sunNote:"The highlighted column is the month used.", interpNote:"The highlighted columns bound the selected interval.",
-      sunLead:"gamma is the day of the Sun’s entry into ARI00, read from the database.",
+      sunLead:"Γ is the day of the Sun’s entry into ARI00. The app reads it from the annual database; by hand use the tabulated value or Γ=20 when unavailable.",
       moonLead:"L is lunar age; N is the duration of the current lunation. The 29/30 reductions follow the lunations already completed; N is obtained from the actual end of the current lunation, even across 31 December. If February has no termination, the sequence continues into March without skipping a lunation. L=1 first crescent; 29/0 or 30/0 conjunction.",
       leapNote:"On 29 February use GG = 28.", at:"at", of:"of", fromDate:"on", and:"and", betweenArc:"between",
       venusDays:"Venus (days)", marsDays:"Mars (days)", jupiterDays:"Jupiter (days)", saturnDays:"Saturn (days)",
-      elongSun:"Sun elong.", eclLon:"Ecl. long.", notation:"Notation", culmination:"Culmination X", horizon:"Horizon X", references:"References"
+      elongSun:"Sun elong.", eclLon:"Ecl. long.", notation:"Notation", culmination:"Culmination and ΔC", horizon:"Horizon X", references:"References"
     };
   }
   return {
@@ -3795,11 +3798,11 @@ function calcUI(){
     anchorCI:"t₀ (CI)", anchorOP:"t₀ (OP)", reconstructed:"ricostruita", between:"Tra", failsafe:"Failsafe", control:"ancora decennale", steps:"passaggi",
     stationary:"Fermata: da −60 a +60 giorni", rise:"levata", set:"tramonto", semiarc:"semiarco", heightCulm:"H culmine", culminates:"culmina", expanded:"Formula sviluppata", riseAz:"az. levata", setAz:"az. tramonto", arcManual:"Calcolo manuale degli archi",
     sunNote:"La colonna evidenziata è il mese usato.", interpNote:"Le colonne evidenziate delimitano il tratto scelto.",
-    sunLead:"gamma è il giorno d’ingresso del Sole in ARI00, letto dal database.",
+    sunLead:"Γ è il giorno d’ingresso del Sole in ARI00. L’app lo legge dal database annuale; a mano si usa il valore tabellato oppure Γ=20 quando manca il dato.",
     moonLead:"L è l’età; N è la durata della lunazione in corso. Le riduzioni 29/30 seguono le lunazioni già terminate; N deriva dal termine effettivo della lunazione corrente, anche oltre il 31 dicembre. Se febbraio non contiene termini, la sequenza prosegue in marzo senza saltare una lunazione. L=1 prima falce; 29/0 o 30/0 congiunzione.",
     leapNote:"Il 29 febbraio usa GG = 28.", at:"a", of:"di", fromDate:"il", and:"e", betweenArc:"tra",
     venusDays:"Venere (gg)", marsDays:"Marte (gg)", jupiterDays:"Giove (gg)", saturnDays:"Saturno (gg)",
-    elongSun:"Elong. Sole", eclLon:"Longit.ecl.", notation:"Notazione", culmination:"Culmine X", horizon:"Orizzonte X", references:"Riferimenti"
+    elongSun:"Elong. Sole", eclLon:"Longit.ecl.", notation:"Notazione", culmination:"Culmine e ΔC", horizon:"Orizzonte X", references:"Riferimenti"
   };
 }
 function calcArcAffinity(lon){
@@ -3920,26 +3923,27 @@ function calcStaticBlock(id, title, html){
 }
 function calcRulerReference(){
   const description = currentLang() === "en"
-    ? "The same notation is used in formulas, tables and results."
-    : "La stessa notazione è usata nelle formule, nelle tabelle e nei risultati.";
+    ? "The same notation is used in formulas, tables and results. F and λ are positive east and negative west."
+    : "La stessa notazione è usata nelle formule, nelle tabelle e nei risultati. F e λ sono positivi a est e negativi a ovest.";
   const formula = currentLang() === "en"
     ? `DATE / TIME : DD.MM.YYYY | hh:mm
 SSAA = year | SS = century | AA = year within the century
 ARITHMETIC  : // : 26//7=3 | % : 26%7=5
 CONVERSIONS : 1 SGN = 2h | 1gr = 4m
-TSL → CIVIL : +4m/gr W of the zone meridian | +DST`
+F = time-zone meridian (E+/W−) | λ = longitude (E+/W−)
+TSL = CIVIL − DST − 4m/gr×(F−λ)
+CIVIL = TSL + DST + 4m/gr×(F−λ)`
     : `DATA / ORA  : GG.MM.SSAA | hh:mm
 SSAA = anno | SS = secolo | AA = anno nel secolo
 ARITMETICA  : // : 26//7=3 | % : 26%7=5
 CONVERSIONI : 1 SGN = 2h | 1gr = 4m
-TSL → T.CIV.: +4m/gr W del meridiano di fuso | +DST`;
+F = meridiano del fuso (E+/O−) | λ = longitudine (E+/O−)
+TSL = T.CIV. − DST − 4m/gr×(F−λ)
+T.CIV. = TSL + DST + 4m/gr×(F−λ)`;
   return calcUniformBlock({id:"calc-righello",title:currentLang()==="en"?"Notation and conversions":"Notazione e conversioni",description,formula});
 }
 function calcSkyReference(year){
   const F = referenceShiftForYear(year);
-  const description = currentLang() === "en"
-    ? "Fiducials mark recognizable positions near the ecliptic; the three pillars orient broad sectors of the vault. All marks share the same precessional shift F."
-    : "I fiduciali segnano posizioni riconoscibili vicine all’eclittica; i tre pilastri orientano grandi settori della volta. Tutte le tacche condividono lo stesso scarto precessionale F.";
   const formula = currentLang() === "en"
     ? `prec.eq. [<<] F: 5gr/360 years | F0: 1840–2199`
     : `prec.eq. [<<] F: 5gr/360 anni | F0: 1840–2199`;
@@ -3962,7 +3966,7 @@ function calcSkyReference(year){
 <tr><th>Antares</th><td>SAG10</td></tr>
 </tbody></table></div>`;
   const current = `F(${year}) = ${F>0?"+":""}${F}gr`;
-  return calcUniformBlock({id:"calc-riferimenti-cielo",title:currentLang()==="en"?"Sky references":"Riferimenti del cielo",description,formula,table,current});
+  return calcUniformBlock({id:"calc-riferimenti-cielo",title:currentLang()==="en"?"Sky references":"Riferimenti del cielo",formula,table,current});
 }
 function calcPlanetReference(){
   const description = currentLang() === "en"
@@ -4018,9 +4022,9 @@ function calcExactAnchorReference(year){
     {name:displayName("Saturno"), event:"OP", rows:calcExactAnchorWindow(ANCHORS.SATURN_OP, start, end)}
   ]);
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-ancore", `R1 · Ephemeris anchors ${start}–${end}`, `<p><code>CI</code> = inferior conjunction; <code>OP</code> = opposition. The preferred reference is the real date of a Venus CI or a Mars, Jupiter or Saturn OP, taken from an ephemeris or almanac. From that date N•E•B•R•A derives the event position: the Sun for Venus, the Sun plus six signs for an opposition. The app stores the complete date series from <code>1900</code> through <code>2199</code>.</p><p>This table shows the five years before and after the reference year; an asterisk marks the immediately adjacent anchor outside each margin. The planet cards above show the anchor actually used and the distance <code>X</code>.</p>${table}`);
+    return calcStaticBlock("calc-ancore", `R1 · Real app anchors ${start}–${end}`, `<p><code>CI</code> = inferior conjunction; <code>OP</code> = opposition. The preferred reference is the real date of a Venus CI or a Mars, Jupiter or Saturn OP, taken from an ephemeris or almanac. From that date N•E•B•R•A derives the event position: the Sun for Venus, the Sun plus six signs for an opposition. The app stores the complete date series from <code>1900</code> through <code>2199</code>.</p><p>This table shows the five years before and after the reference year; an asterisk marks the immediately adjacent anchor outside each margin. The planet cards above show the anchor actually used and the distance <code>X</code>.</p>${table}`);
   }
-  return calcStaticBlock("calc-ancore", `R1 · Ancore da effemeridi ${start}–${end}`, `<p><code>CI</code> = congiunzione inferiore; <code>OP</code> = opposizione. Il riferimento preferibile è la data reale di una CI di Venere o di una OP di Marte, Giove o Saturno, ricavata da effemeridi o almanacco. Da quella data N•E•B•R•A ricava la posizione dell’evento: il Sole per Venere, il Sole più sei segni per un’opposizione. L’app conserva la serie completa delle date dal <code>1900</code> al <code>2199</code>.</p><p>La tabella mostra i cinque anni precedenti e successivi all’anno di riferimento; l’asterisco indica l’ancora immediatamente esterna a ciascun margine. Le schede dei pianeti riportano l’ancora effettivamente usata e la distanza <code>X</code>.</p>${table}`);
+  return calcStaticBlock("calc-ancore", `R1 · Ancore reali dell’app ${start}–${end}`, `<p><code>CI</code> = congiunzione inferiore; <code>OP</code> = opposizione. Il riferimento preferibile è la data reale di una CI di Venere o di una OP di Marte, Giove o Saturno, ricavata da effemeridi o almanacco. Da quella data N•E•B•R•A ricava la posizione dell’evento: il Sole per Venere, il Sole più sei segni per un’opposizione. L’app conserva la serie completa delle date dal <code>1900</code> al <code>2199</code>.</p><p>La tabella mostra i cinque anni precedenti e successivi all’anno di riferimento; l’asterisco indica l’ancora immediatamente esterna a ciascun margine. Le schede dei pianeti riportano l’ancora effettivamente usata e la distanza <code>X</code>.</p>${table}`);
 }
 function calcDecadeAnchorReference(year){
   const center = Math.max(1680, Math.min(4090, Math.floor(year/10)*10));
@@ -4028,7 +4032,7 @@ function calcDecadeAnchorReference(year){
   const end = center + 100;
   const table = calcDecadeAnchorTable(start, end);
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-controlli", `R2 · Decennial anchors ${start}–${end} and failsafe`, `<p>Outside <code>1900–2199</code>, one real anchor per planet is retained for each decade. The failsafe starts from the last decennial anchor not later than the selected date, generates successive CI or OP events, and uses the reconstructed event nearest to the date.</p><pre class="calc-code">Venus    CI+ = CI + 584 days
+    return calcStaticBlock("calc-controlli", `R2 · Decennial anchors ${start}–${end} and automatic reconstruction`, `<p>Outside <code>1900–2199</code>, one real anchor per planet is retained for each decade. The automatic reconstruction starts from the last decennial anchor not later than the selected date, generates successive CI or OP events, and uses the reconstructed event nearest to the date.</p><pre class="calc-code">Venus    CI+ = CI + 584 days
 Jupiter  OP+ = OP + 399 days
 Saturn   OP+ = OP + 378 days
 
@@ -4039,7 +4043,7 @@ if p &lt; 210:  days = 809 − p//4
 if p ≥ 210:  days = 690 + p//3
 OP+ = OP + days</pre><p>At the estimated date, a Venus CI takes the Sun’s position; an opposition takes <code>M24 = Sun + 6 signs</code>. Error can grow with the number of steps from the real anchor.</p>${table}`);
   }
-  return calcStaticBlock("calc-controlli", `R2 · Ancore decennali ${start}–${end} e failsafe`, `<p>Fuori dal <code>1900–2199</code> viene conservata un’ancora reale per pianeta in ogni decennio. Il failsafe parte dall’ultima ancora decennale che non segue la data scelta, genera le CI o le OP successive e usa l’evento ricostruito più vicino alla data.</p><pre class="calc-code">Venere   CI+ = CI + 584 giorni
+  return calcStaticBlock("calc-controlli", `R2 · Ancore decennali ${start}–${end} e ricostruzione automatica`, `<p>Fuori dal <code>1900–2199</code> viene conservata un’ancora reale per pianeta in ogni decennio. La ricostruzione automatica parte dall’ultima ancora decennale che non segue la data scelta, genera le CI o le OP successive e usa l’evento ricostruito più vicino alla data.</p><pre class="calc-code">Venere   CI+ = CI + 584 giorni
 Giove    OP+ = OP + 399 giorni
 Saturno  OP+ = OP + 378 giorni
 
@@ -4052,7 +4056,7 @@ OP+ = OP + gg</pre><p>Alla data stimata, una CI di Venere assume la posizione de
 }
 function calcSingleAnchorReference(){
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-ancora-unica", "R3 · Propagation from one known anchor", `<p>For each planet, the calculation can start from any real inferior conjunction or opposition whose date is known. This date is indicated by <code>t₀</code>. From <code>t₀</code>, use long jumps and, when useful, intermediate jumps to reach a region from which only a few consecutive events are needed to reach the required one.</p><p>Jumps may be applied forward or backward. In a jump expressed in calendar years and days, shift the calendar year first, then add or subtract the days. For Mars, <code>g(p)</code> gives only the next opposition: the last intermediate anchor must therefore precede the target date.</p><p>The examples below use the real anchors of 1583 as <code>t₀</code>, to show an extended propagation to the events near 2000. The same rules apply from any other known real anchor.</p><p><b>Anchors used in the examples</b></p><pre class="calc-code">Venus   CI  22.12.1583
+    return calcStaticBlock("calc-ancora-unica", "R3 · Manual failsafe from one known anchor", `<p>For each planet, the calculation can start from any real inferior conjunction or opposition whose date is known. This date is indicated by <code>t₀</code>. From <code>t₀</code>, use long jumps and, when useful, intermediate jumps to reach a region from which only a few consecutive events are needed to reach the required one.</p><p>Jumps may be applied forward or backward. In a jump expressed in calendar years and days, shift the calendar year first, then add or subtract the days. For Mars, <code>g(p)</code> gives only the next opposition: the last intermediate anchor must therefore precede the target date.</p><p>The examples below use the real anchors of 1583 as <code>t₀</code>, to show an extended propagation to the events near 2000. The same rules apply from any other known real anchor.</p><p><b>Anchors used in the examples</b></p><pre class="calc-code">Venus   CI  22.12.1583
 Mars    OP  07.01.1583
 Jupiter OP  17.09.1583
 Saturn  OP  13.09.1583</pre>
@@ -4073,9 +4077,9 @@ Saturn  OP  13.09.1583</pre>
 14.01.2006 −584d = 09.06.2004
 09.06.2004 −584d = 03.11.2002
 03.11.2002 −584d = 29.03.2001</pre><p><b>Calculated CI:</b> <code>29.03.2001</code>.</p>
-<h3>Mars · oppositions</h3><p><b>Rule.</b> Use long jumps of <code>+79 years +3 days</code> forward and <code>−79 years −3 days</code> backward. After the 79-year jumps, apply a correction of one day for every leap century passed: <code>1600, 2000, 2400, 2800…</code>. Forward, subtract the correction <code>C</code>; backward, add it. Within a 79-year block, an intermediate jump may be used up to four times: <code>+17 years +22 days</code> forward and <code>−17 years −22 days</code> backward.</p><pre class="calc-code">p = (pos − 292 − F) % 360
+<h3>Mars · oppositions</h3><p><b>Rule.</b> Use long jumps of <code>+79 years +3 days</code> forward and <code>−79 years −3 days</code> backward. After the 79-year jumps, apply a correction of one day for every leap century passed: <code>1600, 2000, 2400, 2800…</code>. Forward, subtract the correction <code>C</code>; backward, add it. Within the longer cycle, repeat the intermediate jump whenever useful, forward or backward: <code>+17 years +22 days</code> or <code>−17 years −22 days</code>. The combination of the periods means that no more than two intermediate jumps are needed.</p><pre class="calc-code">p = (pos − 292 − F) % 360
 if p &lt; 210: g(p) = 809 − p//4
-if p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> is the longitude of Mars at the current opposition, equal to the Sun plus 180gr. Calculate the Sun’s position with the rule in block G. If the annual value of <code>Γ</code> is unavailable, the mean value <code>Γ=20</code> may be used, with a possible additional error of ±1gr. <code>F=0</code> in 1840–2199; it is <code>−5</code> in 1583–1839, <code>+5</code> in 2200–2559, and changes by 5gr every 360 years. Recalculate <code>pos</code>, <code>p</code> and <code>g(p)</code> after every opposition.</p><pre class="calc-code">07.01.1583 +5×79y = 07.01.1978
+if p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> is the longitude of Mars at the current opposition, equal to the Sun plus 180gr. Calculate the Sun’s position with the rule in the Sun block. If the annual value of <code>Γ</code> is unavailable, the mean value <code>Γ=20</code> may be used, with a possible additional error of ±1gr. <code>F=0</code> in 1840–2199; it is <code>−5</code> in 1583–1839, <code>+5</code> in 2200–2559, and changes by 5gr every 360 years. Recalculate <code>pos</code>, <code>p</code> and <code>g(p)</code> after every opposition.</p><pre class="calc-code">07.01.1583 +5×79y = 07.01.1978
 +5×3d −C        = 21.01.1978   [C=1: 1600]
 +17y +22d       = 12.02.1995
 
@@ -4103,7 +4107,7 @@ g(p)=690+279//3=783d
 05.11.1999 +378d = 17.11.2000</pre><p><b>Calculated OP:</b> <code>17.11.2000</code>. Only four local steps were used, so no extra day is added.</p>
 <p class="calc-table-caption">Check against real events near 2000</p><div class="calc-table-wrap"><table class="calc-vertical-table"><tr><th>Planet</th><th>Calculated</th><th>Real</th><th>Difference</th></tr><tr><td>Venus · CI</td><td>29.03.2001</td><td>30.03.2001</td><td>−1d</td></tr><tr><td>Mars · OP</td><td>13.06.2001</td><td>13.06.2001</td><td>0d</td></tr><tr><td>Jupiter · OP</td><td>23.11.2000</td><td>28.11.2000</td><td>−5d</td></tr><tr><td>Saturn · OP</td><td>17.11.2000</td><td>19.11.2000</td><td>−2d</td></tr></table></div>`);
   }
-  return calcStaticBlock("calc-ancora-unica", "R3 · Propagazione da una sola ancora nota", `<p>Per ciascun pianeta il calcolo può partire da qualunque congiunzione inferiore o opposizione reale di data nota. Questa data è indicata con <code>t₀</code>. Da <code>t₀</code> si usano i salti lunghi e, se utili, quelli intermedi per portarsi in una zona da cui bastino pochi eventi consecutivi per raggiungere quello cercato.</p><p>I salti si possono applicare in avanti o a ritroso. Nei salti espressi in anni e giorni si sposta prima l’anno di calendario, poi si aggiungono o sottraggono i giorni. Per Marte, <code>g(p)</code> conduce soltanto all’opposizione successiva: l’ultima ancora intermedia deve quindi precedere la data cercata.</p><p>Gli esempi seguenti usano come <code>t₀</code> le ancore reali del 1583, per mostrare una propagazione estesa fino agli eventi attorno al 2000. Le stesse regole si applicano partendo da qualsiasi altra ancora reale nota.</p><p><b>Ancore usate negli esempi</b></p><pre class="calc-code">Venere   CI  22.12.1583
+  return calcStaticBlock("calc-ancora-unica", "R3 · Failsafe manuale da una sola ancora", `<p>Per ciascun pianeta il calcolo può partire da qualunque congiunzione inferiore o opposizione reale di data nota. Questa data è indicata con <code>t₀</code>. Da <code>t₀</code> si usano i salti lunghi e, se utili, quelli intermedi per portarsi in una zona da cui bastino pochi eventi consecutivi per raggiungere quello cercato.</p><p>I salti si possono applicare in avanti o a ritroso. Nei salti espressi in anni e giorni si sposta prima l’anno di calendario, poi si aggiungono o sottraggono i giorni. Per Marte, <code>g(p)</code> conduce soltanto all’opposizione successiva: l’ultima ancora intermedia deve quindi precedere la data cercata.</p><p>Gli esempi seguenti usano come <code>t₀</code> le ancore reali del 1583, per mostrare una propagazione estesa fino agli eventi attorno al 2000. Le stesse regole si applicano partendo da qualsiasi altra ancora reale nota.</p><p><b>Ancore usate negli esempi</b></p><pre class="calc-code">Venere   CI  22.12.1583
 Marte    OP  07.01.1583
 Giove    OP  17.09.1583
 Saturno  OP  13.09.1583</pre>
@@ -4124,9 +4128,9 @@ Saturno  OP  13.09.1583</pre>
 14.01.2006 −584g = 09.06.2004
 09.06.2004 −584g = 03.11.2002
 03.11.2002 −584g = 29.03.2001</pre><p><b>CI calcolata:</b> <code>29.03.2001</code>.</p>
-<h3>Marte · opposizioni</h3><p><b>Regola.</b> Si usano salti lunghi di <code>+79 anni +3 giorni</code> in avanti e <code>−79 anni −3 giorni</code> a ritroso. Compiuti i salti da 79 anni, si applica una correzione di un giorno per ogni secolo bisestile superato: <code>1600, 2000, 2400, 2800…</code>. In avanti la correzione <code>C</code> si sottrae; a ritroso si aggiunge. Entro un blocco di 79 anni si può usare fino a quattro volte il salto intermedio: <code>+17 anni +22 giorni</code> in avanti e <code>−17 anni −22 giorni</code> a ritroso.</p><pre class="calc-code">p = (pos − 292 − F) % 360
+<h3>Marte · opposizioni</h3><p><b>Regola.</b> Si usano salti lunghi di <code>+79 anni +3 giorni</code> in avanti e <code>−79 anni −3 giorni</code> a ritroso. Compiuti i salti da 79 anni, si applica una correzione di un giorno per ogni secolo bisestile superato: <code>1600, 2000, 2400, 2800…</code>. In avanti la correzione <code>C</code> si sottrae; a ritroso si aggiunge. All’interno del ciclo più lungo il salto intermedio si ripete finché è utile, in avanti o a ritroso: <code>+17 anni +22 giorni</code> oppure <code>−17 anni −22 giorni</code>. La combinazione dei periodi fa sì che non ne servano più di due.</p><pre class="calc-code">p = (pos − 292 − F) % 360
 se p &lt; 210: g(p) = 809 − p//4
-se p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> è la longitudine di Marte all’opposizione corrente, uguale al Sole più 180gr. La posizione del Sole si ricava con la regola del blocco G. In mancanza del valore annuale di <code>Γ</code> si può usare il valore medio <code>Γ=20</code>, con un possibile errore aggiuntivo di ±1gr. <code>F=0</code> nel 1840–2199; vale <code>−5</code> nel 1583–1839, <code>+5</code> nel 2200–2559 e cambia di 5gr ogni 360 anni. Dopo ogni opposizione si ricalcolano <code>pos</code>, <code>p</code> e <code>g(p)</code>.</p><pre class="calc-code">07.01.1583 +5×79a = 07.01.1978
+se p ≥ 210: g(p) = 690 + p//3</pre><p><code>pos</code> è la longitudine di Marte all’opposizione corrente, uguale al Sole più 180gr. La posizione del Sole si ricava con la regola del blocco Sole. In mancanza del valore annuale di <code>Γ</code> si può usare il valore medio <code>Γ=20</code>, con un possibile errore aggiuntivo di ±1gr. <code>F=0</code> nel 1840–2199; vale <code>−5</code> nel 1583–1839, <code>+5</code> nel 2200–2559 e cambia di 5gr ogni 360 anni. Dopo ogni opposizione si ricalcolano <code>pos</code>, <code>p</code> e <code>g(p)</code>.</p><pre class="calc-code">07.01.1583 +5×79a = 07.01.1978
 +5×3g −C          = 21.01.1978   [C=1: 1600]
 +17a +22g          = 12.02.1995
 
@@ -4156,9 +4160,9 @@ g(p)=690+279//3=783g
 }
 function calcValidityReference(){
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-validita", "R4 · Validity", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Ecliptic positions</b>The ruler positions are general. Fiducials and pillars retain 5gr-rounded marks and shift together by 5gr every 360 years.</div><div class="calc-mini-card"><b>Local sky</b>ARC, altitude, rise, set and arc shape depend on place. The standard table is designed for 45N and is practical at about 42N–48N.</div><div class="calc-mini-card"><b>Time</b>The app covers 1583–4199; exact anchors are used in 1900–2199 and decennial failsafe reconstruction outside it.</div><div class="calc-mini-card"><b>Observation</b>Positions are normally within about 15gr in useful observing situations. The Moon may differ by roughly one lunar day.</div></div>`);
+    return calcStaticBlock("calc-validita", "R4 · Validity", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Sun</b>The calendar rule normally places the Sun within a few degrees. Using <code>Γ=20</code> when the annual value is unavailable may add about ±1gr.</div><div class="calc-mini-card"><b>Moon</b>The practical difference may reach roughly one lunar day.</div><div class="calc-mini-card"><b>Planets</b>Positions are of the order of 15gr in useful observing situations and are often better.</div><div class="calc-mini-card"><b>Local sky</b>The standard table is designed for 45N and is practical at about 42N–48N. The latitude-adapted table is experimental.</div><div class="calc-mini-card"><b>Intervals</b>The app covers 1583–4199; exact planetary anchors are used in 1900–2199 and decennial automatic reconstruction outside that interval.</div><div class="calc-mini-card"><b>References</b>Ecliptic-ruler positions are general. Fiducials and pillars retain 5gr-rounded marks and shift together by 5gr every 360 years.</div></div>`);
   }
-  return calcStaticBlock("calc-validita", "R4 · Validità", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Posizioni eclittiche</b>Le posizioni sul righello hanno valore generale. Fiduciali e pilastri conservano tacche arrotondate a 5gr e scattano insieme di 5gr ogni 360 anni.</div><div class="calc-mini-card"><b>Cielo locale</b>ARC, altezza, levata, tramonto e forma dell’arco dipendono dal luogo. La tavola standard è pensata per 45N ed è pratica fra circa 42N e 48N.</div><div class="calc-mini-card"><b>Tempo</b>L’app copre il 1583–4199; usa ancore esatte nel 1900–2199 e la ricostruzione failsafe da ancore decennali fuori da questa fascia.</div><div class="calc-mini-card"><b>Osservazione</b>Le posizioni restano normalmente entro circa 15gr nelle situazioni utili. Per la Luna lo scarto può raggiungere l’ordine di un giorno lunare.</div></div>`);
+  return calcStaticBlock("calc-validita", "R4 · Validità", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Sole</b>La regola di calendario colloca normalmente il Sole entro pochi gradi. Usare <code>Γ=20</code> quando manca il valore annuale può aggiungere circa ±1gr.</div><div class="calc-mini-card"><b>Luna</b>Lo scarto pratico può raggiungere l’ordine di un giorno lunare.</div><div class="calc-mini-card"><b>Pianeti</b>Le posizioni sono dell’ordine di 15gr nelle situazioni osservative utili e spesso risultano migliori.</div><div class="calc-mini-card"><b>Cielo locale</b>La tavola standard è pensata per 45N ed è pratica fra circa 42N e 48N. La tavola adattata alla latitudine è sperimentale.</div><div class="calc-mini-card"><b>Intervalli</b>L’app copre il 1583–4199; usa ancore planetarie esatte nel 1900–2199 e la ricostruzione automatica da ancore decennali fuori da questa fascia.</div><div class="calc-mini-card"><b>Riferimenti</b>Le posizioni sul righello hanno valore generale. Fiduciali e pilastri conservano tacche arrotondate a 5gr e scattano insieme di 5gr ogni 360 anni.</div></div>`);
 }
 function renderCalculationTrace(date, rows, state, meta, extra){
   const box = document.getElementById("calcTrace");
@@ -4178,19 +4182,19 @@ function renderCalculationTrace(date, rows, state, meta, extra){
   const yMonth = Y_MONTH[m];
   const I = gamma + yMonth;
   const solarFormula = currentLang() === "en"
-    ? `I = gamma + y
+    ? `I = Γ + y
 
 If GG≥I: SGN=MM;   gr=GG−I
 If GG<I:  SGN=MM−1; gr=30−I+GG`
-    : `I = gamma + y
+    : `I = Γ + y
 
 Se GG≥I: SGN=MM;   gr=GG−I
 Se GG<I:  SGN=MM−1; gr=30−I+GG`;
   let solarCurrent;
   if(d >= I){
-    solarCurrent = `gamma = ${gamma}   [ARI00: ${extra.ariesEntry}]
+    solarCurrent = `Γ = ${gamma}   [ARI00: ${extra.ariesEntry}]
 y(${monthNames[m]}) = ${yMonth}
-I = gamma + y = ${gamma} + ${yMonth} = ${I}
+I = Γ + y = ${gamma} + ${yMonth} = ${I}
 
 GG = ${d} ≥ ${I}
 SGN = ${monthSign}
@@ -4199,9 +4203,9 @@ gr = ${d}−${I} = ${String(d-I).padStart(2,"0")}
 ${displayName("Sole")} = ${sunRow.sg}`;
   }else{
     const prev = MONTH_SIGNS[m === 1 ? 12 : m-1];
-    solarCurrent = `gamma = ${gamma}   [ARI00: ${extra.ariesEntry}]
+    solarCurrent = `Γ = ${gamma}   [ARI00: ${extra.ariesEntry}]
 y(${monthNames[m]}) = ${yMonth}
-I = gamma + y = ${gamma} + ${yMonth} = ${I}
+I = Γ + y = ${gamma} + ${yMonth} = ${I}
 
 GG = ${d} < ${I}
 SGN = ${prev}
@@ -4210,8 +4214,8 @@ gr = 30−${I}+${d} = ${String(30-I+d).padStart(2,"0")}
 ${displayName("Sole")} = ${sunRow.sg}`;
   }
   const solarDescription = currentLang() === "en"
-    ? "From the Sun’s entry day in ARI00 and the monthly value y, the calendar date is converted into SGNgr. gamma is read from the database."
-    : "Dal giorno d’ingresso del Sole in ARI00 e dal valore mensile y, la data viene convertita in SGNgr. gamma è letto dal database.";
+    ? "From the Sun’s entry day in ARI00 and the monthly value y, the calendar date is converted into SGNgr. In the app Γ is read from the annual database; by hand use the tabulated value or Γ=20 when it is unavailable."
+    : "Dal giorno d’ingresso del Sole in ARI00 e dal valore mensile y, la data viene convertita in SGNgr. Nell’app Γ è letto dal database annuale; nel calcolo a mano si usa il valore tabellato oppure Γ=20 quando il dato non è disponibile.";
   const solarTable = calcRefTable(u.monthTable,[{label:"MM",values:monthNames.slice(1)},{label:"y",values:Y_MONTH.slice(1)},{label:"SGN",values:MONTH_SIGNS.slice(1)}],m-1);
   const solarBlock = calcUniformBlock({id:"calc-sole",title:`1 · ${displayName("Sole")} · ${sunRow.sg}`,description:solarDescription,formula:solarFormula,table:solarTable,current:solarCurrent,note:u.sunNote});
 
@@ -4238,23 +4242,25 @@ ${displayName("Sole")} = ${sunRow.sg}`;
   const lunarFormula = currentLang() === "en"
     ? `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
 L = E + R + GG
-Subtract, in order, the 29/30 lunations already completed.
-N is the duration at the actual end of the current lunation, even across 31 December.
-If February has no termination, the sequence continues into March without skipping a lunation.
+Subtract, in order, the lunations already completed.
+For each month of termination: 1st lunation N=29 in an even month | N=30 in an odd month.
+A 2nd lunation ending in the same month uses the opposite N.
+N of the lunation containing the date remains valid across 31 December.
+If February has no termination, the sequence continues into March.
 29/0 | 30/0 = conjunction   [29/02: GG=28]
 
-N = duration of the current lunation
 SGN = (L+30−N)×2//5
 gr  = ((L+30−N)×2%5)×6
 Moon = Sun + SGN + gr`
     : `E = ((SSAA%19)×11 + [8−SS + SS//4 + SS//3]) %30
 L = E + R + GG
-Sottrai nell’ordine le lunazioni 29/30 già terminate.
-N è la durata al termine effettivo della lunazione corrente, anche oltre il 31 dicembre.
-Se febbraio non contiene termini, la sequenza prosegue in marzo senza saltare una lunazione.
+Sottrai nell’ordine le lunazioni già terminate.
+Per ogni mese di termine: 1a lunazione N=29 con mese pari | N=30 con mese dispari.
+Una 2a lunazione che termina nello stesso mese usa N opposto.
+N della lunazione che contiene la data vale anche oltre il 31 dicembre.
+Se febbraio non contiene termini, la sequenza prosegue in marzo.
 29/0 | 30/0 = congiunzione   [29/02: GG=28]
 
-N = durata della lunazione in corso
 SGN = (L+30−N)×2//5
 gr  = ((L+30−N)×2%5)×6
 Luna = Sole + SGN + gr`;
@@ -4287,7 +4293,7 @@ ${calcEqInterp("gr",vTr)}
 ${displayName("Venere")} = ${displayName("Sole")} + d(X)
        = ${sunRow.sg} ${meta.venus.elong<0?"−":"+"} ${Math.abs(meta.venus.elong).toFixed(1).replace(/\.0$/,"")}gr
        ≈ ${venusRow.sg}`;
-  const venusBlock=calcUniformBlock({id:"calc-venere",title:`3a · ${displayName("Venere")} · ${venusRow.sg}`,description:currentLang()==="en"?"The nearest inferior conjunction gives t₀; the curve returns elongation from the Sun.":"La congiunzione inferiore più vicina dà t₀; la curva restituisce l’elongazione dal Sole.",formula:`${displayName("Venere")} = ${displayName("Sole")} + d(X)`,table:venusTable,current:venusCurrent,note:u.interpNote});
+  const venusBlock=calcUniformBlock({id:"calc-venere",title:`3a · ${displayName("Venere")} · ${venusRow.sg}`,description:currentLang()==="en"?"Anchor: nearest inferior conjunction. Here d(X) is elongation from the Sun.":"Ancora: congiunzione inferiore più vicina. Qui d(X) è l’elongazione dal Sole.",table:venusTable,current:venusCurrent,note:u.interpNote});
 
   const mPts=MARS_POINTS, mTr=calcTraceSegment(mPts,meta.mars.d);
   const marsTable=calcCurveTable(`${u.curveNodes} · t₀=OP`,mPts,meta.mars.d,u.eclLon,u.marsDays);
@@ -4300,7 +4306,7 @@ ${calcEqInterp("gr",mTr)}
 ${displayName("Marte")} = M24 + d(X)
       = ${meta.mars.op.sg} ${meta.mars.offset<0?"−":"+"} ${Math.abs(meta.mars.offset).toFixed(1).replace(/\.0$/,"")}gr
       ≈ ${marsRow.sg}`;
-  const marsBlock=calcUniformBlock({id:"calc-marte",title:`3b · ${displayName("Marte")} · ${marsRow.sg}`,description:currentLang()==="en"?"The nearest opposition gives t₀ and M24; the curve gives the ecliptic displacement from it.":"L’opposizione più vicina dà t₀ e M24; la curva fornisce lo scostamento eclittico da quel punto.",formula:`${displayName("Marte")} = M24 + d(X)`,table:marsTable,current:marsCurrent,note:u.interpNote});
+  const marsBlock=calcUniformBlock({id:"calc-marte",title:`3b · ${displayName("Marte")} · ${marsRow.sg}`,description:currentLang()==="en"?"Anchor: nearest opposition, which fixes t₀ and M24. Here d(X) is the ecliptic displacement from M24.":"Ancora: opposizione più vicina, che fissa t₀ e M24. Qui d(X) è lo scostamento eclittico da M24.",table:marsTable,current:marsCurrent,note:u.interpNote});
 
   const jPts=JUPITER_POINTS, jTr=calcTraceSegment(jPts,meta.jupiter.d);
   const jupiterTable=calcCurveTable(`${u.curveNodes} · t₀=OP`,jPts,meta.jupiter.d,u.eclLon,u.jupiterDays);
@@ -4310,7 +4316,7 @@ X = ${currentLang()==="en"?"date":"data"}−t₀ = ${calcSigned(meta.jupiter.d,0
 ${Math.abs(meta.jupiter.d)<=60?`${u.stationary}\nd(X) = 0gr`:`${u.between} ${calcSigned(jTr.x0,0)} → ${calcSigned(jTr.y0,0)}gr ${u.and} ${calcSigned(jTr.x1,0)} → ${calcSigned(jTr.y1,0)}gr:\n${calcEqInterp("gr",jTr)}`}
 
 ${displayName("Giove")} = M24 + d(X) ≈ ${jupiterRow.sg}`;
-  const jupiterBlock=calcUniformBlock({id:"calc-giove",title:`3c · ${displayName("Giove")} · ${jupiterRow.sg}`,description:currentLang()==="en"?"The nearest opposition gives t₀ and M24; the central interval represents the apparent stop around opposition.":"L’opposizione più vicina dà t₀ e M24; il tratto centrale rappresenta la fermata apparente attorno all’opposizione.",formula:`${displayName("Giove")} = M24 + d(X)`,table:jupiterTable,current:jupiterCurrent,note:u.interpNote});
+  const jupiterBlock=calcUniformBlock({id:"calc-giove",title:`3c · ${displayName("Giove")} · ${jupiterRow.sg}`,description:currentLang()==="en"?"Anchor: nearest opposition. The central interval gives d(X)=0 and represents the apparent stop around opposition.":"Ancora: opposizione più vicina. Il tratto centrale dà d(X)=0 e rappresenta la fermata apparente attorno all’opposizione.",table:jupiterTable,current:jupiterCurrent,note:u.interpNote});
 
   const sPts=SATURN_POINTS, sTr=calcTraceSegment(sPts,meta.saturn.d);
   const saturnTable=calcCurveTable(`${u.curveNodes} · t₀=OP`,sPts,meta.saturn.d,u.eclLon,u.saturnDays);
@@ -4320,35 +4326,56 @@ X = ${currentLang()==="en"?"date":"data"}−t₀ = ${calcSigned(meta.saturn.d,0)
 ${Math.abs(meta.saturn.d)<=60?`${u.stationary}\nd(X) = 0gr`:`${u.between} ${calcSigned(sTr.x0,0)} → ${calcSigned(sTr.y0,0)}gr ${u.and} ${calcSigned(sTr.x1,0)} → ${calcSigned(sTr.y1,0)}gr:\n${calcEqInterp("gr",sTr)}`}
 
 ${displayName("Saturno")} = M24 + d(X) ≈ ${saturnRow.sg}`;
-  const saturnBlock=calcUniformBlock({id:"calc-saturno",title:`3d · ${displayName("Saturno")} · ${saturnRow.sg}`,description:currentLang()==="en"?"The nearest opposition gives t₀ and M24; the slow curve gives the ecliptic displacement.":"L’opposizione più vicina dà t₀ e M24; la curva lenta fornisce lo scostamento eclittico.",formula:`${displayName("Saturno")} = M24 + d(X)`,table:saturnTable,current:saturnCurrent,note:u.interpNote});
+  const saturnBlock=calcUniformBlock({id:"calc-saturno",title:`3d · ${displayName("Saturno")} · ${saturnRow.sg}`,description:currentLang()==="en"?"Anchor: nearest opposition. The slow curve gives d(X), the ecliptic displacement from M24.":"Ancora: opposizione più vicina. La curva lenta dà d(X), lo scostamento eclittico da M24.",table:saturnTable,current:saturnCurrent,note:u.interpNote});
 
   const lonCorrection=(extra.zoneMeridian-Number(document.getElementById("lonInput").value))*4;
   const hhmm=document.getElementById("timeInput").value||"00:00";
   const tslCurrent=currentLang()==="en"
-    ? `TSL = civil time − longitude correction − DST\n    = ${hhmm} − ${calcSigned(lonCorrection,0)}m − ${formatDSTOffset(extra.dst)}\n    = ${state.tslLabel}`
-    : `TSL = ora civile − correzione di longitudine − DST\n    = ${hhmm} − ${calcSigned(lonCorrection,0)}m − ${formatDSTOffset(extra.dst)}\n    = ${state.tslLabel}`;
-  const culmLines=[sunRow,moonRow,venusRow,marsRow,jupiterRow,saturnRow].map(r=>`C(${displayName(r.name)}) = ${calcCulminationHM(r.lon,extra.sun)} TSL`).join("\n");
+    ? `TSL = civil time − DST − 4m/gr×(F−λ)
+    = ${hhmm} − ${formatDSTOffset(extra.dst)} − ${calcSigned(lonCorrection,0)}m
+    = ${state.tslLabel}`
+    : `TSL = ora civile − DST − 4m/gr×(F−λ)
+    = ${hhmm} − ${formatDSTOffset(extra.dst)} − ${calcSigned(lonCorrection,0)}m
+    = ${state.tslLabel}`;
+  const calcCenterLon=mod(extra.sun+(extra.tslRoundedMinutes-720)/4,360);
+  const tslFromNoon=fmtDT((extra.tslRoundedMinutes-720)/60);
+  const culmLines=[sunRow,moonRow,venusRow,marsRow,jupiterRow,saturnRow].map(r=>`${displayName(r.name)}: C(X) = ${calcCulminationHM(r.lon,extra.sun)} TSL · ΔC = ${fmtDCSide(r.dC)}`).join("\n");
   const culmineFormula = currentLang() === "en"
-    ? `TSL = civil time − longitude correction − DST
-C(X) = 12:00 + (X−SUN)   [SGNgr → hh:mm]
+    ? `TSL = civil time − DST − 4m/gr×(F−λ)
+C = SUN + 15gr×(TSL−12h)
+ΔC = (C−X)/15gr   [− east | + west]
+C(X) = 12:00 + (X−SUN)/15gr
 M24 = SUN + 6SGN`
-    : `TSL = ora civile − correzione di longitudine − DST
-C(X) = 12:00 + (X−SOLE)   [SGNgr → hh:mm]
+    : `TSL = ora civile − DST − 4m/gr×(F−λ)
+C = SOLE + 15gr×(TSL−12h)
+ΔC = (C−X)/15gr   [− est | + ovest]
+C(X) = 12:00 + (X−SOLE)/15gr
 M24 = SOLE + 6SGN`;
   const culmineCurrent=`${tslCurrent}
 
+C = ${displayName("Sole")} + 15gr×(${tslFromNoon}) = ${fmtSG(calcCenterLon)}
 M24 = ${displayName("Sole")} + 6SGN = ${fmtSG(mod(extra.sun+180,360))}
 
 ${culmLines}`;
-  const culmineBlock=calcUniformBlock({id:"calc-culmine",title:`4 · ${u.culmination}`,description:currentLang()==="en"?"The ecliptic distance from the Sun becomes the time at which each object crosses the meridian.":"La distanza eclittica dal Sole diventa l’ora in cui ciascun corpo attraversa il meridiano.",formula:culmineFormula,current:culmineCurrent});
+  const culmineBlock=calcUniformBlock({id:"calc-culmine",title:`4 · ${u.culmination}`,description:currentLang()==="en"?"C is the ecliptic position on the meridian at the selected TSL. ΔC places each body east or west of it; the inverse formula gives its culmination time.":"C è la posizione eclittica sul meridiano al TSL scelto. ΔC colloca ogni corpo a est o a ovest; la formula inversa ne ricava l’ora di culmine.",formula:culmineFormula,current:culmineCurrent});
 
-  const horizonRule=currentLang()==="en"
-    ? `[base: ARI00 / LIB00; 45N] rise: 90(E) | semiarc: 6h | culm. H: 90−Lat
+  const standardArcMode=state.arcMode==="nebra45";
+  const horizonRule=standardArcMode
+    ? (currentLang()==="en"
+      ? `[standard table 45N] base ARI00 / LIB00: rise 90(E) | semiarc 6h | culm. H 45gr
 [per ±ARC unit] 10gr N/S | 30m earlier/later | 8gr vertical
-refinement: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: next SGN`
-    : `[base: ARI00 / LIB00; 45N] lev: 90(E) | semiarco: 6h | H culm: 90−Lat
+app refinement: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: next SGN`
+      : `[tavola standard 45N] base ARI00 / LIB00: lev 90(E) | semiarco 6h | H culm 45gr
 [per unità ±ARC] 10gr N/S | 30m ant/rit | 8gr vert
-aff.: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: SGN+1`;
+affinamento app: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: SGN+1`)
+    : (currentLang()==="en"
+      ? `[latitude-adapted table · experimental · ${state.coeff.label}] base ARI00 / LIB00: rise 90(E) | semiarc 6h | culm. H ${calcHumanNumber(state.coeff.H0)}gr
+[per ±ARC unit] ${calcHumanNumber(state.coeff.kAz)}gr N/S | ${calcArcDurationText(state.coeff.kT)} earlier/later | 8gr vertical
+app refinement: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: next SGN`
+      : `[tavola adattata alla latitudine · sperimentale · ${state.coeff.label}] base ARI00 / LIB00: lev 90(E) | semiarco 6h | H culm ${calcHumanNumber(state.coeff.H0)}gr
+[per unità ±ARC] ${calcHumanNumber(state.coeff.kAz)}gr N/S | ${calcArcDurationText(state.coeff.kT)} ant/rit | 8gr vert
+affinamento app: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: SGN+1`);
+
   const arcTable=calcRefTable(currentLang()==="en"?"SGN / ARC":"SGN / ARC",[
     {label:"SGN",values:SIGNS},
     {label:"ARC",values:SIGNS.map(s=>arcSymbol(ARC_BASE[s]))}
@@ -4359,7 +4386,7 @@ aff.: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: SGN+1`;
     const expanded=index===0?calcArcFormulaHTML(r,state):"";
     return `<div class="calc-arc-row"><div class="calc-arc-head"><b>${calcEscape(displayName(r.name))}</b><span>${calcEscape(r.sg)} · ${calcEscape(calcArcAffinity(r.lon))}</span></div><div class="calc-arc-summary">${u.rise} ≈ ${Math.round(lev)}gr (${compassDir(lev)}) · ${semiarcLabel} ${calcHours(semi)} · ${u.heightCulm} ≈ ${Math.round(h)}gr · ${u.set} ≈ ${Math.round(trm)}gr (${compassDir(trm)}) · ${u.culminates} ${calcCulminationHM(r.lon,extra.sun)} TSL</div>${expanded}</div>`;
   }).join(""):`<div class="calc-note">${T("lat_msg_out")}</div>`;
-  const horizonBlock=calcUniformBlock({id:"calc-locale",title:`5 · ${currentLang()==="en"?"ARC and horizon":"ARC e orizzonte"}`,description:currentLang()==="en"?"ARC selects the daily path associated with each ecliptic position and gives rise, semiarc, culmination height and setting.":"ARC assegna a ogni posizione eclittica il proprio arco diurno e ricava levata, semiarco, altezza al culmine e tramonto.",formula:horizonRule,table:arcTable,currentHTML:horizonRows});
+  const horizonBlock=calcUniformBlock({id:"calc-locale",title:`5 · ${currentLang()==="en"?"ARC and horizon":"ARC e orizzonte"}`,description:currentLang()==="en"?"The standard table uses the fixed 45N coefficients and is practical at about 42N–48N. The experimental adapted mode recalculates the base and coefficients for the entered latitude. The current calculation follows the selected mode.":"La tavola standard usa i coefficienti fissi di 45N ed è pratica fra circa 42N e 48N. La modalità adattata ricalcola base e coefficienti per la latitudine inserita ed è sperimentale. Il calcolo corrente segue la modalità selezionata.",formula:horizonRule,table:arcTable,currentHTML:horizonRows});
 
   const ephemerisBlock=calcStaticBlock("calc-effemeridi",currentLang()==="en"?"6 · Draw planetary ephemerides":"6 · Disegnare le effemeridi",currentLang()==="en"?`<p>Use the same node tables employed by the calculation.</p><ol class="calc-build-list"><li>Draw a grid: calendar on the vertical axis at days <code>1, 11, 21</code>; ecliptic ruler on the horizontal axis, viewed south with <code>ARI</code> to the right.</li><li>Draw the Sun’s diagonal.</li><li>Choose <code>t₀</code> and place the curve nodes at their dates and ecliptic positions.</li><li>Join consecutive nodes with straight segments; continue from the next anchor when needed.</li></ol>`:`<p>Si usano le stesse tabelle dei nodi impiegate dal calcolo.</p><ol class="calc-build-list"><li>Traccia una griglia: calendario sull’asse verticale, scandito ai giorni <code>1, 11, 21</code>; righello eclittico sull’asse orizzontale, visto verso sud con <code>ARI</code> a destra.</li><li>Disegna la diagonale del Sole.</li><li>Scegli <code>t₀</code> e riporta i nodi della curva alle date e alle posizioni eclittiche corrispondenti.</li><li>Unisci i nodi consecutivi con segmenti; quando serve, prosegui dall’ancora successiva.</li></ol>`);
 
