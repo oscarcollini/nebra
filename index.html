@@ -1023,14 +1023,20 @@
   .scene-control-label{font-size:12px;font-weight:800;color:#555;padding:0 0 8px 2px}
   .scene-control-panel .step-controls{grid-column:auto;grid-template-columns:repeat(2,minmax(170px,1fr));width:min(440px,100%);margin-left:auto}
   .scene-summary-panel{padding:0;margin-bottom:14px}
-  .scene-summary-panel,
-  .scene-control-panel{
-    isolation:isolate;
-    contain:layout paint;
-  }
+  /* Keep these sections in the normal page painting flow.
+     Android Chrome can leave repeated compositor tiles while scrolling
+     when paint containment is applied to dynamically updated panels. */
   .scene-summary-panel .summary{margin:0;border:0;border-radius:9px;padding:9px 11px}
   .scene-meta-line{margin-bottom:5px;font-size:12px;color:#555}
   .results-panel{padding-top:10px}
+  .result-notes-foldout{margin-top:8px;border-top:1px solid #ddd;padding-top:7px}
+  .result-notes-foldout > summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;color:#555;font-size:11.5px;font-weight:700}
+  .result-notes-foldout > summary::-webkit-details-marker{display:none}
+  .result-notes-foldout > summary::before{content:"▸";color:#777}
+  .result-notes-foldout[open] > summary::before{content:"▾"}
+  .result-notes-foldout .smallnote{margin-top:7px}
+  body.red-mode .result-notes-foldout{border-top-color:#4d0000}
+  body.red-mode .result-notes-foldout > summary,body.red-mode .result-notes-foldout > summary::before{color:#bb5555}
   body.red-mode body.red-mode .label-inline-note,body.red-mode .settings-status,body.red-mode .scene-meta-line,body.red-mode .scene-control-label{color:#bb5555}
   body.red-mode .settings-panel{background:#100000;border-color:#4d0000}
   body.red-mode .settings-panel>summary{border-bottom-color:#4d0000;color:#ff7777}
@@ -1378,7 +1384,10 @@ html.pwa-launch #pwaSplash.is-hiding{
 </div>
 <div class="panel results-panel">
 <table id="resultTable"></table>
+<details class="result-notes-foldout" id="resultNotesDetails">
+<summary data-i18n="result_notes_summary">Informazioni sui risultati</summary>
 <div class="smallnote" id="notes"></div>
+</details>
 <a class="table-tool-link" data-i18n="ascii_open_link" href="#asciiPlanetDetails" id="planetEphemerisLink">→ Vedi le effemeridi grafiche dei pianeti</a>
 </div>
 </section>
@@ -1578,6 +1587,7 @@ const I18N = {
     screen_guide_move_2:"Lo spostamento orario segue la rotazione della volta; quello giornaliero mostra l’avanzamento del Sole e della Luna e il moto più lento dei pianeti.",
     screen_guide_move_3:"Il pulsante flottante 🌙/☀ passa dalla visualizzazione normale a quella rossa.",
     back_to_top:"↑ Torna all’app",
+    result_notes_summary:"Informazioni sui risultati",
     about_summary:"Cos’è N•E•B•R•A",
     about_intro:"N•E•B•R•A collega calendario, eclittica e volta locale.",
     about_what_title:"Cosa fa",
@@ -1778,6 +1788,7 @@ const I18N = {
     screen_guide_move_2:"Hourly steps follow the rotation of the sky; daily steps show the advance of the Sun and Moon and the slower motion of the planets.",
     screen_guide_move_3:"The floating 🌙/☀ button switches between the normal and red displays.",
     back_to_top:"↑ Back to app",
+    result_notes_summary:"Result information",
     about_summary:"About N•E•B•R•A",
     about_intro:"N•E•B•R•A links the calendar, the ecliptic and the local sky vault.",
     about_what_title:"What it does",
@@ -4639,6 +4650,14 @@ if(asciiGraphBox){
   });
 }
 
+
+const resultNotesDetails = document.getElementById("resultNotesDetails");
+if(resultNotesDetails){
+  try{ resultNotesDetails.open = localStorage.getItem("nebra.resultNotesOpen") === "1"; }catch(_err){}
+  resultNotesDetails.addEventListener("toggle", () => {
+    try{ localStorage.setItem("nebra.resultNotesOpen", resultNotesDetails.open ? "1" : "0"); }catch(_err){}
+  });
+}
 
 document.getElementById("nowBtn").addEventListener("click", setTodayNow);
 const planetEphemerisLink = document.getElementById("planetEphemerisLink");
