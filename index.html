@@ -1027,6 +1027,12 @@
      when paint containment is applied to dynamically updated panels. */
   .scene-summary-panel .summary{margin:0;border:0;border-radius:9px;padding:9px 11px}
   .scene-meta-line{margin-bottom:5px;font-size:12px;color:#555}
+  .summary-sun-pos{font-weight:800}
+  .summary-sun-arc-high{color:#e41a1c}
+  .summary-sun-arc-positive{color:#ff8c00}
+  .summary-sun-arc-neutral{color:#666}
+  .summary-sun-arc-negative{color:#2ca02c}
+  .summary-sun-arc-low{color:#1f4aff}
   .results-panel{padding-top:10px}
   .result-notes-foldout{margin-top:8px;border-top:1px solid #ddd;padding-top:7px}
   .result-notes-foldout > summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;color:#555;font-size:11.5px;font-weight:700}
@@ -1622,6 +1628,7 @@ const I18N = {
     visible:"Sopra l’orizzonte (E → O)",
     visible_help:"Tocca un nome per evidenziarlo sulla tavola.",
     culminates_now:"C sul meridiano",
+    meridian_short:"Meridiano",
     moon_segment_note:"Fascia Luna",
     moon_segment_text:"segmento grigio = posizione lunare ±6gr lungo l’eclittica (≈±12h di moto medio; sul righello ±24m).",
     curve_offset:"scarto ecl.",
@@ -1824,6 +1831,7 @@ const I18N = {
     visible:"Above the horizon (E → W)",
     visible_help:"Tap a name to highlight it on the chart.",
     culminates_now:"C on the meridian",
+    meridian_short:"Meridian",
     moon_segment_note:"Moon band",
     moon_segment_text:"grey segment = lunar position ±6gr along the ecliptic (≈±12h of mean motion; ±24m on the hour ruler).",
     curve_offset:"ecl. offset",
@@ -2731,6 +2739,21 @@ function moonAgeLabel(moon){
 function moonNoteAge(moon){
   if(moon.L === 0) return `${moon.zeroCycle}/0`;
   return `${moon.L}`;
+}
+function civilToTSLCorrectionLabel(minutes){
+  const rounded = Math.round(minutes);
+  if(rounded === 0) return "0:00";
+  const sign = rounded > 0 ? "+" : "−";
+  const a = Math.abs(rounded);
+  return `${sign}${Math.floor(a/60)}:${String(a%60).padStart(2,"0")}`;
+}
+function summarySunArcClass(lon){
+  const sign = sgFromLon(lon).s;
+  if(["GEM","CAN","LEO"].includes(sign)) return "summary-sun-arc-high";
+  if(["TAU","VIR"].includes(sign)) return "summary-sun-arc-positive";
+  if(["ARI","LIB"].includes(sign)) return "summary-sun-arc-neutral";
+  if(sign === "CAP") return "summary-sun-arc-low";
+  return "summary-sun-arc-negative";
 }
 
 function dtFromCenter(objLon, centerLon){
@@ -3645,9 +3668,14 @@ function renderTable(rows, state, meta, extra){
   };
   const summary = document.getElementById("summary");
   updateSettingsStatus(state, extra);
+  const civilToTSLCorrection = civilToTSLCorrectionLabel(-(extra.lonCorr + extra.dst));
+  const moonRow = rows.find(r => r.name === "Luna");
+  const moonSummary = moonRow
+    ? `${moonPhaseEmoji(meta.moon.L)} ${moonAgeLabel(meta.moon)} ${moonRow.sg}`
+    : "—";
   summary.innerHTML = `
-    <div class="scene-meta-line"><b>${state.dateLabel}</b> · ${state.timeLabel} ${T("civil")} · ${state.observerLatLabel} ${state.lonLabel} · <b>TSL</b> ${state.tslLabel}</div>
-    <div><b>${T("sun")}</b> ${fmtSG(extra.sun)} · <b>${T("culminates_now")}</b> ${fmtSG(state.centerLon)}</div>
+    <div class="scene-meta-line"><b>${state.dateLabel}</b> · ${state.timeLabel} ${T("civil")} · ${state.observerLatLabel} ${state.lonLabel} (${civilToTSLCorrection}) · <b>TSL</b> ${state.tslLabel}</div>
+    <div>☉ <span class="summary-sun-pos ${summarySunArcClass(extra.sun)}">${fmtSG(extra.sun)}</span> · ${moonSummary} · ${T("meridian_short")} ${fmtSG(state.centerLon)}</div>
     <div class="visible-block">
       <div class="visible-title"><b>${T("visible")}</b></div>
       <div class="visible-help">${T("visible_help")}</div>
