@@ -1007,6 +1007,8 @@
   .settings-panel[open]>summary{border-bottom:1px solid #ddd}
   .settings-panel[open]>summary::before{content:"▾"}
   .settings-status{font-size:11px;font-weight:400;line-height:1.35;color:#666}
+  .settings-status.settings-status-error{color:#a40000;font-weight:700}
+  #zoneMeridianInput[aria-invalid="true"]{border-color:#a40000;outline:1px solid #a40000}
   .settings-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px}
   .settings-group{min-width:0;border:1px solid #ddd;border-radius:7px;background:#fff;padding:9px}
   .settings-group h3{margin:0 0 9px;font-size:12.5px;line-height:1.25}
@@ -1233,7 +1235,7 @@
 <h3 data-i18n="settings_time_title">Tempo civile</h3>
 <div>
 <label data-i18n="label_zone_meridian" for="zoneMeridianInput">Meridiano del fuso (E+/O−)</label>
-<input id="zoneMeridianInput" step="15" type="number" value="15"/>
+<input id="zoneMeridianInput" min="-180" max="210" step="15" type="number" value="15"/>
 </div>
 <div class="dst-auto-row">
 <label class="checkline" for="dstAutoInput">
@@ -1474,6 +1476,7 @@ const I18N = {
     settings_horizon_title:"Orizzonte",
     scene_move_label:"Muovi la scena",
     settings_zone:"fuso",
+    zone_meridian_invalid:"Meridiano del fuso non valido: inserire un valore fra 180 O e 210 E.",
     settings_dst_auto:"ora legale automatica",
     settings_dst_on:"ora legale attiva",
     settings_dst_off:"ora legale disattivata",
@@ -1677,6 +1680,7 @@ const I18N = {
     settings_horizon_title:"Horizon",
     scene_move_label:"Move the scene",
     settings_zone:"zone",
+    zone_meridian_invalid:"Invalid time-zone meridian: enter a value from 180 W to 210 E.",
     settings_dst_auto:"automatic daylight saving",
     settings_dst_on:"daylight saving on",
     settings_dst_off:"daylight saving off",
@@ -3449,7 +3453,22 @@ function refreshApp(){
   const civilMin = hh*60 + mm;
   const lat = Number(document.getElementById("latInput").value);
   const lon = Number(document.getElementById("lonInput").value);
-  const zoneMeridian = Number(document.getElementById("zoneMeridianInput").value);
+  const zoneMeridianInput = document.getElementById("zoneMeridianInput");
+  const zoneMeridianRaw = zoneMeridianInput.value.trim();
+  const zoneMeridian = Number(zoneMeridianRaw);
+  const zoneMeridianValid = zoneMeridianRaw !== "" && Number.isFinite(zoneMeridian) && zoneMeridian >= -180 && zoneMeridian <= 210;
+  if(!zoneMeridianValid){
+    zoneMeridianInput.setCustomValidity(T("zone_meridian_invalid"));
+    zoneMeridianInput.setAttribute("aria-invalid","true");
+    const settingsStatus = document.getElementById("settingsStatus");
+    if(settingsStatus){
+      settingsStatus.textContent = T("zone_meridian_invalid");
+      settingsStatus.classList.add("settings-status-error");
+    }
+    return;
+  }
+  zoneMeridianInput.setCustomValidity("");
+  zoneMeridianInput.removeAttribute("aria-invalid");
   const localHorizon = Number(document.getElementById("horizonInput").value) || 0;
   const horizonProfile = NebraHorizon.getActiveProfile();
   const dstAuto = document.getElementById("dstAutoInput").checked;
@@ -3510,7 +3529,7 @@ function refreshApp(){
     localArcAvailable,
     arcMode: mode,
     lonLabel:`${Math.abs(lon).toFixed(2).replace(/\.00$/,"")}${lonHemisphere}`,
-    zoneLabel:`${Math.abs(zoneMeridian).toFixed(0)}${zoneHemisphere}`,
+    zoneLabel:`${Math.abs(zoneMeridian).toFixed(0)} ${zoneHemisphere}`,
     tslLabel:fmtHM(tslWrapped),
     localHorizon,
     horizonProfile,
@@ -3648,6 +3667,7 @@ function drawAsciiPlanetGraph(focusDate){
 function updateSettingsStatus(state, extra){
   const el = document.getElementById("settingsStatus");
   if(!el) return;
+  el.classList.remove("settings-status-error");
   const dstText = extra.dstAuto ? T("settings_dst_auto") : (extra.dst ? T("settings_dst_on") : T("settings_dst_off"));
   const horizonText = state.horizonProfile ? `${T("settings_profile")} ${state.horizonProfile.name}` : `${T("settings_horizon_value")} ${state.localHorizon}gr`;
   const moonText = state.showMoonSegment ? T("settings_moon_on") : T("settings_moon_off");
