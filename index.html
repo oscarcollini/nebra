@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>N•E•B•R•A · v0.9.95 · UI v11</title>
+<title>N•E•B•R•A v0.9.95</title>
 <meta content="Calcolatore astronomico N•E•B•R•A per Sole, Luna, pianeti e orizzonte locale." name="description"/>
 <meta content="#078783" name="theme-color"/>
 <!-- PWA_SHELL_BEGIN -->
@@ -659,6 +659,9 @@
     stroke-width:2.6px;
     opacity:1;
   }
+  .chart-curve{fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .chart-az-guide{fill:none;stroke:#111;stroke-width:.8;stroke-dasharray:5 5;opacity:.18;pointer-events:none}
+  body.red-mode .chart-az-guide{stroke:#cc7777;opacity:.22}
   .chart-point{
     cursor:pointer;
   }
@@ -2689,27 +2692,110 @@ function latCoefficients(lat, mode){
 function HArc(m, coeff){ return coeff.H0 + 8*m; }
 function TArc(m, coeff){ return 6 + coeff.kT*m; }
 
-const POWER = 1.10;
-function altOnCurve(m, x, coeff){
-  const T = TArc(m, coeff);
-  if(Math.abs(x) > T) return null;
-  const q = Math.abs(x)/T;
-  return HArc(m, coeff) * Math.pow(Math.cos((Math.PI/2)*q), POWER);
+function curveColorForM(m){
+  return m===3 || m===2 ? COLORS.arc3 : m===1 ? COLORS.arc1 : m===0 ? "#999" : m===-1 || m===-2 ? COLORS.arcN1 : COLORS.arcN3;
 }
-function betaNorm(q){
-  if(q >= 1) return 1;
-  const H = deg2rad(90*q);
-  const phi = deg2rad(45);
-  const beta = rad2deg(Math.atan2(Math.sin(H), Math.cos(H)*Math.sin(phi)));
-  return beta / 90;
+function curveNodes(m, coeff){
+  const T=TArc(m,coeff), H=HArc(m,coeff);
+  return {
+    xs:[-T,-3*T/4,-T/2,-T/4,0,T/4,T/2,3*T/4,T],
+    ys:[0,H/3,2*H/3,9*H/10,H,9*H/10,2*H/3,H/3,0]
+  };
 }
-function roughAz(m,x,coeff){
-  const T = TArc(m, coeff);
-  if(Math.abs(x) > T) return null;
-  const q = Math.abs(x)/T;
-  const betaEnd = 90 + coeff.kAz*m;
-  const beta = betaEnd * betaNorm(q);
-  return x < 0 ? 180 - beta : 180 + beta;
+function monotoneTangents(xs,ys){
+  const n=xs.length, d=[];
+  for(let i=0;i<n-1;i++) d.push((ys[i+1]-ys[i])/(xs[i+1]-xs[i]));
+  const m=new Array(n);
+  m[0]=d[0]; m[n-1]=d[n-2];
+  for(let i=1;i<n-1;i++){
+    if(d[i-1]===0 || d[i]===0 || Math.sign(d[i-1])!==Math.sign(d[i])) m[i]=0;
+    else m[i]=(2*d[i-1]*d[i])/(d[i-1]+d[i]);
+  }
+  for(let i=0;i<n-1;i++){
+    if(d[i]===0){ m[i]=0; m[i+1]=0; continue; }
+    const a=m[i]/d[i], b=m[i+1]/d[i], h=Math.hypot(a,b);
+    if(h>3){ const s=3/h; m[i]=s*a*d[i]; m[i+1]=s*b*d[i]; }
+  }
+  return m;
+}
+function monotoneValue(xs,ys,x){
+  if(x<xs[0] || x>xs[xs.length-1]) return null;
+  let i=xs.length-2;
+  for(let k=0;k<xs.length-1;k++){
+    if(x<=xs[k+1]){ i=k; break; }
+  }
+  const tangents=monotoneTangents(xs,ys);
+  const h=xs[i+1]-xs[i];
+  const t=h===0?0:(x-xs[i])/h, t2=t*t, t3=t2*t;
+  const h00=2*t3-3*t2+1, h10=t3-2*t2+t, h01=-2*t3+3*t2, h11=t3-t2;
+  return h00*ys[i]+h10*h*tangents[i]+h01*ys[i+1]+h11*h*tangents[i+1];
+}
+function altOnCurve(m,x,coeff){
+  const nodes=curveNodes(m,coeff);
+  return monotoneValue(nodes.xs,nodes.ys,x);
+}
+function azFrom114(m,x,coeff){
+  const alt=altOnCurve(m,x,coeff);
+  if(alt===null) return null;
+  if(Math.abs(x)<1e-9) return 180;
+  const den=1-alt/114;
+  if(Math.abs(den)<1e-9) return 180;
+  const horizonIntercept=x/den;
+  return mod(180+15*horizonIntercept,360);
+}
+function rayIntersection114(m,target,coeff){
+  const nodes=curveNodes(m,coeff);
+  const T=nodes.xs[nodes.xs.length-1];
+  const side=Math.sign(target);
+  const end=side*Math.min(Math.abs(target),T);
+  const f=x=>{
+    const y=altOnCurve(m,x,coeff);
+    if(y===null) return null;
+    return y-114*(1-x/target);
+  };
+  let lo=0, hi=end, flo=f(lo), fhi=f(hi);
+  if(flo===null || fhi===null || flo*fhi>0) return null;
+  for(let k=0;k<42;k++){
+    const mid=(lo+hi)/2, fm=f(mid);
+    if(fm===null) return null;
+    if(flo*fm<=0){ hi=mid; fhi=fm; }
+    else { lo=mid; flo=fm; }
+  }
+  const x=(lo+hi)/2;
+  return {x,y:altOnCurve(m,x,coeff)};
+}
+function drawArcGeometry(chartLayer,xMap,yMap,coeff,baseline){
+  const guideLayer=svgEl("g",{"aria-hidden":"true"});
+  chartLayer.appendChild(guideLayer);
+
+  // Le rette complete partono dal punto 114; è visibile soltanto
+  // il tratto compreso fra ARC+++ e l'orizzonte.
+  for(const target of [-6,-4.5,-3,-1.5,1.5,3,4.5,6]){
+    const p=rayIntersection114(3,target,coeff);
+    if(!p) continue;
+    guideLayer.appendChild(svgEl("line",{
+      x1:xMap(p.x),y1:yMap(p.y),
+      x2:xMap(target),y2:baseline,
+      class:"chart-az-guide"
+    }));
+  }
+
+  for(const m of [-3,-2,-1,0,1,2,3]){
+    let d="";
+    const T=TArc(m,coeff);
+    for(let i=0;i<=240;i++){
+      const x=-T+2*T*i/240;
+      const y=altOnCurve(m,x,coeff);
+      if(y===null) continue;
+      d+=(i===0?"M":"L")+xMap(x).toFixed(1)+","+yMap(y).toFixed(1)+" ";
+    }
+    const major=[-3,-1,1,3].includes(m);
+    chartLayer.appendChild(svgEl("path",{
+      d,class:"chart-curve",stroke:curveColorForM(m),
+      "stroke-width":major?2.4:1.4,opacity:major?1:0.45,
+      "stroke-dasharray":major?"":"6 6"
+    }));
+  }
 }
 function chartAzForDeltaC(x){
   if(!Number.isFinite(x)) return null;
@@ -2960,42 +3046,7 @@ function drawChart(rows, state){
     const tick = is2 ? 16 : is1 ? 10 : 5;
     chartLayer.appendChild(svgEl("line",{x1:xMap(t),x2:xMap(t),y1:baseline,y2:baseline-tick,stroke:"#555","stroke-width":is2?1:0.7}));
   }
-  const colorForM = m => m===3 || m===2 ? COLORS.arc3 : m===1 ? COLORS.arc1 : m===0 ? "#999" : m===-1 || m===-2 ? COLORS.arcN1 : COLORS.arcN3;
-  for(const m of [-3,-2,-1,0,1,2,3]){
-    const T = TArc(m,state.coeff);
-    let d = "";
-    for(let i=0;i<=240;i++){
-      const x = -T + 2*T*i/240;
-      const y = altOnCurve(m,x,state.coeff);
-      if(y === null) continue;
-      d += (i===0 ? "M" : "L") + xMap(x).toFixed(1) + "," + yMap(y).toFixed(1) + " ";
-    }
-    const major = [-3,-1,1,3].includes(m);
-    chartLayer.appendChild(svgEl("path",{d,fill:"none",stroke:colorForM(m),"stroke-width":major?2.4:1.4,opacity:major?1:0.45,"stroke-dasharray":major?"":"6 6"}));
-  }
-  for(const beta of [30,60,90]){
-    for(const side of [-1,1]){
-      let pts = [];
-      for(const m of [-3,-2,-1,0,1,2,3]){
-        const betaEnd = 90 + state.coeff.kAz*m;
-        if(beta <= betaEnd){
-          let lo=0,hi=1;
-          for(let k=0;k<28;k++){
-            const mid=(lo+hi)/2;
-            if(betaNorm(mid) < beta/betaEnd) lo=mid; else hi=mid;
-          }
-          const q=(lo+hi)/2;
-          const x = side*q*TArc(m,state.coeff);
-          const y = altOnCurve(m,x,state.coeff);
-          if(y !== null) pts.push([xMap(x),yMap(y)]);
-        }
-      }
-      if(pts.length>1){
-        let d = pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
-        chartLayer.appendChild(svgEl("path",{d,fill:"none",stroke:"#111","stroke-width":0.8,opacity:0.16,"stroke-dasharray":beta===30?"2 4":beta===60?"5 5":"9 5"}));
-      }
-    }
-  }
+  drawArcGeometry(chartLayer,xMap,yMap,state.coeff,baseline);
   if(state.localArcAvailable){
     if(state.horizonProfile && state.horizonProfile.points && state.horizonProfile.points.length >= 2){
       let d = "";
@@ -3496,12 +3547,15 @@ function refreshApp(){
       const localAlt = altOnCurve(arc, x, coeff);
       const alt = localArcAvailable ? localAlt : null;
       const onSky = alt !== null && x >= -8 && x <= 8;
-      const az = onSky ? roughAz(arc, x, coeff) : null;
-      const profileHorizon = onSky && horizonProfile ? NebraHorizon.heightAt(horizonProfile.points, az) : 0;
+      // Valore numerico interno: serve soltanto a interrogare il profilo locale.
+      const profileAz = onSky ? azFrom114(arc, x, coeff) : null;
+      // Risultato visibile: punto della rosa dei venti più vicino.
+      const direction = profileAz !== null ? compassDir(profileAz) : null;
+      const profileHorizon = onSky && horizonProfile ? NebraHorizon.heightAt(horizonProfile.points, profileAz) : 0;
       const effectiveHorizon = onSky ? (horizonProfile ? profileHorizon : localHorizon) : 0;
       const clearance = onSky ? alt - effectiveHorizon : null;
       const visible = onSky && clearance >= 0;
-      return {...o, sg:fmtSG(o.lon), arc, dC:x, x, alt, az, onSky, profileHorizon, effectiveHorizon, clearance, visible};
+      return {...o, sg:fmtSG(o.lon), arc, dC:x, x, alt, direction, profileAz, onSky, profileHorizon, effectiveHorizon, clearance, visible};
     });
     return {center, rows:builtRows, meta:built.meta};
   };
@@ -3750,7 +3804,7 @@ function renderTable(rows, state, meta, extra){
     const alt = onSky
       ? `<span class="alt-wrap"><span class="alt-flag${altWarn ? " alt-warning" : ""}">${altWarn ? "!" : ""}</span><span class="alt-value">${Math.round(r.alt)}gr</span></span>`
       : `<span class="alt-wrap"><span class="alt-flag"></span><span class="alt-value">—</span></span>`;
-    const az = onSky && r.az !== null ? compassDir(r.az) : "—";
+    const az = onSky && r.direction ? r.direction : "—";
     const bodyLabel = r.name === "Luna" ? `${displayName(r.name)} ${moonPhaseEmoji(meta.moon.L)} <b>${moonAgeLabel(meta.moon)}</b>` : displayName(r.name);
     tr.innerHTML = `<td>${bodyLabel}</td><td>${r.sg}</td><td>${fmtArc(r.arc)}</td><td>${fmtDCSide(r.dC)}</td><td class="alt-cell">${alt}</td><td>${az}</td>`;
     tbody.appendChild(tr);
