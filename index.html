@@ -1023,6 +1023,11 @@
   .settings-group .dst-device-note[hidden]{display:none!important}
   .settings-group .arc-advanced,.settings-group .horizon-profiles{grid-column:auto;align-self:auto;margin-top:9px}
   .settings-group .horizon-profile-actions{grid-template-columns:1.2fr 1fr .8fr}
+  .settings-day-group{grid-column:1/-1}
+  .day-convention-row{display:flex;align-items:center;gap:6px}
+  .day-convention-row .checkline{flex:1;height:auto;min-height:30px}
+  .nebra-date-notice{display:flex;flex-wrap:wrap;gap:3px 16px;margin-top:4px;font-size:11.5px;line-height:1.35;color:#555}
+  body.red-mode .nebra-date-notice{color:#bb5555}
   .scene-control-panel{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:8px 12px}
   .scene-control-label{font-size:12px;font-weight:800;color:#555;padding:0 0 8px 2px}
   .scene-control-panel .step-controls{grid-column:auto;grid-template-columns:repeat(2,minmax(170px,1fr));width:min(440px,100%);margin-left:auto}
@@ -1306,6 +1311,17 @@
 </div>
 </details>
 </section>
+
+<section class="settings-group settings-day-group">
+<h3 data-i18n="settings_day_title">Convenzione del giorno</h3>
+<div class="day-convention-row">
+<label class="checkline" for="italianHoursInput">
+<input id="italianHoursInput" type="checkbox"/> <span data-i18n="italian_hours_label">Ore italiche · tramonto medio</span>
+</label>
+<button aria-controls="italianHoursNote" aria-expanded="false" class="dst-info-button" id="italianHoursInfoBtn" type="button">ⓘ</button>
+</div>
+<span class="dst-device-note" data-i18n="italian_hours_note" hidden="" id="italianHoursNote">Fa iniziare il giorno N•E•B•R•A alle 18:00 TSL, come approssimazione fissa della convenzione delle ore italiche, nella quale il nuovo giorno cominciava al tramonto. Non segue il tramonto reale.</span>
+</section>
 </div>
 </details>
 </section>
@@ -1477,6 +1493,12 @@ const I18N = {
     settings_time_title:"Tempo civile",
     settings_table_title:"Aspetto della tavola",
     settings_horizon_title:"Orizzonte",
+    settings_day_title:"Convenzione del giorno",
+    italian_hours_label:"Ore italiche · tramonto medio",
+    italian_hours_info:"Informazioni sulle ore italiche · tramonto medio",
+    italian_hours_note:"Fa iniziare il giorno N•E•B•R•A alle 18:00 TSL, come approssimazione fissa della convenzione delle ore italiche, nella quale il nuovo giorno cominciava al tramonto. Non segue il tramonto reale.",
+    civil_date_label:"Data civile",
+    nebra_day_label:"Giorno N•E•B•R•A",
     scene_move_label:"Muovi la scena",
     settings_zone:"fuso",
     zone_meridian_invalid:"Meridiano del fuso non valido: inserire un valore fra 180 O e 210 E.",
@@ -1487,6 +1509,7 @@ const I18N = {
     settings_profile:"profilo",
     settings_moon_on:"fascia lunare attiva",
     settings_moon_off:"fascia lunare nascosta",
+    settings_italian_hours_on:"giorno alle 18 TSL",
     route_more:"Guida e approfondimenti ↓",
     label_civil_time:"Ora civile",
     label_lat:"Latitudine",
@@ -1514,7 +1537,8 @@ const I18N = {
     label_dst_auto:"Ora legale automatica",
     check_dst_auto:"automatica",
     dst_device_note:"Usa le regole di ora legale del dispositivo.",
-    table_day_rule:"Le posizioni giornaliere sono aggiornate a mezzogiorno TSL, così la stessa notte resta continua.",
+    table_day_rule_civil:"Le posizioni giornaliere cambiano a mezzanotte civile.",
+    table_day_rule_italian:"Con Ore italiche · tramonto medio attivo, il giorno N•E•B•R•A cambia alle 18:00 TSL.",
     chart_ruler:"righello",
     ascii_intro:"Il grafico è centrato sulla data selezionata e copre circa tre anni. Sviluppa nel tempo le stesse curve a tratti usate dal calcolo planetario: l’asse orizzontale segue le date, quello verticale la posizione lungo l’eclittica.",
     ascii_open_link:"→ Vedi le effemeridi grafiche dei pianeti",
@@ -1681,6 +1705,12 @@ const I18N = {
     settings_time_title:"Civil time",
     settings_table_title:"Table appearance",
     settings_horizon_title:"Horizon",
+    settings_day_title:"Day convention",
+    italian_hours_label:"Italian hours · mean sunset",
+    italian_hours_info:"Information about Italian hours · mean sunset",
+    italian_hours_note:"Starts the N•E•B•R•A day at 18:00 TSL, as a fixed approximation of the Italian-hours convention in which the new day began at sunset. It does not follow the actual sunset.",
+    civil_date_label:"Civil date",
+    nebra_day_label:"N•E•B•R•A day",
     scene_move_label:"Move the scene",
     settings_zone:"zone",
     zone_meridian_invalid:"Invalid time-zone meridian: enter a value from 180 W to 210 E.",
@@ -1691,6 +1721,7 @@ const I18N = {
     settings_profile:"profile",
     settings_moon_on:"lunar band on",
     settings_moon_off:"lunar band hidden",
+    settings_italian_hours_on:"day starts at 18 TSL",
     route_more:"Guide and further reading ↓",
     label_civil_time:"Civil time",
     label_lat:"Latitude",
@@ -1718,7 +1749,8 @@ const I18N = {
     label_dst_auto:"Automatic daylight saving",
     check_dst_auto:"automatic",
     dst_device_note:"Uses the daylight-saving rules of the device.",
-    table_day_rule:"Daily positions update at 12:00 TSL, so the same observing night remains continuous.",
+    table_day_rule_civil:"Daily positions change at civil midnight.",
+    table_day_rule_italian:"With Italian hours · mean sunset enabled, the N•E•B•R•A day changes at 18:00 TSL.",
     chart_ruler:"ruler",
     ascii_intro:"The graph is centred on the selected date and covers about three years. It develops over time the same piecewise curves used by the planetary calculation: the horizontal axis follows dates and the vertical axis the position along the ecliptic.",
     ascii_open_link:"→ View the graphical planetary ephemerides",
@@ -1904,6 +1936,11 @@ function applyLanguage(){
     dstInfoBtn.title = T("dst_info");
     dstInfoBtn.setAttribute("aria-label", T("dst_info"));
   }
+  const italianHoursInfoBtn = document.getElementById("italianHoursInfoBtn");
+  if(italianHoursInfoBtn){
+    italianHoursInfoBtn.title = T("italian_hours_info");
+    italianHoursInfoBtn.setAttribute("aria-label", T("italian_hours_info"));
+  }
   const nightFab = document.getElementById("nightFab");
   if(nightFab){
     const redActive = !!document.getElementById("redModeInput")?.checked;
@@ -2061,15 +2098,20 @@ function calendarDayIndex(date){
 function addCalendarDays(date, delta){
   return new Date(date.getTime() + delta*MS_DAY);
 }
-function tableDateFromTSL(civilDate, tslRoundedMinutes){
+function nebraDayFromTSL(civilDate, tslRoundedMinutes, italianHours){
+  if(!italianHours) return civilDate;
   const tslDayShift = Math.floor(tslRoundedMinutes / 1440);
   const minuteOfTSLDay = mod(tslRoundedMinutes, 1440);
-  const tableShift = tslDayShift + (minuteOfTSLDay < 720 ? -1 : 0);
-  return addCalendarDays(civilDate, tableShift);
+  const nebraShift = tslDayShift + (minuteOfTSLDay >= 1080 ? 1 : 0);
+  return addCalendarDays(civilDate, nebraShift);
 }
 function formatDateDMY(date){
   const {y,m,d} = ymd(date);
   return `${String(d).padStart(2,"0")}.${String(m).padStart(2,"0")}.${y}`;
+}
+function formatDateDayMonth(date){
+  const locale = currentLang() === "en" ? "en-GB" : "it-IT";
+  return new Intl.DateTimeFormat(locale,{day:"numeric",month:"long",timeZone:"UTC"}).format(date);
 }
 function daysBetween(a,b){
   return Math.round((b.getTime()-a.getTime())/MS_DAY);
@@ -3193,6 +3235,7 @@ function saveUserDefaults(){
     localStorage.setItem("nebra.lang", document.getElementById("langInput").value);
     localStorage.setItem("nebra.dstAuto", document.getElementById("dstAutoInput").checked ? "1" : "0");
     localStorage.setItem("nebra.dstManual", document.getElementById("dstInput").checked ? "1" : "0");
+    localStorage.setItem("nebra.italianHours", document.getElementById("italianHoursInput").checked ? "1" : "0");
   }catch(e){}
 }
 
@@ -3207,6 +3250,7 @@ function loadUserDefaults(){
     const lang = localStorage.getItem("nebra.lang");
     const dstAuto = localStorage.getItem("nebra.dstAuto");
     const dstManual = localStorage.getItem("nebra.dstManual");
+    const italianHours = localStorage.getItem("nebra.italianHours");
 
     if(lat !== null) document.getElementById("latInput").value = lat;
     if(lon !== null) document.getElementById("lonInput").value = lon;
@@ -3217,6 +3261,7 @@ function loadUserDefaults(){
     if(lang !== null) document.getElementById("langInput").value = lang;
     if(dstAuto !== null) document.getElementById("dstAutoInput").checked = dstAuto === "1";
     if(dstManual !== null) document.getElementById("dstInput").checked = dstManual === "1";
+    if(italianHours !== null) document.getElementById("italianHoursInput").checked = italianHours === "1";
   }catch(e){}
 }
 
@@ -3536,7 +3581,8 @@ function refreshApp(){
   const tslRaw = civilMin - lonCorr - dst;
   const tslRoundedMinutes = Math.round(tslRaw);
   const tslWrapped = mod(tslRoundedMinutes, 1440);
-  const tableDate = tableDateFromTSL(civilDate, tslRoundedMinutes);
+  const italianHours = document.getElementById("italianHoursInput").checked;
+  const nebraDate = nebraDayFromTSL(civilDate, tslRoundedMinutes, italianHours);
   const deltaMin = tslRaw - 720;
   const buildRowsForDate = (date, dailySun) => {
     const center = mod(dailySun + deltaMin/4, 360);
@@ -3560,16 +3606,13 @@ function refreshApp(){
     return {center, rows:builtRows, meta:built.meta};
   };
 
-  // Grafico e tabella mantengono la posizione giornaliera centrata a mezzogiorno TSL.
-  const sun = sunLon(tableDate);
-  const graphic = buildRowsForDate(tableDate, sun);
+  // Tutte le posizioni giornaliere usano la stessa data: civile, oppure il giorno
+  // N•E•B•R•A che in modalità “Ore italiche · tramonto medio” scatta alle 18:00 TSL.
+  const sun = sunLon(nebraDate);
+  const graphic = buildRowsForDate(nebraDate, sun);
   const centerLon = graphic.center;
   const rows = graphic.rows;
   const meta = graphic.meta;
-
-  // Il blocco “Calcoli e formule” cambia invece alla mezzanotte civile.
-  const calcSun = sunLon(civilDate);
-  const calculation = buildRowsForDate(civilDate, calcSun);
 
   const lonHemisphere = lon < 0 ? T("west") : T("east");
   const zoneHemisphere = zoneMeridian < 0 ? T("west") : T("east");
@@ -3588,26 +3631,21 @@ function refreshApp(){
     localHorizon,
     horizonProfile,
     showMoonSegment,
-    moonSegmentHours:6/15
+    moonSegmentHours:6/15,
+    italianHours
   };
 
   drawChart(rows, state);
-  drawAsciiPlanetGraph(tableDate);
+  drawAsciiPlanetGraph(nebraDate);
   const extra = {
     lonCorr, dst, dstAuto, tslWrapped, tslRoundedMinutes,
     sun, zoneMeridian,
-    sunGamma:solarGammaForDate(tableDate),
-    ariesEntry:ariesEntryLabel(tableDate),
-    civilDate, tableDate
+    sunGamma:solarGammaForDate(nebraDate),
+    ariesEntry:ariesEntryLabel(nebraDate),
+    civilDate, nebraDate, italianHours
   };
   renderTable(rows, state, meta, extra);
-  const calcExtra = {
-    ...extra,
-    sun:calcSun,
-    sunGamma:solarGammaForDate(civilDate),
-    ariesEntry:ariesEntryLabel(civilDate)
-  };
-  renderCalculationTrace(civilDate, calculation.rows, state, calculation.meta, calcExtra);
+  renderCalculationTrace(nebraDate, rows, state, meta, extra);
 }
 
 function drawAsciiPlanetGraph(focusDate){
@@ -3725,7 +3763,8 @@ function updateSettingsStatus(state, extra){
   const dstText = extra.dstAuto ? T("settings_dst_auto") : (extra.dst ? T("settings_dst_on") : T("settings_dst_off"));
   const horizonText = state.horizonProfile ? `${T("settings_profile")} ${state.horizonProfile.name}` : `${T("settings_horizon_value")} ${state.localHorizon}gr`;
   const moonText = state.showMoonSegment ? T("settings_moon_on") : T("settings_moon_off");
-  el.textContent = `${T("settings_status_prefix")} ${T("settings_zone")} ${state.zoneLabel} · ${dstText} · ${horizonText} · ${moonText}`;
+  const italianHoursText = state.italianHours ? ` · ${T("settings_italian_hours_on")}` : "";
+  el.textContent = `${T("settings_status_prefix")} ${T("settings_zone")} ${state.zoneLabel} · ${dstText} · ${horizonText} · ${moonText}${italianHoursText}`;
 }
 
 function renderTable(rows, state, meta, extra){
@@ -3747,8 +3786,13 @@ function renderTable(rows, state, meta, extra){
   const moonSummary = moonRow
     ? `${moonPhaseEmoji(meta.moon.L)} ${moonAgeLabel(meta.moon)} ${moonRow.sg}`
     : "—";
+  const nebraDateDiffers = extra.italianHours && calendarDayIndex(extra.civilDate) !== calendarDayIndex(extra.nebraDate);
+  const nebraDateNotice = nebraDateDiffers
+    ? `<div class="nebra-date-notice"><span><b>${T("civil_date_label")}:</b> ${formatDateDayMonth(extra.civilDate)}</span><span><b>${T("nebra_day_label")}:</b> ${formatDateDayMonth(extra.nebraDate)}</span></div>`
+    : "";
   summary.innerHTML = `
     <div class="scene-meta-line"><b>${state.dateLabel}</b> · ${state.timeLabel} ${T("civil")} · ${state.observerLatLabel} ${state.lonLabel} (${civilToTSLCorrection}) · <b>TSL</b> ${state.tslLabel}</div>
+    ${nebraDateNotice}
     <div>☉ <span class="summary-sun-pos ${summarySunArcClass(extra.sun)}">${fmtSG(extra.sun)}</span> · ${moonSummary} · ${T("meridian_short")} ${fmtSG(state.centerLon)}</div>
     <div class="visible-block">
       <div class="visible-title"><b>${T("visible")}</b></div>
@@ -3814,7 +3858,7 @@ function renderTable(rows, state, meta, extra){
   const notes = document.getElementById("notes");
   const marsWarn = meta.mars.warning ? `<div class="warn">${T("mars_warn")}</div>` : "";
   notes.innerHTML = `
-    <div>${T("table_day_rule")}</div>
+    <div>${state.italianHours ? T("table_day_rule_italian") : T("table_day_rule_civil")}</div>
     <div><b>${T("sun")}:</b> ARI00≈${extra.ariesEntry}.</div>
     <div><b>${T("moon")}:</b> E=${meta.moon.E}, R=${meta.moon.R}, L=${moonNoteAge(meta.moon)}, Δ☉=${meta.moon.dist}.</div>
     ${state.showMoonSegment ? `<div><b>${T("moon_segment_note")}:</b> ${T("moon_segment_text")}</div>` : ""}
@@ -3881,7 +3925,7 @@ function calcUI(){
   if(currentLang() === "en"){
     return {
       months:["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],
-      civilDate:"Civil date and time", tableDate:"Table date", rule:"Daily positions update at 12:00 TSL so the observing night remains continuous.",
+      civilDate:"Civil date and time", nebraDay:"N•E•B•R•A day", ruleCivil:"Daily positions change at civil midnight.", ruleItalian:"With Italian hours · mean sunset enabled, the N•E•B•R•A day starts at 18:00 TSL.",
       monthTable:"MM / y / SGN", lunarTable:"MM / R", curveNodes:"Curve table", daysFromT0:" days",
       anchorCI:"t₀ (CI)", anchorOP:"t₀ (OP)", reconstructed:"reconstructed", between:"Between", failsafe:"Failsafe", control:"decennial anchor", steps:"steps",
       stationary:"Stationary interval: −60 to +60 days", rise:"rise", set:"set", semiarc:"semiarc", heightCulm:"culm. H", culminates:"culminates", expanded:"Expanded formula", riseAz:"rise az.", setAz:"set az.", arcManual:"Manual arc calculation",
@@ -3895,7 +3939,7 @@ function calcUI(){
   }
   return {
     months:["","GEN","FEB","MAR","APR","MAG","GIU","LUG","AGO","SET","OTT","NOV","DIC"],
-    civilDate:"Data e ora civile", tableDate:"Data della tavola", rule:"Le posizioni giornaliere sono aggiornate a mezzogiorno TSL, così la notte osservativa resta continua.",
+    civilDate:"Data e ora civile", nebraDay:"Giorno N•E•B•R•A", ruleCivil:"Le posizioni giornaliere cambiano a mezzanotte civile.", ruleItalian:"Con Ore italiche · tramonto medio attivo, il giorno N•E•B•R•A comincia alle 18:00 TSL.",
     monthTable:"MM / y / SGN", lunarTable:"MM / R", curveNodes:"Tabella della curva", daysFromT0:" giorni",
     anchorCI:"t₀ (CI)", anchorOP:"t₀ (OP)", reconstructed:"ricostruita", between:"Tra", failsafe:"Failsafe", control:"ancora decennale", steps:"passaggi",
     stationary:"Fermata: da −60 a +60 giorni", rise:"levata", set:"tramonto", semiarc:"semiarco", heightCulm:"H culmine", culminates:"culmina", expanded:"Formula sviluppata", riseAz:"az. levata", setAz:"az. tramonto", arcManual:"Calcolo manuale degli archi",
@@ -4504,10 +4548,11 @@ P2: 2/3 orizzontale | 4/5 verticale
 Az: punto 114</pre><ol class="calc-build-list"><li>Traccia orizzonte e meridiano; alla latitudine corrente il culmine base è <code>${calcHumanNumber(90-latNow)}gr</code>.</li><li>Per l’ARC desiderato segna levata, culmine e tramonto applicando la regola <code>10gr / 30m / 8gr</code>.</li><li>Fra levata e culmine colloca P1 a un terzo dello spostamento orizzontale e a metà di quello verticale; colloca P2 a due terzi in orizzontale e a quattro quinti in verticale. Riporta gli stessi punti sul lato occidentale.</li><li>Traccia un solo arco regolare attraverso levata, P1, P2, culmine, i punti speculari e tramonto.</li><li>Dal punto <code>114</code> traccia le guide di azimut verso E, ESE, SE e S.</li></ol>`);
 
   const civilYMD = ymd(extra.civilDate);
-  const tableLabel = formatDateDMY(extra.tableDate);
-  const datesDiffer = calendarDayIndex(extra.civilDate) !== calendarDayIndex(extra.tableDate);
-  const tableDateLine = datesDiffer ? `<br><b>${u.tableDate}:</b> ${tableLabel}` : "";
-  const dateReference=`<div class="calc-date-reference"><b>${u.civilDate}:</b> ${state.dateLabel} ${state.timeLabel} · <b>TSL:</b> ${state.tslLabel}${tableDateLine}<br>${u.rule}</div>`;
+  const nebraLabel = formatDateDMY(extra.nebraDate);
+  const datesDiffer = extra.italianHours && calendarDayIndex(extra.civilDate) !== calendarDayIndex(extra.nebraDate);
+  const nebraDateLine = datesDiffer ? `<br><b>${u.nebraDay}:</b> ${nebraLabel}` : "";
+  const dayRule = extra.italianHours ? u.ruleItalian : u.ruleCivil;
+  const dateReference=`<div class="calc-date-reference"><b>${u.civilDate}:</b> ${state.dateLabel} ${state.timeLabel} · <b>TSL:</b> ${state.tslLabel}${nebraDateLine}<br>${dayRule}</div>`;
   const groupText = currentLang() === "en" ? {
     refs:"References and calendar", current:"Selected-date calculation", build:"Constructing the tables", anchors:"Anchors and validity"
   } : {
@@ -4626,6 +4671,13 @@ document.getElementById("dstInfoBtn").addEventListener("click", () => {
   else note.setAttribute("hidden", "");
   document.getElementById("dstInfoBtn").setAttribute("aria-expanded", willOpen ? "true" : "false");
 });
+document.getElementById("italianHoursInfoBtn").addEventListener("click", () => {
+  const note = document.getElementById("italianHoursNote");
+  const willOpen = note.hasAttribute("hidden");
+  if(willOpen) note.removeAttribute("hidden");
+  else note.setAttribute("hidden", "");
+  document.getElementById("italianHoursInfoBtn").setAttribute("aria-expanded", willOpen ? "true" : "false");
+});
 document.getElementById("latInfoBtn").addEventListener("click", () => {
   const note = document.getElementById("latValidityNote");
   if(note?.hasAttribute("hidden")) openLatitudePopup();
@@ -4657,7 +4709,7 @@ function bindAutoRecalc(){
     dateInput.addEventListener("input", scheduleRefresh);
     dateInput.addEventListener("change", refreshApp);
   }
-  for(const id of ["dstInput","moonSegmentInput","latMode","arcAdvancedInput"]){
+  for(const id of ["dstInput","moonSegmentInput","latMode","arcAdvancedInput","italianHoursInput"]){
     const el = document.getElementById(id);
     if(el) el.addEventListener("change", () => { saveUserDefaults(); refreshApp(); });
   }
