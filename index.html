@@ -3353,11 +3353,32 @@ const NebraHorizon = (() => {
   const id = () => `h${Date.now().toString(36)}${Math.random().toString(36).slice(2,7)}`;
   const mod = (n,m) => ((n % m) + m) % m;
 
+  /* PWA_PROFILE_BEGIN */
+  const EMBEDDED_TEST_PROFILE = Object.freeze({
+    id: "nebra-profilo-di-prova-v2",
+    name: "Profilo di prova",
+    source: "profilo-di-prova.txt · incorporato nella PWA",
+    created: "2026-07-21T00:00:00.000Z",
+    points: [[0,7],[5,8],[10,7],[15,9],[20,11],[25,14],[30,18],[35,22],[40,17],[45,13],[50,10],[55,8],[60,6],[65,5],[70,4],[75,3],[80,2],[85,2],[90,3],[95,5],[100,7],[105,5],[110,3],[115,2],[120,2],[125,1],[130,1],[135,2],[140,1],[145,1],[150,0],[155,1],[160,1],[165,0],[170,1],[175,1],[180,1],[185,2],[190,2],[195,3],[200,4],[205,6],[210,8],[215,7],[220,9],[225,12],[230,15],[235,18],[240,16],[245,13],[250,11],[255,9],[260,7],[265,6],[270,5],[275,8],[280,11],[285,14],[290,12],[295,9],[300,7],[305,6],[310,8],[315,10],[320,9],[325,7],[330,6],[335,5],[340,6],[345,8],[350,7],[355,6],[360,7]]
+  });
+  /* PWA_PROFILE_END */
 
   function load(){
     try{
       const raw = localStorage.getItem(STORAGE);
-      if(!raw) return;
+      if(!raw){
+        store = {
+          activeId: EMBEDDED_TEST_PROFILE.id,
+          profiles: [{
+            id: EMBEDDED_TEST_PROFILE.id,
+            name: EMBEDDED_TEST_PROFILE.name,
+            source: EMBEDDED_TEST_PROFILE.source,
+            created: EMBEDDED_TEST_PROFILE.created,
+            points: normalizePoints(EMBEDDED_TEST_PROFILE.points)
+          }]
+        };
+        return;
+      }
       const parsed = JSON.parse(raw);
       if(!parsed || !Array.isArray(parsed.profiles)) return;
       store = {
