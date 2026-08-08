@@ -1660,7 +1660,7 @@ const I18N = {
     culminates_now:"C sul meridiano",
     meridian_short:"Meridiano",
     moon_segment_note:"Fascia Luna",
-    moon_segment_text:"segmento grigio = posizione lunare ±6gr lungo l’eclittica (≈±12h di moto medio; sul righello ±24m).",
+    moon_segment_text:"fascia grigia sulla curva = posizione lunare ±6gr lungo l’eclittica (≈±12h di moto medio), proiettata sullo stesso ARC della Luna centrale.",
     curve_offset:"scarto ecl.",
     timezone_meridian:"meridiano fuso",
     longitude_correction:"correzione longitudine",
@@ -1872,7 +1872,7 @@ const I18N = {
     culminates_now:"C on the meridian",
     meridian_short:"Meridian",
     moon_segment_note:"Moon band",
-    moon_segment_text:"grey segment = lunar position ±6gr along the ecliptic (≈±12h of mean motion; ±24m on the hour ruler).",
+    moon_segment_text:"grey band on the curve = lunar position ±6gr along the ecliptic (≈±12h of mean motion), projected on the same ARC as the central Moon position.",
     curve_offset:"ecl. offset",
     timezone_meridian:"time-zone meridian",
     longitude_correction:"longitude correction",
@@ -3185,13 +3185,24 @@ function drawChart(rows, state){
     const inRange = x >= -8 && x <= 8;
     const sx = inRange ? xMap(x) : x < -8 ? xMap(-8) : xMap(8);
 
-    if(state.showMoonSegment && r.name === "Luna" && inRange){
+    if(state.showMoonSegment && r.name === "Luna" && state.localArcAvailable){
+      // ±6gr eclittici = ±0,4h sul righello. Gli estremi sono proiettati
+      // sulla stessa curva ARC della posizione lunare centrale.
       const seg = state.moonSegmentHours;
-      const x1 = Math.max(-8, x - seg);
-      const x2 = Math.min(8, x + seg);
-      chartLayer.appendChild(svgEl("line",{x1:xMap(x1),x2:xMap(x2),y1:stripY,y2:stripY,stroke:"#777","stroke-width":6,opacity:0.34,"stroke-linecap":"round"}));
-      chartLayer.appendChild(svgEl("line",{x1:xMap(x1),x2:xMap(x1),y1:stripY-5,y2:stripY+5,stroke:"#555","stroke-width":1,opacity:0.55}));
-      chartLayer.appendChild(svgEl("line",{x1:xMap(x2),x2:xMap(x2),y1:stripY-5,y2:stripY+5,stroke:"#555","stroke-width":1,opacity:0.55}));
+      const curveT = TArc(r.arc, state.coeff);
+      const x1 = Math.max(-8, -curveT, x - seg);
+      const x2 = Math.min(8, curveT, x + seg);
+      if(x2 > x1){
+        let d = "";
+        const steps = 18;
+        for(let i=0;i<=steps;i++){
+          const xx = x1 + (x2-x1)*i/steps;
+          const yy = altOnCurve(r.arc, xx, state.coeff);
+          if(yy === null) continue;
+          d += (d ? "L" : "M") + xMap(xx).toFixed(1) + "," + yMap(yy).toFixed(1) + " ";
+        }
+        if(d) chartLayer.appendChild(svgEl("path",{d,fill:"none",stroke:"#777","stroke-width":6,opacity:0.34,"stroke-linecap":"round","stroke-linejoin":"round"}));
+      }
     }
 
     if(r.kind === "body"){
@@ -3235,6 +3246,7 @@ function saveUserDefaults(){
     localStorage.setItem("nebra.lang", document.getElementById("langInput").value);
     localStorage.setItem("nebra.dstAuto", document.getElementById("dstAutoInput").checked ? "1" : "0");
     localStorage.setItem("nebra.dstManual", document.getElementById("dstInput").checked ? "1" : "0");
+    localStorage.setItem("nebra.moonSegment", document.getElementById("moonSegmentInput").checked ? "1" : "0");
     localStorage.setItem("nebra.italianHours", document.getElementById("italianHoursInput").checked ? "1" : "0");
   }catch(e){}
 }
@@ -3250,6 +3262,7 @@ function loadUserDefaults(){
     const lang = localStorage.getItem("nebra.lang");
     const dstAuto = localStorage.getItem("nebra.dstAuto");
     const dstManual = localStorage.getItem("nebra.dstManual");
+    const moonSegment = localStorage.getItem("nebra.moonSegment");
     const italianHours = localStorage.getItem("nebra.italianHours");
 
     if(lat !== null) document.getElementById("latInput").value = lat;
@@ -3261,6 +3274,7 @@ function loadUserDefaults(){
     if(lang !== null) document.getElementById("langInput").value = lang;
     if(dstAuto !== null) document.getElementById("dstAutoInput").checked = dstAuto === "1";
     if(dstManual !== null) document.getElementById("dstInput").checked = dstManual === "1";
+    if(moonSegment !== null) document.getElementById("moonSegmentInput").checked = moonSegment === "1";
     if(italianHours !== null) document.getElementById("italianHoursInput").checked = italianHours === "1";
   }catch(e){}
 }
@@ -3339,32 +3353,11 @@ const NebraHorizon = (() => {
   const id = () => `h${Date.now().toString(36)}${Math.random().toString(36).slice(2,7)}`;
   const mod = (n,m) => ((n % m) + m) % m;
 
-  /* PWA_PROFILE_BEGIN */
-  const EMBEDDED_TEST_PROFILE = Object.freeze({
-    id: "nebra-profilo-di-prova-v2",
-    name: "Profilo di prova",
-    source: "profilo-di-prova.txt · incorporato nella PWA",
-    created: "2026-07-21T00:00:00.000Z",
-    points: [[0,7],[5,8],[10,7],[15,9],[20,11],[25,14],[30,18],[35,22],[40,17],[45,13],[50,10],[55,8],[60,6],[65,5],[70,4],[75,3],[80,2],[85,2],[90,3],[95,5],[100,7],[105,5],[110,3],[115,2],[120,2],[125,1],[130,1],[135,2],[140,1],[145,1],[150,0],[155,1],[160,1],[165,0],[170,1],[175,1],[180,1],[185,2],[190,2],[195,3],[200,4],[205,6],[210,8],[215,7],[220,9],[225,12],[230,15],[235,18],[240,16],[245,13],[250,11],[255,9],[260,7],[265,6],[270,5],[275,8],[280,11],[285,14],[290,12],[295,9],[300,7],[305,6],[310,8],[315,10],[320,9],[325,7],[330,6],[335,5],[340,6],[345,8],[350,7],[355,6],[360,7]]
-  });
-  /* PWA_PROFILE_END */
 
   function load(){
     try{
       const raw = localStorage.getItem(STORAGE);
-      if(!raw){
-        store = {
-          activeId: EMBEDDED_TEST_PROFILE.id,
-          profiles: [{
-            id: EMBEDDED_TEST_PROFILE.id,
-            name: EMBEDDED_TEST_PROFILE.name,
-            source: EMBEDDED_TEST_PROFILE.source,
-            created: EMBEDDED_TEST_PROFILE.created,
-            points: normalizePoints(EMBEDDED_TEST_PROFILE.points)
-          }]
-        };
-        return;
-      }
+      if(!raw) return;
       const parsed = JSON.parse(raw);
       if(!parsed || !Array.isArray(parsed.profiles)) return;
       store = {
@@ -3583,6 +3576,11 @@ function refreshApp(){
   const tslWrapped = mod(tslRoundedMinutes, 1440);
   const italianHours = document.getElementById("italianHoursInput").checked;
   const nebraDate = nebraDayFromTSL(civilDate, tslRoundedMinutes, italianHours);
+  const nebraYear = ymd(nebraDate).y;
+  if(nebraYear < 1583 || nebraYear > 4199){
+    renderRangeError(nebraDate);
+    return;
+  }
   const deltaMin = tslRaw - 720;
   const buildRowsForDate = (date, dailySun) => {
     const center = mod(dailySun + deltaMin/4, 360);
@@ -4537,11 +4535,11 @@ affinamento app: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: SGN
   const ephemerisBlock=calcStaticBlock("calc-effemeridi",currentLang()==="en"?"6 · Draw planetary ephemerides":"6 · Disegnare le effemeridi",currentLang()==="en"?`<p>Use the same node tables employed by the calculation.</p><ol class="calc-build-list"><li>Draw a grid: calendar on the vertical axis at days <code>1, 11, 21</code>; ecliptic ruler on the horizontal axis, viewed south with <code>ARI</code> to the right.</li><li>Draw the Sun’s diagonal.</li><li>Choose <code>t₀</code> and place the curve nodes at their dates and ecliptic positions.</li><li>Join consecutive nodes with straight segments; continue from the next anchor when needed.</li></ol>`:`<p>Si usano le stesse tabelle dei nodi impiegate dal calcolo.</p><ol class="calc-build-list"><li>Traccia una griglia: calendario sull’asse verticale, scandito ai giorni <code>1, 11, 21</code>; righello eclittico sull’asse orizzontale, visto verso sud con <code>ARI</code> a destra.</li><li>Disegna la diagonale del Sole.</li><li>Scegli <code>t₀</code> e riporta i nodi della curva alle date e alle posizioni eclittiche corrispondenti.</li><li>Unisci i nodi consecutivi con segmenti; quando serve, prosegui dall’ancora successiva.</li></ol>`);
 
   const latNow=Number(document.getElementById("latInput")?.value||45);
-  const tableBlock=calcStaticBlock("calc-tavola",currentLang()==="en"?"7 · Draw the arc table":"7 · Disegnare la tavola",currentLang()==="en"?`<p>Construct the table from the equinoctial base arc and the ARC values.</p><pre class="calc-code">base: ARI00 / LIB00
+  const tableBlock=calcStaticBlock("calc-tavola",currentLang()==="en"?"7 · Draw the arc table":"7 · Disegnare la tavola",currentLang()==="en"?`<p>Construct the table from the equinoctial base arc and the ARC values. For hand construction, two intermediate points are sufficient; the app uses additional nodes to refine the curve shape.</p><pre class="calc-code">base: ARI00 / LIB00
 rise: 90gr E | semiarc: 6h | culm. H: 90−Lat
 P1: 1/3 horizontal | 1/2 vertical
 P2: 2/3 horizontal | 4/5 vertical
-Az: point 114</pre><ol class="calc-build-list"><li>Draw horizon and meridian; set the base culmination at <code>${calcHumanNumber(90-latNow)}gr</code> for the current latitude.</li><li>For the desired ARC, mark rise, culmination and setting using the 10gr / 30m / 8gr rule.</li><li>Between rise and culmination mark P1 at one third of the horizontal displacement and one half of the vertical displacement; mark P2 at two thirds horizontally and four fifths vertically. Mirror both points westward.</li><li>Draw one regular arc through rise, P1, P2, culmination, the mirrored points and setting.</li><li>From point <code>114</code> draw the azimuth guides toward E, ESE, SE and S.</li></ol>`:`<p>La tavola nasce dall’arco base equinoziale e dai valori ARC.</p><pre class="calc-code">base: ARI00 / LIB00
+Az: point 114</pre><ol class="calc-build-list"><li>Draw horizon and meridian; set the base culmination at <code>${calcHumanNumber(90-latNow)}gr</code> for the current latitude.</li><li>For the desired ARC, mark rise, culmination and setting using the 10gr / 30m / 8gr rule.</li><li>Between rise and culmination mark P1 at one third of the horizontal displacement and one half of the vertical displacement; mark P2 at two thirds horizontally and four fifths vertically. Mirror both points westward.</li><li>Draw one regular arc through rise, P1, P2, culmination, the mirrored points and setting.</li><li>From point <code>114</code> draw the azimuth guides toward E, ESE, SE and S.</li></ol>`:`<p>La tavola nasce dall’arco base equinoziale e dai valori ARC. Per la costruzione manuale bastano due punti intermedi; l’app usa nodi aggiuntivi per affinare la forma della curva.</p><pre class="calc-code">base: ARI00 / LIB00
 levata: 90gr E | semiarco: 6h | H culmine: 90−Lat
 P1: 1/3 orizzontale | 1/2 verticale
 P2: 2/3 orizzontale | 4/5 verticale
@@ -4605,7 +4603,6 @@ function setTodayNow(){
 
   document.getElementById("dateInput").value = `${yyyy}-${mm}-${dd}`;
   document.getElementById("timeInput").value = `${hh}:${mi}`;
-  document.getElementById("moonSegmentInput").checked = true;
   refreshApp();
 }
 
