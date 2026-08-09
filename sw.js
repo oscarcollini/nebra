@@ -1,4 +1,4 @@
-const CACHE_NAME = "nebra-offline-v0-9-95-r1-20260808";
+const CACHE_NAME = "nebra-offline-v0-9-99-r1-20260809";
 const APP_SHELL = [
   "./",
   "./index.html",

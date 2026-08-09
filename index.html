@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>N•E•B•R•A v0.9.95</title>
+<title>N•E•B•R•A v0.9.99</title>
 <meta content="Calcolatore astronomico N•E•B•R•A per Sole, Luna, pianeti e orizzonte locale." name="description"/>
 <meta content="#078783" name="theme-color"/>
 <!-- PWA_SHELL_BEGIN -->
@@ -1043,6 +1043,8 @@
   .summary-sun-arc-neutral{color:#666}
   .summary-sun-arc-negative{color:#2ca02c}
   .summary-sun-arc-low{color:#1f4aff}
+  .eclipse-alert{color:#d00000;font-weight:900}
+  body.red-mode .eclipse-alert{color:#ff4d4d}
   .results-panel{padding-top:10px}
   .result-notes-foldout{margin-top:8px;border-top:1px solid #ddd;padding-top:7px}
   .result-notes-foldout > summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;color:#555;font-size:11.5px;font-weight:700}
@@ -1372,7 +1374,7 @@
 <div class="about-body">
 <p class="calc-intro" data-i18n="about_intro">N•E•B•R•A collega calendario, eclittica e volta locale.</p>
 <h3 data-i18n="about_what_title">Cosa fa</h3>
-<p data-i18n-html="about_what_text">Dalla data ricava la posizione del Sole, l’età e la posizione della Luna, il moto dei pianeti e i riferimenti stellari; ora e luogo trasformano queste posizioni nella scena sopra l’orizzonte. I risultati sono espressi in <code>SGNgr</code>, <code>ARC</code>, distanza dal meridiano, altezza e direzione.</p>
+<p data-i18n-html="about_what_text">Dalla data ricava la posizione del Sole, l’età, la posizione e lo scarto N/S della Luna, il moto dei pianeti e i riferimenti stellari; ora e luogo trasformano queste posizioni nella scena sopra l’orizzonte. I risultati sono espressi in <code>SGNgr</code>, <code>ARC</code>, distanza dal meridiano, altezza e direzione.</p>
 <h3 data-i18n="about_use_title">A cosa serve</h3>
 <p data-i18n="about_use_text">Serve a preparare e accompagnare l’osservazione a occhio nudo: trovare un pianeta, seguire la Luna, riconoscere il tratto di eclittica presente nella volta e ricostruire la scena anche con cielo parzialmente coperto o luminoso.</p>
 <h3 data-i18n="about_philosophy_title">La filosofia</h3>
@@ -1403,6 +1405,9 @@
 <div class="about-glossary-body">
 <div class="about-term"><b>SGNgr</b><span data-i18n="gloss_sgngr">Posizione lungo l’eclittica espressa da segno e grado.</span></div>
 <div class="about-term"><b>ARC</b><span data-i18n="gloss_arc">Valore del modello che identifica la forma dell’arco diurno.</span></div>
+<div class="about-term"><b>K</b><span data-i18n="gloss_k">Knot: posizione del nodo lunare ascendente lungo l’eclittica.</span></div>
+<div class="about-term"><b>p</b><span data-i18n="gloss_p">Posizione della Luna nel ciclo nodale, misurata da K.</span></div>
+<div class="about-term"><b>NS</b><span data-i18n="gloss_ns">Scarto della Luna a nord (+) o a sud (−) dell’eclittica.</span></div>
 <div class="about-term"><b>ΔC</b><span data-i18n="gloss_dc">Distanza temporale dal meridiano: negativa a est, positiva a ovest.</span></div>
 <div class="about-term"><b>TSL</b><span data-i18n="gloss_tsl">Tempo solare locale, usato per collocare la scena rispetto al meridiano.</span></div>
 <div class="about-term"><b>Alt</b><span data-i18n="gloss_alt">Altezza stimata del corpo sopra l’orizzonte.</span></div>
@@ -1431,7 +1436,7 @@
 <p data-i18n="screen_guide_table_lead">Per ogni corpo e fiduciale la tabella riporta:</p>
 <div class="screen-guide-defs">
 <p data-i18n-html="screen_guide_table_sgngr"><strong><code>SGNgr</code></strong> posizione lungo l’eclittica.</p>
-<p data-i18n-html="screen_guide_table_arc"><strong><code>ARC</code></strong> arco diurno.</p>
+<p data-i18n-html="screen_guide_table_arc"><strong><code>ARC</code></strong> arco diurno; per la Luna include la correzione N/S rispetto all’eclittica.</p>
 <p data-i18n-html="screen_guide_table_dc"><strong><code>ΔC</code></strong> distanza temporale dal meridiano.</p>
 <p data-i18n-html="screen_guide_table_alt"><strong><code>Alt</code></strong> altezza stimata.</p>
 <p data-i18n-html="screen_guide_table_az"><strong><code>Az</code></strong> direzione approssimativa.</p>
@@ -1556,7 +1561,7 @@ const I18N = {
     screen_guide_table_title:"Leggere la tabella",
     screen_guide_table_lead:"Per ogni corpo e fiduciale la tabella riporta:",
     screen_guide_table_sgngr:"<strong><code>SGNgr</code></strong> posizione lungo l’eclittica.",
-    screen_guide_table_arc:"<strong><code>ARC</code></strong> arco diurno.",
+    screen_guide_table_arc:"<strong><code>ARC</code></strong> arco diurno; per la Luna include la correzione N/S rispetto all’eclittica.",
     screen_guide_table_dc:"<strong><code>ΔC</code></strong> distanza temporale dal meridiano.",
     screen_guide_table_alt:"<strong><code>Alt</code></strong> altezza stimata.",
     screen_guide_table_az:"<strong><code>Az</code></strong> direzione approssimativa.",
@@ -1574,7 +1579,7 @@ const I18N = {
     about_summary:"Cos’è N•E•B•R•A",
     about_intro:"N•E•B•R•A collega calendario, eclittica e volta locale.",
     about_what_title:"Cosa fa",
-    about_what_text:"Dalla data ricava la posizione del Sole, l’età e la posizione della Luna, il moto dei pianeti e i riferimenti stellari; ora e luogo trasformano queste posizioni nella scena sopra l’orizzonte. I risultati sono espressi in <code>SGNgr</code>, <code>ARC</code>, distanza dal meridiano, altezza e direzione.",
+    about_what_text:"Dalla data ricava la posizione del Sole, l’età, la posizione e lo scarto N/S della Luna, il moto dei pianeti e i riferimenti stellari; ora e luogo trasformano queste posizioni nella scena sopra l’orizzonte. I risultati sono espressi in <code>SGNgr</code>, <code>ARC</code>, distanza dal meridiano, altezza e direzione.",
     about_use_title:"A cosa serve",
     about_use_text:"Serve a preparare e accompagnare l’osservazione a occhio nudo: trovare un pianeta, seguire la Luna, riconoscere il tratto di eclittica presente nella volta e ricostruire la scena anche con cielo parzialmente coperto o luminoso.",
     about_philosophy_title:"La filosofia",
@@ -1601,6 +1606,9 @@ const I18N = {
     about_glossary:"Glossario",
     gloss_sgngr:"Posizione lungo l’eclittica espressa da segno e grado.",
     gloss_arc:"Valore del modello che identifica la forma dell’arco diurno.",
+    gloss_k:"Knot: posizione del nodo lunare ascendente lungo l’eclittica.",
+    gloss_p:"Posizione della Luna nel ciclo nodale, misurata da K.",
+    gloss_ns:"Scarto della Luna a nord (+) o a sud (−) dell’eclittica.",
     gloss_dc:"Distanza temporale dal meridiano: negativa a est, positiva a ovest.",
     gloss_tsl:"Tempo solare locale, usato per collocare la scena rispetto al meridiano.",
     gloss_alt:"Altezza stimata del corpo sopra l’orizzonte.",
@@ -1651,6 +1659,10 @@ const I18N = {
     body:"Corpo",
     sun:"Sole",
     moon:"Luna",
+    lunar_node:"Nodo lunare",
+    eclipse_check:"Eclissi",
+    eclipse_possible:"possibile alla sizigia",
+    eclipse_impossible:"impossibile alla sizigia",
     venus:"Venere",
     mars:"Marte",
     jupiter:"Giove",
@@ -1686,7 +1698,7 @@ const I18N = {
     ascii_title:"GRAFICO TRIENNALE ASCII",
     help_body:"Nome del corpo o del fiduciale.",
     help_sgngr:"Posizione lungo l’eclittica: segno zodiacale + grado.",
-    help_arc:"Valore dell’arco diurno rispetto alla base equinoziale ARC 0. Ogni passo modifica altezza al meridiano, semiarco e direzioni di levata e tramonto; i decimali indicano l’affinamento entro il segno.",
+    help_arc:"Valore dell’arco diurno rispetto alla base equinoziale ARC 0. Ogni passo modifica altezza al meridiano, semiarco e direzioni di levata e tramonto; i decimali indicano l’affinamento entro il segno. Per la Luna include lo scarto N/S rispetto all’eclittica.",
     help_dc:"Distanza temporale dal passaggio al meridiano: 0 = sul meridiano; negativa a est, positiva a ovest.",
     help_alt:"Altezza stimata; ! = possibile invisibilità dietro il profilo locale o sotto l’orizzonte rettilineo scelto.",
     help_az:"Direzione approssimativa.",
@@ -1768,7 +1780,7 @@ const I18N = {
     screen_guide_table_title:"Read the results",
     screen_guide_table_lead:"For each body and fiducial, the table gives:",
     screen_guide_table_sgngr:"<strong><code>SGNgr</code></strong> position along the ecliptic.",
-    screen_guide_table_arc:"<strong><code>ARC</code></strong> diurnal arc.",
+    screen_guide_table_arc:"<strong><code>ARC</code></strong> diurnal arc; for the Moon it includes the N/S correction from the ecliptic.",
     screen_guide_table_dc:"<strong><code>ΔC</code></strong> time distance from the meridian.",
     screen_guide_table_alt:"<strong><code>Alt</code></strong> estimated altitude.",
     screen_guide_table_az:"<strong><code>Az</code></strong> approximate direction.",
@@ -1786,7 +1798,7 @@ const I18N = {
     about_summary:"About N•E•B•R•A",
     about_intro:"N•E•B•R•A links the calendar, the ecliptic and the local sky vault.",
     about_what_title:"What it does",
-    about_what_text:"From the date it derives the Sun’s position, the Moon’s age and position, planetary motion and stellar references; time and place turn these positions into the scene above the horizon. Results are expressed as <code>SGNgr</code>, <code>ARC</code>, distance from the meridian, altitude and direction.",
+    about_what_text:"From the date it derives the Sun’s position, the Moon’s age, position and N/S offset, planetary motion and stellar references; time and place turn these positions into the scene above the horizon. Results are expressed as <code>SGNgr</code>, <code>ARC</code>, distance from the meridian, altitude and direction.",
     about_use_title:"What it is for",
     about_use_text:"It is designed to prepare and support naked-eye observation: finding a planet, following the Moon, recognizing the section of the ecliptic in the sky and reconstructing the scene even under partly cloudy or bright skies.",
     about_philosophy_title:"The approach",
@@ -1813,6 +1825,9 @@ const I18N = {
     about_glossary:"Glossary",
     gloss_sgngr:"Position along the ecliptic expressed by sign and degree.",
     gloss_arc:"Model value identifying the shape of the diurnal arc.",
+    gloss_k:"Knot: position of the ascending lunar node along the ecliptic.",
+    gloss_p:"Moon position in the nodal cycle, measured from K.",
+    gloss_ns:"Moon offset north (+) or south (−) of the ecliptic.",
     gloss_dc:"Time distance from the meridian: negative to the east, positive to the west.",
     gloss_tsl:"Local solar time, used to place the scene relative to the meridian.",
     gloss_alt:"Estimated height of the body above the horizon.",
@@ -1863,6 +1878,10 @@ const I18N = {
     body:"Body",
     sun:"Sun",
     moon:"Moon",
+    lunar_node:"Lunar node",
+    eclipse_check:"Eclipse",
+    eclipse_possible:"possible at syzygy",
+    eclipse_impossible:"impossible at syzygy",
     venus:"Venus",
     mars:"Mars",
     jupiter:"Jupiter",
@@ -1898,7 +1917,7 @@ const I18N = {
     ascii_title:"THREE-YEAR ASCII PLANET GRAPH",
     help_body:"Body or fiducial name.",
     help_sgngr:"Position along the ecliptic: zodiac sign + degree.",
-    help_arc:"Diurnal-arc value relative to the equinoctial ARC 0 base. Each step changes meridian altitude, semiarc and rising/setting directions; decimals show refinement within the sign.",
+    help_arc:"Diurnal-arc value relative to the equinoctial ARC 0 base. Each step changes meridian altitude, semiarc and rising/setting directions; decimals show refinement within the sign. For the Moon it includes the N/S offset from the ecliptic.",
     help_dc:"Time from meridian passage: 0 = on the meridian; negative east of it, positive west of it.",
     help_alt:"Estimated altitude; ! = possible invisibility behind the local profile or below the selected straight horizon.",
     help_az:"Approximate direction.",
@@ -2386,6 +2405,49 @@ function lunarDistanceState(L, N){
   const gr = (twice % 5) * 6;
   return {N, valueL, twice, rawSgn, sgn, gr, total:sgn*30 + gr};
 }
+const LUNAR_NODE_ANCHOR_DATE = new Date(Date.UTC(2025,0,29));
+const LUNAR_NODE_ANCHOR_LON = 0; // ARI00
+const LUNAR_NODE_PERIOD_DAYS = 6798;
+const LUNAR_NODE_NS_POINTS = [[0,0],[90,5],[180,0],[270,-5],[360,0]];
+
+function lunarNodeState(date, moonLongitude){
+  const days = calendarDayIndex(date) - calendarDayIndex(LUNAR_NODE_ANCHOR_DATE);
+  // Nodo medio tropicale: regressione completa in circa 6798 giorni.
+  const k = mod(LUNAR_NODE_ANCHOR_LON - days * 360 / LUNAR_NODE_PERIOD_DAYS, 360);
+  const p = mod(moonLongitude - k, 360);
+  const ns = interp(LUNAR_NODE_NS_POINTS, p);
+  const descending = mod(k + 180, 360);
+  const nodeDistance = Math.min(Math.abs(norm180(moonLongitude-k)), Math.abs(norm180(moonLongitude-descending)));
+  return {k, p, ns, descending, nodeDistance, days};
+}
+
+function lunarNodeManualState(date){
+  const ay = 2025, am = 1, ad = 29;
+  const target = ymd(date);
+  const forward = calendarDayIndex(date) >= calendarDayIndex(LUNAR_NODE_ANCHOR_DATE);
+  let a, anniversary, g, shift;
+  if(forward){
+    a = target.y - ay;
+    anniversary = new Date(Date.UTC(ay+a,am-1,ad));
+    if(calendarDayIndex(anniversary) > calendarDayIndex(date)){
+      a -= 1;
+      anniversary = new Date(Date.UTC(ay+a,am-1,ad));
+    }
+    g = daysBetween(anniversary,date);
+    shift = 19*a + Math.floor(a/3) + Math.floor(g/19);
+    return {forward:true,a,g,shift,k:mod(LUNAR_NODE_ANCHOR_LON-shift,360),anniversary};
+  }
+  a = ay - target.y;
+  anniversary = new Date(Date.UTC(ay-a,am-1,ad));
+  if(calendarDayIndex(anniversary) < calendarDayIndex(date)){
+    a -= 1;
+    anniversary = new Date(Date.UTC(ay-a,am-1,ad));
+  }
+  g = daysBetween(date,anniversary);
+  shift = 19*a + Math.floor(a/3) + Math.floor(g/19);
+  return {forward:false,a,g,shift,k:mod(LUNAR_NODE_ANCHOR_LON+shift,360),anniversary};
+}
+
 function moonLon(date, sun){
   const age = lunarAgeAt(date);
   const {L,N} = age;
@@ -2397,10 +2459,22 @@ function moonLon(date, sun){
     : gr === 0
       ? `+${sgn} SGN`
       : `+${sgn} SGN +${gr}gr`;
+  const lon = mod(sun + sgn*30 + gr, 360);
+  const node = lunarNodeState(date, lon);
+  const isFullMoon = distance.total === 180;
+
+  // Condizione nodale per le eclissi: non predice un evento. Dice soltanto
+  // se, a questa longitudine solare, una sizigia può produrre un'eclissi.
+  const sunNodeDistance = Math.min(
+    Math.abs(norm180(sun-node.k)),
+    Math.abs(norm180(sun-node.descending))
+  );
+  const eclipsePossible = sunNodeDistance <= 15;
   return {
-    lon: mod(sun + sgn*30 + gr, 360),
+    lon,
     ...age,
-    isNewMoon, distance, dist
+    isNewMoon, isFullMoon, distance, dist, node,
+    sunNodeDistance, eclipsePossible
   };
 }
 
@@ -3607,7 +3681,11 @@ function refreshApp(){
     const center = mod(dailySun + deltaMin/4, 360);
     const built = buildObjects(date, dailySun);
     const builtRows = built.objects.map(o => {
-      const arc = arcAffinamento(o.lon);
+      const baseArc = arcAffinamento(o.lon);
+      // La latitudine eclittica lunare viene tradotta nel linguaggio ARC:
+      // 1 unità ARC ≈ 8gr verticali. Le altre posizioni restano eclittiche.
+      const ns = o.name === "Luna" ? built.meta.moon.node.ns : 0;
+      const arc = baseArc + ns/8;
       const x = dtFromCenter(o.lon, center);
       const localAlt = altOnCurve(arc, x, coeff);
       const alt = localArcAvailable ? localAlt : null;
@@ -3620,7 +3698,7 @@ function refreshApp(){
       const effectiveHorizon = onSky ? (horizonProfile ? profileHorizon : localHorizon) : 0;
       const clearance = onSky ? alt - effectiveHorizon : null;
       const visible = onSky && clearance >= 0;
-      return {...o, sg:fmtSG(o.lon), arc, dC:x, x, alt, direction, profileAz, onSky, profileHorizon, effectiveHorizon, clearance, visible};
+      return {...o, sg:fmtSG(o.lon), baseArc, ns, arc, dC:x, x, alt, direction, profileAz, onSky, profileHorizon, effectiveHorizon, clearance, visible};
     });
     return {center, rows:builtRows, meta:built.meta};
   };
@@ -3802,8 +3880,11 @@ function renderTable(rows, state, meta, extra){
   updateSettingsStatus(state, extra);
   const civilToTSLCorrection = civilToTSLCorrectionLabel(-(extra.lonCorr + extra.dst));
   const moonRow = rows.find(r => r.name === "Luna");
+  const eclipseAlert = meta.moon.eclipsePossible && (meta.moon.isNewMoon || meta.moon.isFullMoon)
+    ? ' <span class="eclipse-alert">!</span>'
+    : "";
   const moonSummary = moonRow
-    ? `${moonPhaseEmoji(meta.moon.L)} ${moonAgeLabel(meta.moon)} ${moonRow.sg}`
+    ? `${moonPhaseEmoji(meta.moon.L)} ${moonAgeLabel(meta.moon)} ${moonRow.sg}${eclipseAlert}`
     : "—";
   const nebraDateDiffers = extra.italianHours && calendarDayIndex(extra.civilDate) !== calendarDayIndex(extra.nebraDate);
   const nebraDateNotice = nebraDateDiffers
@@ -3880,6 +3961,8 @@ function renderTable(rows, state, meta, extra){
     <div>${state.italianHours ? T("table_day_rule_italian") : T("table_day_rule_civil")}</div>
     <div><b>${T("sun")}:</b> ARI00≈${extra.ariesEntry}.</div>
     <div><b>${T("moon")}:</b> E=${meta.moon.E}, R=${meta.moon.R}, L=${moonNoteAge(meta.moon)}, Δ☉=${meta.moon.dist}.</div>
+    <div><b>${T("lunar_node")}:</b> K=${fmtSG(meta.moon.node.k)} · p=${Math.round(meta.moon.node.p)}gr · NS=${calcSigned(meta.moon.node.ns,1)}gr.</div>
+    <div><b>${T("eclipse_check")}:</b> ${Math.round(meta.moon.sunNodeDistance)}gr ${currentLang()==="en"?"Sun–nearest node":"Sole–nodo più vicino"} · <b>${meta.moon.eclipsePossible ? T("eclipse_possible") : T("eclipse_impossible")}</b>.</div>
     ${state.showMoonSegment ? `<div><b>${T("moon_segment_note")}:</b> ${T("moon_segment_text")}</div>` : ""}
     <div><b>${T("venus_note")}${meta.venus.ci.reconstructed ? ` (${T("derived_ci")})` : ""}:</b> ${T("from_ci")}=${fmtDG(meta.venus.d)}; ${T("sun_elong")}=${fmtArc(meta.venus.elong)}gr; ${T("vis_short")}=${venusVisibilityCode(meta.venus.elong)}.</div>
     <div><b>${T("mars_note")}${meta.mars.op.reconstructed ? ` (${T("derived_op")})` : ""}:</b> ${T("from_op")}=${fmtDG(meta.mars.d)}; ${T("curve_offset")}=${fmtArc(meta.mars.offset)}gr.</div>
@@ -4325,9 +4408,9 @@ g(p)=690+279//3=783g
 }
 function calcValidityReference(){
   if(currentLang() === "en"){
-    return calcStaticBlock("calc-validita", "R4 · Validity", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Sun</b>The calendar rule normally places the Sun within a few degrees. Using <code>Γ=20</code> when the annual value is unavailable may add about ±1gr.</div><div class="calc-mini-card"><b>Moon</b>The practical difference may reach roughly one lunar day.</div><div class="calc-mini-card"><b>Planets</b>Positions are of the order of 15gr in useful observing situations and are often better.</div><div class="calc-mini-card"><b>Local sky</b>The standard table is designed for 45N and is practical at about 42N–48N. The latitude-adapted table is experimental.</div><div class="calc-mini-card"><b>Intervals</b>The app covers 1583–4199; exact planetary anchors are used in 1900–2199 and decennial automatic reconstruction outside that interval.</div><div class="calc-mini-card"><b>References</b>Ecliptic-ruler positions are general. Fiducials and pillars retain 5gr-rounded marks and shift together by 5gr every 360 years.</div></div>`);
+    return calcStaticBlock("calc-validita", "R4 · Validity", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Sun</b>The calendar rule normally places the Sun within a few degrees. Using <code>Γ=20</code> when the annual value is unavailable may add about ±1gr.</div><div class="calc-mini-card"><b>Moon</b>The practical difference may reach roughly one lunar day. K uses the mean 6798-day nodal cycle; NS is the linear ±5gr approximation used by the method.</div><div class="calc-mini-card"><b>Planets</b>Positions are of the order of 15gr in useful observing situations and are often better.</div><div class="calc-mini-card"><b>Local sky</b>The standard table is designed for 45N and is practical at about 42N–48N. The latitude-adapted table is experimental.</div><div class="calc-mini-card"><b>Intervals</b>The app covers 1583–4199; exact planetary anchors are used in 1900–2199 and decennial automatic reconstruction outside that interval.</div><div class="calc-mini-card"><b>References</b>Ecliptic-ruler positions are general. Fiducials and pillars retain 5gr-rounded marks and shift together by 5gr every 360 years.</div></div>`);
   }
-  return calcStaticBlock("calc-validita", "R4 · Validità", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Sole</b>La regola di calendario colloca normalmente il Sole entro pochi gradi. Usare <code>Γ=20</code> quando manca il valore annuale può aggiungere circa ±1gr.</div><div class="calc-mini-card"><b>Luna</b>Lo scarto pratico può raggiungere l’ordine di un giorno lunare.</div><div class="calc-mini-card"><b>Pianeti</b>Le posizioni sono dell’ordine di 15gr nelle situazioni osservative utili e spesso risultano migliori.</div><div class="calc-mini-card"><b>Cielo locale</b>La tavola standard è pensata per 45N ed è pratica fra circa 42N e 48N. La tavola adattata alla latitudine è sperimentale.</div><div class="calc-mini-card"><b>Intervalli</b>L’app copre il 1583–4199; usa ancore planetarie esatte nel 1900–2199 e la ricostruzione automatica da ancore decennali fuori da questa fascia.</div><div class="calc-mini-card"><b>Riferimenti</b>Le posizioni sul righello hanno valore generale. Fiduciali e pilastri conservano tacche arrotondate a 5gr e scattano insieme di 5gr ogni 360 anni.</div></div>`);
+  return calcStaticBlock("calc-validita", "R4 · Validità", `<div class="calc-mini-grid"><div class="calc-mini-card"><b>Sole</b>La regola di calendario colloca normalmente il Sole entro pochi gradi. Usare <code>Γ=20</code> quando manca il valore annuale può aggiungere circa ±1gr.</div><div class="calc-mini-card"><b>Luna</b>Lo scarto pratico può raggiungere l’ordine di un giorno lunare. K usa il ciclo nodale medio di 6798 giorni; NS è l’approssimazione lineare ±5gr adottata dal metodo.</div><div class="calc-mini-card"><b>Pianeti</b>Le posizioni sono dell’ordine di 15gr nelle situazioni osservative utili e spesso risultano migliori.</div><div class="calc-mini-card"><b>Cielo locale</b>La tavola standard è pensata per 45N ed è pratica fra circa 42N e 48N. La tavola adattata alla latitudine è sperimentale.</div><div class="calc-mini-card"><b>Intervalli</b>L’app copre il 1583–4199; usa ancore planetarie esatte nel 1900–2199 e la ricostruzione automatica da ancore decennali fuori da questa fascia.</div><div class="calc-mini-card"><b>Riferimenti</b>Le posizioni sul righello hanno valore generale. Fiduciali e pilastri conservano tacche arrotondate a 5gr e scattano insieme di 5gr ogni 360 anni.</div></div>`);
 }
 function renderCalculationTrace(date, rows, state, meta, extra){
   const box = document.getElementById("calcTrace");
@@ -4445,7 +4528,62 @@ ${displayName("Luna")} = ${displayName("Sole")} + ${calcSignedDistanceText(lunar
     ? "The Moon gives two results: lunar age L, which describes the phase, and SGNgr. E is the epact; R is the monthly regular. The current example identifies the lunation that contains the selected civil date."
     : "Per la Luna si ricavano due risultati: l’età L, che descrive la fase, e la posizione SGNgr. E è l’epatta; R la regolare mensile. L’esempio individua la lunazione che contiene la data civile selezionata.";
   const lunarTable = calcRefTable(u.lunarTable,[{label:"MM",values:monthNames.slice(1)},{label:"R",values:R_MONTH.slice(1)}],m-1);
-  const lunarBlock = calcUniformBlock({id:"calc-luna",title:`2 · ${displayName("Luna")} · ${moonRow.sg}`,description:lunarDescription,formula:lunarFormula,table:lunarTable,current:lunarCurrent});
+  const lunarBlock = calcUniformBlock({id:"calc-luna",title:`2a · ${displayName("Luna")} · ${moonRow.sg}`,description:lunarDescription,formula:lunarFormula,table:lunarTable,current:lunarCurrent});
+
+  const manualNode = lunarNodeManualState(date);
+  const nodeTr = calcTraceSegment(LUNAR_NODE_NS_POINTS,lunar.node.p);
+  const nodeTable = calcCurveTable(currentLang()==="en"?"p / N-S offset":"p / scarto N-S",LUNAR_NODE_NS_POINTS,lunar.node.p,"NS","p");
+  const nodeFormula = currentLang() === "en"
+    ? `K (Knot) = ascending node
+anchor t0: 29.01.2025 ARI00
+MiniNEBRA: K:[t0 -19gr(a) -(a//3)gr -(g//19)gr]
+(backward: reverse the signs)
+
+p = (SGNgr - K) % 360
+p :   0    90   180   270   360
+NS:   0    +5    0    -5     0
+linear interpolation between nodes
+
+ARC(Moon) = ARC(ecliptic) + NS/8
+new/full Moon + Sun within 15gr of nearest node: eclipse possible
+K near ARI00: major standstill | K near LIB00: minor standstill`
+    : `K (Knot) = nodo ascendente
+ancora t0: 29.01.2025 ARI00
+MiniNEBRA: K:[t0 -19gr(a) -(a//3)gr -(g//19)gr]
+(a ritroso: inverti i segni)
+
+p = (SGNgr - K) % 360
+p :   0    90   180   270   360
+NS:   0    +5    0    -5     0
+interpolazione lineare fra i nodi
+
+ARC(Luna) = ARC(eclittica) + NS/8
+novilunio/plenilunio + Sole entro 15gr dal nodo più vicino: eclissi possibile
+K vicino ad ARI00: major standstill | K vicino a LIB00: minor standstill`;
+  const manualSign = manualNode.forward ? "−" : "+";
+  const nodeInterpCurrent = nodeTr.atNode
+    ? `NS = ${calcSigned(nodeTr.y,1)}gr`
+    : `NS = ${calcSigned(nodeTr.y0,0)} + [(${calcSigned(lunar.node.p,1)} − ${calcSigned(nodeTr.x0,0)}) / (${calcSigned(nodeTr.x1,0)} − ${calcSigned(nodeTr.x0,0)})] × (${calcSigned(nodeTr.y1,0)} − ${calcSigned(nodeTr.y0,0)})
+   = ${calcSigned(lunar.node.ns,1)}gr`;
+  const eclipseCurrent = `${displayName("Sole")} - ${currentLang()==="en"?"nearest node":"nodo più vicino"} = ${calcSigned(lunar.sunNodeDistance,1).replace(/^\+/,"")}gr
+${lunar.sunNodeDistance.toFixed(1)}gr <= 15gr -> ${lunar.eclipsePossible ? (currentLang()==="en"?"eclipse possible at syzygy":"eclissi possibile alla sizigia") : (currentLang()==="en"?"eclipse impossible at syzygy":"eclissi impossibile alla sizigia")}`;
+  const nodeCurrent = `t0 = 29.01.2025 ARI00
+a = ${manualNode.a} · g = ${manualNode.g}
+K(MiniNEBRA) = ARI00 ${manualSign} [19×${manualNode.a} + ${manualNode.a}//3 + ${manualNode.g}//19]
+             = ${fmtSG(manualNode.k)}
+K(app · 6798g) = ${fmtSG(lunar.node.k)}
+
+p = (${moonRow.sg} - ${fmtSG(lunar.node.k)}) %360 = ${calcSigned(lunar.node.p,1).replace(/^\+/,"")}gr
+${nodeInterpCurrent}
+
+ARC(eclittica) = ${fmtArc(moonRow.baseArc)}
+ARC(Luna) = ${fmtArc(moonRow.baseArc)} + (${calcSigned(lunar.node.ns,1)}/8) = ${fmtArc(moonRow.arc)}
+
+${eclipseCurrent}`;
+  const nodeDescription = currentLang() === "en"
+    ? "K (Knot) is the ascending lunar node. The app propagates its mean tropical position with the 6798-day cycle; the compact MiniNEBRA rule is the manual approximation. p locates the Moon in the nodal cycle, and NS is its north/south offset from the ecliptic. At syzygy, eclipse possibility is checked from the Sun’s distance to the nearest node."
+    : "K (Knot) è il nodo lunare ascendente. L’app ne propaga la posizione media tropicale con il ciclo di 6798 giorni; la regola compatta MiniNEBRA è l’approssimazione manuale. p colloca la Luna nel ciclo nodale e NS è il suo scarto nord/sud dall’eclittica. Alla sizigia, la possibilità di eclissi dipende dalla distanza del Sole dal nodo più vicino.";
+  const nodeBlock = calcUniformBlock({id:"calc-nodo",title:`2b · ${T("lunar_node")} · K ${fmtSG(lunar.node.k)} · NS ${calcSigned(lunar.node.ns,1)}gr`,description:nodeDescription,formula:nodeFormula,table:nodeTable,current:nodeCurrent});
 
   const vPts=VENUS_POINTS, vTr=calcTraceSegment(vPts,meta.venus.d);
   const venusTable=calcCurveTable(`${u.curveNodes} · t₀=CI`,vPts,meta.venus.d,u.elongSun,u.venusDays);
@@ -4549,7 +4687,10 @@ affinamento app: 0–5:0 | 6–11:1/3 | 12–17:1/2 | 18–23:2/3 | 24–29: SGN
   const horizonRows=state.localArcAvailable?[sunRow,moonRow,venusRow,marsRow,jupiterRow,saturnRow].map((r,index)=>{
     const lev=90-state.coeff.kAz*r.arc, trm=270+state.coeff.kAz*r.arc, h=HArc(r.arc,state.coeff), semi=TArc(r.arc,state.coeff);
     const expanded=index===0?calcArcFormulaHTML(r,state):"";
-    return `<div class="calc-arc-row"><div class="calc-arc-head"><b>${calcEscape(displayName(r.name))}</b><span>${calcEscape(r.sg)} · ${calcEscape(calcArcAffinity(r.lon))}</span></div><div class="calc-arc-summary">${u.rise} ≈ ${Math.round(lev)}gr (${compassDir(lev)}) · ${semiarcLabel} ${calcHours(semi)} · ${u.heightCulm} ≈ ${Math.round(h)}gr · ${u.set} ≈ ${Math.round(trm)}gr (${compassDir(trm)}) · ${u.culminates} ${calcCulminationHM(r.lon,extra.sun)} TSL</div>${expanded}</div>`;
+    const arcLabel = r.name === "Luna"
+      ? `ARC ${fmtArc(r.arc)} [ecl. ${fmtArc(r.baseArc)} · NS ${calcSigned(r.ns,1)}gr]`
+      : calcArcAffinity(r.lon);
+    return `<div class="calc-arc-row"><div class="calc-arc-head"><b>${calcEscape(displayName(r.name))}</b><span>${calcEscape(r.sg)} · ${calcEscape(arcLabel)}</span></div><div class="calc-arc-summary">${u.rise} ≈ ${Math.round(lev)}gr (${compassDir(lev)}) · ${semiarcLabel} ${calcHours(semi)} · ${u.heightCulm} ≈ ${Math.round(h)}gr · ${u.set} ≈ ${Math.round(trm)}gr (${compassDir(trm)}) · ${u.culminates} ${calcCulminationHM(r.lon,extra.sun)} TSL</div>${expanded}</div>`;
   }).join(""):`<div class="calc-note">${T("lat_msg_out")}</div>`;
   const horizonBlock=calcUniformBlock({id:"calc-locale",title:`5 · ${currentLang()==="en"?"ARC and horizon":"ARC e orizzonte"}`,description:currentLang()==="en"?"The standard table uses the fixed 45N coefficients and is practical at about 42N–48N. The experimental adapted mode recalculates the base and coefficients for the entered latitude. The current calculation follows the selected mode.":"La tavola standard usa i coefficienti fissi di 45N ed è pratica fra circa 42N e 48N. La modalità adattata ricalcola base e coefficienti per la latitudine inserita ed è sperimentale. Il calcolo corrente segue la modalità selezionata.",formula:horizonRule,table:arcTable,currentHTML:horizonRows});
 
@@ -4594,6 +4735,7 @@ Az: punto 114</pre><ol class="calc-build-list"><li>Traccia orizzonte e meridiano
     groupHeading("calc-group-current",groupText.current),
     solarBlock,
     lunarBlock,
+    nodeBlock,
     calcPlanetReference(),
     venusBlock,marsBlock,jupiterBlock,saturnBlock,
     culmineBlock,
@@ -4795,7 +4937,7 @@ setTodayNow();
   });
 })();
 </script>
-<footer class="page-footer">N•E•B•R•A v0.9.95 · Oscar Collini fecit · CC BY-SA 4.0</footer>
+<footer class="page-footer">N•E•B•R•A v0.9.99 · Oscar Collini fecit · CC BY-SA 4.0</footer>
 <div aria-hidden="true" class="night-fab-clearance"></div>
 <!-- PWA_SHELL_BEGIN -->
 <script>
