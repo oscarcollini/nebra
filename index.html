@@ -1662,7 +1662,6 @@ const I18N = {
     lunar_node:"Nodo lunare",
     eclipse_check:"Eclissi",
     eclipse_possible:"possibile alla sizigia",
-    eclipse_impossible:"impossibile alla sizigia",
     venus:"Venere",
     mars:"Marte",
     jupiter:"Giove",
@@ -1881,7 +1880,6 @@ const I18N = {
     lunar_node:"Lunar node",
     eclipse_check:"Eclipse",
     eclipse_possible:"possible at syzygy",
-    eclipse_impossible:"impossible at syzygy",
     venus:"Venus",
     mars:"Mars",
     jupiter:"Jupiter",
@@ -3959,12 +3957,15 @@ function renderTable(rows, state, meta, extra){
 
   const notes = document.getElementById("notes");
   const marsWarn = meta.mars.warning ? `<div class="warn">${T("mars_warn")}</div>` : "";
+  const eclipseNote = meta.moon.eclipsePossible && (meta.moon.isNewMoon || meta.moon.isFullMoon)
+    ? `<div><b>${T("eclipse_check")}:</b> ${Math.round(meta.moon.sunNodeDistance)}gr ${currentLang()==="en"?"Sun–nearest node":"Sole–nodo più vicino"} · <b>${T("eclipse_possible")}</b>.</div>`
+    : "";
   notes.innerHTML = `
     <div>${state.italianHours ? T("table_day_rule_italian") : T("table_day_rule_civil")}</div>
     <div><b>${T("sun")}:</b> ARI00≈${extra.ariesEntry}.</div>
     <div><b>${T("moon")}:</b> E=${meta.moon.E}, R=${meta.moon.R}, L=${moonNoteAge(meta.moon)}, Δ☉=${meta.moon.dist}.</div>
     <div><b>${T("lunar_node")}:</b> K=${fmtSG(meta.moon.node.k)} · p=${Math.round(meta.moon.node.p)}gr · NS=${calcSigned(meta.moon.node.ns,1)}gr.</div>
-    <div><b>${T("eclipse_check")}:</b> ${Math.round(meta.moon.sunNodeDistance)}gr ${currentLang()==="en"?"Sun–nearest node":"Sole–nodo più vicino"} · <b>${meta.moon.eclipsePossible ? T("eclipse_possible") : T("eclipse_impossible")}</b>.</div>
+    ${eclipseNote}
     ${state.showMoonSegment ? `<div><b>${T("moon_segment_note")}:</b> ${T("moon_segment_text")}</div>` : ""}
     <div><b>${T("venus_note")}${meta.venus.ci.reconstructed ? ` (${T("derived_ci")})` : ""}:</b> ${T("from_ci")}=${fmtDG(meta.venus.d)}; ${T("sun_elong")}=${fmtArc(meta.venus.elong)}gr; ${T("vis_short")}=${venusVisibilityCode(meta.venus.elong)}.</div>
     <div><b>${T("mars_note")}${meta.mars.op.reconstructed ? ` (${T("derived_op")})` : ""}:</b> ${T("from_op")}=${fmtDG(meta.mars.d)}; ${T("curve_offset")}=${fmtArc(meta.mars.offset)}gr.</div>
@@ -4567,8 +4568,10 @@ K vicino ad ARI00: major standstill | K vicino a LIB00: minor standstill`;
     ? `NS = ${calcSigned(nodeTr.y,1)}gr`
     : `NS = ${calcSigned(nodeTr.y0,0)} + [(${calcSigned(lunar.node.p,1)} − ${calcSigned(nodeTr.x0,0)}) / (${calcSigned(nodeTr.x1,0)} − ${calcSigned(nodeTr.x0,0)})] × (${calcSigned(nodeTr.y1,0)} − ${calcSigned(nodeTr.y0,0)})
    = ${calcSigned(lunar.node.ns,1)}gr`;
-  const eclipseCurrent = `${displayName("Sole")} - ${currentLang()==="en"?"nearest node":"nodo più vicino"} = ${calcSigned(lunar.sunNodeDistance,1).replace(/^\+/,"")}gr
-${lunar.sunNodeDistance.toFixed(1)}gr <= 15gr -> ${lunar.eclipsePossible ? (currentLang()==="en"?"eclipse possible at syzygy":"eclissi possibile alla sizigia") : (currentLang()==="en"?"eclipse impossible at syzygy":"eclissi impossibile alla sizigia")}`;
+  const eclipseCurrent = lunar.eclipsePossible && (lunar.isNewMoon || lunar.isFullMoon)
+    ? `${displayName("Sole")} - ${currentLang()==="en"?"nearest node":"nodo più vicino"} = ${calcSigned(lunar.sunNodeDistance,1).replace(/^\+/,"")}gr
+${lunar.sunNodeDistance.toFixed(1)}gr <= 15gr -> ${currentLang()==="en"?"eclipse possible":"eclissi possibile"}`
+    : "";
   const nodeCurrent = `t0 = 01.01.1583 CAP00
 a = ${manualNode.a} · g = ${manualNode.g}
 K(MiniNEBRA) = CAP00 ${manualSign} [19×${manualNode.a} + ${manualNode.a}//3 + ${manualNode.a}//115 + ${manualNode.g}//19]
@@ -4579,12 +4582,10 @@ p = (${moonRow.sg} - ${fmtSG(lunar.node.k)}) %360 = ${calcSigned(lunar.node.p,1)
 ${nodeInterpCurrent}
 
 ARC(eclittica) = ${fmtArc(moonRow.baseArc)}
-ARC(Luna) = ${fmtArc(moonRow.baseArc)} + (${calcSigned(lunar.node.ns,1)}/8) = ${fmtArc(moonRow.arc)}
-
-${eclipseCurrent}`;
+ARC(Luna) = ${fmtArc(moonRow.baseArc)} + (${calcSigned(lunar.node.ns,1)}/8) = ${fmtArc(moonRow.arc)}${eclipseCurrent ? `\n\n${eclipseCurrent}` : ""}`;
   const nodeDescription = currentLang() === "en"
-    ? "K (Knot) is the ascending lunar node. The app propagates its mean tropical position with the 6798-day cycle; the compact MiniNEBRA rule is the manual approximation. p locates the Moon in the nodal cycle, and NS is its north/south offset from the ecliptic. At syzygy, eclipse possibility is checked from the Sun’s distance to the nearest node."
-    : "K (Knot) è il nodo lunare ascendente. L’app ne propaga la posizione media tropicale con il ciclo di 6798 giorni; la regola compatta MiniNEBRA è l’approssimazione manuale. p colloca la Luna nel ciclo nodale e NS è il suo scarto nord/sud dall’eclittica. Alla sizigia, la possibilità di eclissi dipende dalla distanza del Sole dal nodo più vicino.";
+    ? "K (Knot) is the ascending lunar node. The app propagates its mean tropical position with the 6798-day cycle; the compact MiniNEBRA rule is the manual approximation. p locates the Moon in the nodal cycle, and NS is its north/south offset from the ecliptic. At syzygy, if the Sun is within 15gr of the nearest node, the app marks a possible eclipse."
+    : "K (Knot) è il nodo lunare ascendente. L’app ne propaga la posizione media tropicale con il ciclo di 6798 giorni; la regola compatta MiniNEBRA è l’approssimazione manuale. p colloca la Luna nel ciclo nodale e NS è il suo scarto nord/sud dall’eclittica. Alla sizigia, se il Sole è entro 15gr dal nodo più vicino, l’app segnala una possibile eclissi.";
   const nodeBlock = calcUniformBlock({id:"calc-nodo",title:`2b · ${T("lunar_node")} · K ${fmtSG(lunar.node.k)} · NS ${calcSigned(lunar.node.ns,1)}gr`,description:nodeDescription,formula:nodeFormula,table:nodeTable,current:nodeCurrent});
 
   const vPts=VENUS_POINTS, vTr=calcTraceSegment(vPts,meta.venus.d);
