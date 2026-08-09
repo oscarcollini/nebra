@@ -2406,7 +2406,9 @@ function lunarDistanceState(L, N){
   return {N, valueL, twice, rawSgn, sgn, gr, total:sgn*30 + gr};
 }
 const LUNAR_NODE_ANCHOR_DATE = new Date(Date.UTC(2025,0,29));
-const LUNAR_NODE_ANCHOR_LON = 0; // ARI00
+const LUNAR_NODE_ANCHOR_LON = 0; // ARI00 · ancora app per il ciclo medio 6798g
+const LUNAR_NODE_MANUAL_ANCHOR_DATE = new Date(Date.UTC(1583,0,1));
+const LUNAR_NODE_MANUAL_ANCHOR_LON = 270; // CAP00 · ancora MiniNEBRA
 const LUNAR_NODE_PERIOD_DAYS = 6798;
 const LUNAR_NODE_NS_POINTS = [[0,0],[90,5],[180,0],[270,-5],[360,0]];
 
@@ -2422,9 +2424,9 @@ function lunarNodeState(date, moonLongitude){
 }
 
 function lunarNodeManualState(date){
-  const ay = 2025, am = 1, ad = 29;
+  const ay = 1583, am = 1, ad = 1;
   const target = ymd(date);
-  const forward = calendarDayIndex(date) >= calendarDayIndex(LUNAR_NODE_ANCHOR_DATE);
+  const forward = calendarDayIndex(date) >= calendarDayIndex(LUNAR_NODE_MANUAL_ANCHOR_DATE);
   let a, anniversary, g, shift;
   if(forward){
     a = target.y - ay;
@@ -2434,8 +2436,8 @@ function lunarNodeManualState(date){
       anniversary = new Date(Date.UTC(ay+a,am-1,ad));
     }
     g = daysBetween(anniversary,date);
-    shift = 19*a + Math.floor(a/3) + Math.floor(g/19);
-    return {forward:true,a,g,shift,k:mod(LUNAR_NODE_ANCHOR_LON-shift,360),anniversary};
+    shift = 19*a + Math.floor(a/3) + Math.floor(a/115) + Math.floor(g/19);
+    return {forward:true,a,g,shift,k:mod(LUNAR_NODE_MANUAL_ANCHOR_LON-shift,360),anniversary};
   }
   a = ay - target.y;
   anniversary = new Date(Date.UTC(ay-a,am-1,ad));
@@ -2444,8 +2446,8 @@ function lunarNodeManualState(date){
     anniversary = new Date(Date.UTC(ay-a,am-1,ad));
   }
   g = daysBetween(date,anniversary);
-  shift = 19*a + Math.floor(a/3) + Math.floor(g/19);
-  return {forward:false,a,g,shift,k:mod(LUNAR_NODE_ANCHOR_LON+shift,360),anniversary};
+  shift = 19*a + Math.floor(a/3) + Math.floor(a/115) + Math.floor(g/19);
+  return {forward:false,a,g,shift,k:mod(LUNAR_NODE_MANUAL_ANCHOR_LON+shift,360),anniversary};
 }
 
 function moonLon(date, sun){
@@ -4535,8 +4537,8 @@ ${displayName("Luna")} = ${displayName("Sole")} + ${calcSignedDistanceText(lunar
   const nodeTable = calcCurveTable(currentLang()==="en"?"p / N-S offset":"p / scarto N-S",LUNAR_NODE_NS_POINTS,lunar.node.p,"NS","p");
   const nodeFormula = currentLang() === "en"
     ? `K (Knot) = ascending node
-anchor t0: 29.01.2025 ARI00
-MiniNEBRA: K:[t0 -19gr(a) -(a//3)gr -(g//19)gr]
+anchor t0: 01.01.1583 CAP00
+MiniNEBRA: K:[t0 -19gr(a) -(a//3)gr -(a//115)gr -(g//19)gr]
 (backward: reverse the signs)
 
 p = (SGNgr - K) % 360
@@ -4548,8 +4550,8 @@ ARC(Moon) = ARC(ecliptic) + NS/8
 new/full Moon + Sun within 15gr of nearest node: eclipse possible
 K near ARI00: major standstill | K near LIB00: minor standstill`
     : `K (Knot) = nodo ascendente
-ancora t0: 29.01.2025 ARI00
-MiniNEBRA: K:[t0 -19gr(a) -(a//3)gr -(g//19)gr]
+ancora t0: 01.01.1583 CAP00
+MiniNEBRA: K:[t0 -19gr(a) -(a//3)gr -(a//115)gr -(g//19)gr]
 (a ritroso: inverti i segni)
 
 p = (SGNgr - K) % 360
@@ -4567,9 +4569,9 @@ K vicino ad ARI00: major standstill | K vicino a LIB00: minor standstill`;
    = ${calcSigned(lunar.node.ns,1)}gr`;
   const eclipseCurrent = `${displayName("Sole")} - ${currentLang()==="en"?"nearest node":"nodo più vicino"} = ${calcSigned(lunar.sunNodeDistance,1).replace(/^\+/,"")}gr
 ${lunar.sunNodeDistance.toFixed(1)}gr <= 15gr -> ${lunar.eclipsePossible ? (currentLang()==="en"?"eclipse possible at syzygy":"eclissi possibile alla sizigia") : (currentLang()==="en"?"eclipse impossible at syzygy":"eclissi impossibile alla sizigia")}`;
-  const nodeCurrent = `t0 = 29.01.2025 ARI00
+  const nodeCurrent = `t0 = 01.01.1583 CAP00
 a = ${manualNode.a} · g = ${manualNode.g}
-K(MiniNEBRA) = ARI00 ${manualSign} [19×${manualNode.a} + ${manualNode.a}//3 + ${manualNode.g}//19]
+K(MiniNEBRA) = CAP00 ${manualSign} [19×${manualNode.a} + ${manualNode.a}//3 + ${manualNode.a}//115 + ${manualNode.g}//19]
              = ${fmtSG(manualNode.k)}
 K(app · 6798g) = ${fmtSG(lunar.node.k)}
 
