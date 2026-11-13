@@ -1,23 +1,27 @@
-# N•E•B•R•A v0.9.93 — PWA completa
+# N•E•B•R•A
 
-Contenuto:
-- `index.html`: applicazione PWA;
-- `manifest.webmanifest` e `sw.js`: installazione e funzionamento offline;
-- icone 192, 512 e Apple Touch;
-- `profilo-di-prova.txt`: orizzonte fittizio importabile;
-- istruzioni di pubblicazione e aggiornamento;
-- `LICENSE.txt`: CC BY-SA 4.0.
+**Versione 0.9.99 · PWA installabile e utilizzabile offline dopo il primo caricamento.**
 
-## Coerenza con lo standalone
+N•E•B•R•A è un regolo astronomico digitale per stimare cosa osservare, quando e in quale direzione. Inserisci data, ora civile, latitudine e longitudine per vedere sulla tavola il Sole, la Luna, Venere, Marte, Giove e Saturno, insieme ai riferimenti stellari.
 
-`index.html` deriva dallo stesso sorgente dello standalone. Le sole aggiunte sono:
-1. l'involucro tecnico PWA;
-2. il profilo d'orizzonte fittizio `Profilo di prova`.
+[Apri N•E•B•R•A](https://oscarcollini.github.io/nebra/)
 
-Il profilo viene inserito soltanto se il browser non contiene già profili salvati. Non rappresenta un luogo reale e può essere eliminato o sostituito.
+## Uso
 
-## Intervalli
+- La tavola mostra le posizioni da **8 ore prima a 8 ore dopo il passaggio al meridiano**. Puoi usare un orizzonte rettilineo oppure importare un profilo locale per tenere conto di rilievi e ostacoli.
+- Per provare l’importazione, usa [profilo-di-prova.txt](profilo-di-prova.txt). Il **Profilo di prova** è fittizio e si può eliminare. La guida nell’app spiega anche come importare un profilo esportato da PeakFinder.
+- Nella sezione **Guida e approfondimenti** trovi il metodo di calcolo e le regole manuali di **MiniNEBRA**. Per la Luna, l’app mostra anche nodo, scarto dall’eclittica e indicazione di possibile eclissi.
+- L’app è disponibile in italiano e inglese. Dal menu del browser puoi installarla o aggiungerla alla schermata Home, secondo il dispositivo.
 
-- calcolo calendariale: 1583–4199;
-- ancore planetarie esatte interne: 1900–2199;
-- fuori da tale fascia: ricostruzione failsafe.
+## Intervalli di calcolo
+
+- Intervallo selezionabile nell’app: **1583–4199**.
+- Ancore planetarie tabellari: **1900–2199**. Fuori da questa fascia l’app ricostruisce le ancore a partire da riferimenti decennali.
+
+## File del progetto
+
+- [index.html](index.html) contiene applicazione, tavola, calcoli e guida.
+- [manifest.webmanifest](manifest.webmanifest), [sw.js](sw.js) e le icone gestiscono installazione e uso offline.
+- [ISTRUZIONI-PUBBLICAZIONE.txt](ISTRUZIONI-PUBBLICAZIONE.txt) e [ISTRUZIONI-AGGIORNAMENTO.txt](ISTRUZIONI-AGGIORNAMENTO.txt) descrivono pubblicazione e aggiornamento.
+
+Copyright © 2026 Oscar Collini · [CC BY-SA 4.0](LICENSE.txt).
