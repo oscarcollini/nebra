@@ -1,4 +1,4 @@
-N•E•B•R•A v0.9.93 — PUBBLICAZIONE SU GITHUB PAGES
+N•E•B•R•A v0.9.99 — PUBBLICAZIONE SU GITHUB PAGES
 
 1. Estrai tutti i file dello ZIP nella radice del repository.
 2. Verifica che `index.html` sia nella radice, non dentro una sottocartella.

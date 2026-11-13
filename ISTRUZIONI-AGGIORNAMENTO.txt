@@ -1,10 +1,12 @@
-N•E•B•R•A v0.9.93 — AGGIORNAMENTO PWA
+N•E•B•R•A v0.9.99 — AGGIORNAMENTO PWA
 
-1. Sostituisci tutti i file nella radice del repository.
-2. Esegui commit e push.
-3. Attendi GitHub Pages e ricarica l'app online.
-4. Se resta la vecchia cache: chiudi la PWA, riaprila e ricarica; in ultima istanza cancella i dati del sito o reinstalla.
+1. Carica i file della nuova versione nella stessa cartella di pubblicazione.
+2. Attendi GitHub Pages e ricarica l’app online. Se compare ancora la
+   versione precedente, chiudi e riapri la PWA e ricaricala.
+3. Verifica la versione mostrata e l’apertura offline dopo il caricamento.
 
-Cache di questa build: nebra-offline-v0-9-93-r2-20260721
+Cache della v0.9.99: nebra-offline-v0-9-99-r2-20260809.
 
-Il profilo fittizio non sovrascrive profili già salvati.
+Prima di cambiare indirizzo o intervenire sui dati del sito, esporta i
+profili d’orizzonte. Più app condividono oscarcollini.github.io e la
+cancellazione dei dati del sito può interessare anche le altre app.
